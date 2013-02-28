@@ -12,8 +12,8 @@
 <link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
 <body>
-<div id= "container">
-  <s:property value="name"/>
+<div id="container">
+  <!-- s:property value="name"/-->
 </div>
 </body>
 </html>
