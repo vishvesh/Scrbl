@@ -12,7 +12,9 @@
       	/** **** For Testing on Browsers with a CLICK EVENT **** **/
 	      $(document).on('mousedown', function(e) {
 	    	    $(document).bind('mousemove', function(e) {
-	    	    	container.html("page X : "+e.pageX + " : page Y : "+e.pageY);
+	    	    	var date = new Date();
+		    	    var time = date.getMilliseconds();
+		    	    container.html("page X : "+e.pageX + " : page Y : "+e.pageY + " : time in Milli Secs : "+time);
 	    	    });
 	    	});
 	
@@ -21,15 +23,27 @@
 	    	});
 	    	
 	    /** **** For Testing on Browsers with a TOUCH EVENT **** **/
-	    	$(document).on('touchstart', function(e) {
-	    	    $(document).bind('touchmove', function(e) {
-	    	    	container.html("page X : "+e.pageX + " : page Y : "+e.pageY);
+	    	/*$(document).on('touchstart', function(event) {
+	    	    $(document).bind('touchmove', function(event) {
+	    	    	event.preventDefault();
+	    	    	touch = event.touches[0];
+	    	    	console.log("Touch x:" + touch.pageX + ", y:" + touch.pageY);
+	    	    	container.html("page X : "+touch.pageX + " : page Y : "+touch.pageY);
 	    	    });
 	    	});
 	
 	    	$(document).on('touchend', function() {
 	    	    $(document).unbind('touchmove');
-	    	});
+	    	});*/
+	    	
+	    	document.addEventListener('touchmove', function(event) {
+	    	    event.preventDefault();
+	    	    var touch = event.touches[0];
+	    	    var date = new Date();
+	    	    var time = date.getMilliseconds();
+	    	    container.html("page X : "+touch.pageX + " : page Y : "+touch.pageY + " : time in Milli Secs : "+time);
+	    	    console.log("Touch x:" + touch.pageX + ", y:" + touch.pageY);
+	    	}, false);
       
       
       /*container.mousemove(function(data){
@@ -39,7 +53,7 @@
     		  }
       });*/
       
-      function touchHandler(event)
+      /*function touchHandler(event)
       {
           var touches = event.changedTouches,
               first = touches[0],
@@ -58,7 +72,7 @@
 
           var simulatedEvent = document.createEvent("MouseEvent");
           simulatedEvent.initMouseEvent(type, true, true, window, 1, first.screenX, first.screenY, first.clientX, 
-        		  							first.clientY, false, false, false, false, 0/*left*/, null);
+        		  							first.clientY, false, false, false, false, 0left, null);
           first.target.dispatchEvent(simulatedEvent);
           //event.preventDefault();
       }
@@ -69,7 +83,7 @@
           document.addEventListener("touchmove", touchHandler, true);
           document.addEventListener("touchend", touchHandler, true);
           document.addEventListener("touchcancel", touchHandler, true);    
-      }
+      }*/
       
       /*document.getElementById('container').addEventListener('touchstart', function(ev) {
 
