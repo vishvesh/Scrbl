@@ -14,5 +14,9 @@
             <result name="success">/actionView/success.jsp</result>
         </action>
         
+        <action name="writeValues" class="com.scrbl.action.BaseAction" method="writeValuesToExcel">
+            <result name="success">/actionView/success.jsp</result>
+        </action>
+        
     </package>
 </struts>

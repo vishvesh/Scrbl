@@ -1,4 +1,7 @@
-  $(document).ready( function()
+  var pageX = [];
+  var pageY = [];
+  var timeArray = [];
+$(document).ready( function()
     {
       var container = $('#container');
       container.draggable();
@@ -11,6 +14,7 @@
       
       		
       var varName;
+      
       	/** **** For Testing on Browsers with a CLICK EVENT **** **/
 	      $(document).on('mousedown', function(e) {
 	    	  e.preventDefault();
@@ -25,15 +29,22 @@
 	    	    $(document).bind('mousemove', function(e) {
 	    	    	var date = new Date();
 		    	    var time = date.getMilliseconds();
+		    	    pageX.push(e.pageX);
+		    	    pageY.push(e.pageY);
+		    	    timeArray.push(time);
 		    	    container.html("page X : "+e.pageX + " : page Y : "+e.pageY + " : time in Milli Secs : "+time);
 	    	    });
 	    	});
 	
 	    	$(document).on('mouseup', function() {
+	    		$('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
 	    		clearInterval(this.varName);
 	    	    $(document).unbind('mousemove');
 	    	});
 	    	
+	    	//console.log("coming fine");
+	    	
+	    	//console.log("executes");
 	    /** **** For Testing on Browsers with a TOUCH EVENT **** **/
 	    	/*$(document).on('touchstart', function(event) {
 	    	    $(document).bind('touchmove', function(event) {
@@ -149,6 +160,18 @@
     }
   );
   
+  function writeToExcel(){
+	  console.log("pageX.toString() : "+pageX.toString());
+		$.ajax({
+		  url: '/Scrbl/writeValues',
+		  type: 'POST',
+		  //data: { "pageX=": encodeURIComponent(pageX.toString()), "pageY=": pageY.toString(), "timeArray=": timeArray.toString() },
+		  data: {pageX: encodeURIComponent(pageX.toString())},
+		  success: function(data){
+			  //$('#ajaxResponse').html(data);
+		  }
+		});
+	}
   
 /*$.ajax({
 	type: "POST",

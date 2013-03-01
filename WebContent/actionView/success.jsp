@@ -17,5 +17,11 @@
 </div>
 <div id="counter">
 </div>
+<div id="displayCoordinates">
+</div>
+<div id="writeValues">
+	<span id="ajaxResponse"></span>
+	<input type="button" value="Write Values" onclick="writeToExcel()"/>
+</div>
 </body>
 </html>

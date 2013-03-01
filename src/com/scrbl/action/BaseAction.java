@@ -16,18 +16,19 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+	private String pageX;
+	private String pageY;
+	private String timeArray;
+
 	public String firstBlood()
 	{
 		name = "Welcome To Scrbl!";
+		return SUCCESS;
+	}
+	
+	public String writeValuesToExcel()
+	{
+		System.out.println(pageX);
 		return SUCCESS;
 	}
 	
@@ -38,7 +39,39 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 
 	@Override
 	public void setServletRequest(HttpServletRequest arg0) {
-		// TODO Auto-generated method stub
 		
 	}
+	
+	public String getPageX() {
+		return pageX;
+	}
+
+	public void setPageX(String pageX) {
+		this.pageX = pageX;
+	}
+
+	public String getPageY() {
+		return pageY;
+	}
+
+	public void setPageY(String pageY) {
+		this.pageY = pageY;
+	}
+
+	public String getTimeArray() {
+		return timeArray;
+	}
+
+	public void setTimeArray(String timeArray) {
+		this.timeArray = timeArray;
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }
