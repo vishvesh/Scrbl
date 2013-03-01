@@ -9,8 +9,19 @@
     	}); 
      }); */
       
+      		
+      var varName;
       	/** **** For Testing on Browsers with a CLICK EVENT **** **/
 	      $(document).on('mousedown', function(e) {
+	    	  e.preventDefault();
+	    	  var counter = $('#counter');
+				var varCounter = 0;
+				 this.varName = setInterval(function() {
+		  	    if (varCounter <= 10) {
+		  	    	counter.html("Timer in Seconds : "+varCounter++);
+		  	    } 
+		  	}, 1000);
+				
 	    	    $(document).bind('mousemove', function(e) {
 	    	    	var date = new Date();
 		    	    var time = date.getMilliseconds();
@@ -19,6 +30,7 @@
 	    	});
 	
 	    	$(document).on('mouseup', function() {
+	    		clearInterval(this.varName);
 	    	    $(document).unbind('mousemove');
 	    	});
 	    	
@@ -36,7 +48,7 @@
 	    	    $(document).unbind('touchmove');
 	    	});*/
 	    	
-	    	document.addEventListener('touchmove', function(event) {
+	    	var getXYOnTouchmove =	document.addEventListener('touchmove', function(event) {
 	    	    event.preventDefault();
 	    	    var touch = event.touches[0];
 	    	    var date = new Date();
@@ -44,8 +56,22 @@
 	    	    container.html("page X : "+touch.pageX + " : page Y : "+touch.pageY + " : time in Milli Secs : "+time);
 	    	    console.log("Touch x:" + touch.pageX + ", y:" + touch.pageY);
 	    	}, false);
-      
-      
+	    	
+	     	var touchStart = document.addEventListener('touchstart', function(event) {
+	     		event.preventDefault();
+	     		var counter = $('#counter');
+	     		var varCounter = 0;
+		    	var varName = setInterval(function() {
+		    	    if (varCounter <= 10) {
+		    	    	counter.html("Timer in Seconds : "+varCounter++);
+		    	    } else {
+		    	        clearInterval(varName);
+		    	    }
+		    	}, 1000);
+	     	}, false);
+	     	
+	    	//varName;
+	    	
       /*container.mousemove(function(data){
     	  if(data.which == 1)
     		  {

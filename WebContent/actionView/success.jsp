@@ -15,5 +15,7 @@
 <div id="container">
   <!-- s:property value="name"/-->
 </div>
+<div id="counter">
+</div>
 </body>
 </html>
