@@ -161,12 +161,15 @@ $(document).ready( function()
   );
   
   function writeToExcel(){
-	  console.log("pageX.toString() : "+pageX.toString());
+	  console.log("pageX.toString() : "+JSON.stringify(pageX));
+	  console.log("pageY.toString() : "+JSON.stringify(pageY));
 		$.ajax({
 		  url: '/Scrbl/writeValues',
 		  type: 'POST',
+		  /*dataType: 'json',
+		  contentType: 'application/json, charset=utf-8',*/
 		  //data: { "pageX=": encodeURIComponent(pageX.toString()), "pageY=": pageY.toString(), "timeArray=": timeArray.toString() },
-		  data: {pageX: encodeURIComponent(pageX.toString())},
+		  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY)},
 		  success: function(data){
 			  //$('#ajaxResponse').html(data);
 		  }
