@@ -65,8 +65,13 @@ $(document).ready( function()
 	    	    var touch = event.touches[0];
 	    	    var date = new Date();
 	    	    var time = date.getMilliseconds();
+	    	    //container.html("page X : "+touch.pageX + " : page Y : "+touch.pageY + " : time in Milli Secs : "+time);
+	    	    //console.log("Touch x:" + touch.pageX + ", y:" + touch.pageY);
+	    	    pageX.push(touch.pageX);
+	    	    pageY.push(touch.pageY);
+	    	    timeArray.push(time);
 	    	    container.html("page X : "+touch.pageX + " : page Y : "+touch.pageY + " : time in Milli Secs : "+time);
-	    	    console.log("Touch x:" + touch.pageX + ", y:" + touch.pageY);
+	    	    $('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
 	    	}, false);
 	    	
 	     	document.addEventListener('touchstart', function(event) {
