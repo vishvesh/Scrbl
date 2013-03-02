@@ -56,16 +56,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
 		 
-		Map<String, Object[]> data = new TreeMap<String, Object[]>();
-		data.put("0", new String[] {"X-Coordinate", "Y-Coordinate", "Time"});
+		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
+		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time"});
 		String[] pagex = pageX.split(",");
 		String[] pagey = pageY.split(",");
 		int counter = 1;
 		
 		while(counter <= pagex.length)
 		{
-			System.out.print("Counter : "+counter + " ");
-			data.put(Integer.toString(counter), new String[] {pagex[counter - 1], pagey[counter - 1], Integer.toString(counter)});
+			//System.out.print("Counter : "+counter + " ");
+			data.put(counter, new String[] {pagex[counter - 1], pagey[counter - 1], Integer.toString(counter)});
 			counter++;
 		}
 		/*Iterator it = data.entrySet().iterator();
@@ -73,26 +73,26 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		Map.Entry pairs = (Map.Entry)it.next();
 		 System.out.println(pairs.getKey()+",");
 		}*/
-		//SortedSet<String> keySet = new TreeSet<String>(data.keySet());
-		List<String> keySet=new ArrayList<String>(data.keySet());
-		Collections.sort(keySet);
+		SortedSet<Integer> keySet = new TreeSet<Integer>(data.keySet());
+		//List<Integer> keySet=new ArrayList(data.keySet());
+		//Collections.sort(keySet);
 		//keySet =  (TreeSet<String>) data.keySet();
 		int rownum = 0;
-		for (String key : keySet) {
+		for (int key : keySet) {
 			//System.out.println("KEYSET KEY : "+key);
 		    Row row = sheet.createRow(rownum++);
 		    String [] objArr = (String[]) data.get(key);
 		    int cellnum = 0;
 		    for (String obj : objArr) {
 		        Cell cell = row.createCell(cellnum++);
-		        //System.out.println("String is : "+obj + " : cell column index : "+cell.getColumnIndex() +" : cell row index : "+cell.getRowIndex());
+		        //System.out.println("String is : "+obj);
 		        if(obj instanceof String)
 		            cell.setCellValue((String)obj);
 		    }
 		}
 		 
 		try {
-		    FileOutputStream out = new FileOutputStream(new File("C:\\new.xls"));
+		    FileOutputStream out = new FileOutputStream(new File("C:\\X-Y-Time-Coordinates.xls"));
 		    workbook.write(out);
 		    out.close();
 		    System.out.println("Excel written successfully..");

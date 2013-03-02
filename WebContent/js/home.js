@@ -33,11 +33,12 @@ $(document).ready( function()
 		    	    pageY.push(e.pageY);
 		    	    timeArray.push(time);
 		    	    container.html("page X : "+e.pageX + " : page Y : "+e.pageY + " : time in Milli Secs : "+time);
+		    	    $('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
 	    	    });
 	    	});
 	
 	    	$(document).on('mouseup', function() {
-	    		$('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
+	    		
 	    		clearInterval(this.varName);
 	    	    $(document).unbind('mousemove');
 	    	});
@@ -59,7 +60,7 @@ $(document).ready( function()
 	    	    $(document).unbind('touchmove');
 	    	});*/
 	    	
-	    	var getXYOnTouchmove =	document.addEventListener('touchmove', function(event) {
+	    	document.addEventListener('touchmove', function(event) {
 	    	    event.preventDefault();
 	    	    var touch = event.touches[0];
 	    	    var date = new Date();
@@ -68,7 +69,7 @@ $(document).ready( function()
 	    	    console.log("Touch x:" + touch.pageX + ", y:" + touch.pageY);
 	    	}, false);
 	    	
-	     	var touchStart = document.addEventListener('touchstart', function(event) {
+	     	document.addEventListener('touchstart', function(event) {
 	     		event.preventDefault();
 	     		var counter = $('#counter');
 	     		var varCounter = 0;
