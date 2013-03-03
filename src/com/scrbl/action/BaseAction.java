@@ -48,8 +48,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private String pageY;
 	private String timeArray;
 	private File file;
-	private String pathname = "";
-	private String nameOfFile = "X-Y-Coordinates.xls";
+	private String nameOfFile = getText("email.nameOfFile");
 
 	public String firstBlood()
 	{
@@ -66,6 +65,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
+		//System.out.println(getText("emailfile.nameOfFile"));
         
 		return SUCCESS;
 	}
@@ -119,8 +119,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		}
 		 
 		try {
-			file = new File(pathname+nameOfFile);
-			System.out.println("File Path : "+(pathname+nameOfFile));
+			file = new File(nameOfFile);
+			System.out.println("File Path : "+(nameOfFile));
 			System.out.println("canonical path : "+file.getCanonicalPath()+ " : abs path : "+ file.getAbsolutePath() +" : path : "+ file.getPath());
 		    FileOutputStream out = new FileOutputStream(file);
 		    workbook.write(out);
@@ -138,56 +138,51 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	
 	private void sendEmailWithAttachment()
 	{
-		/*if (args.length != 5) 
-		  {
-		      System.out.println("usage: java sendfile <to> <from> <smtp> <file>");
-		      System.exit(1);
-		  }*/
+	  	String emailSubject = getText("email.emailSubject");
+	  	String emailHost = getText("email.emailHost");
+        String emailPassword = getText("email.emailPassword");
+        String emailFrom = getText("email.emailFrom");
+        String emailBody = getText("email.emailBody");
+        //String toAddress = "deshmukh.vish@yahoo.com";
+        //String emailAddresses = new String("fragbait14@gmail.com, amitshob@gmail.com");
+        String emailAddresses = getText("email.emailAddresses");
+        //String toAddress = "amitshob@gmail.com";
+        String filename = nameOfFile;
+        //System.out.println("File Path in sendemailwithattachment : "+(pathname+nameOfFile));
+        // Get system properties
+        Properties props = System.getProperties();
+        props.put("mail.smtp.host", emailHost);
+        props.put("mail.smtps.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        
+        try {
+	        Session session = Session.getInstance(props, null);
+	        MimeMessage message = new MimeMessage(session);
+	        message.setFrom(new InternetAddress(emailFrom));
+	        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailAddresses));
+	        message.setSubject(emailSubject);
 
-		  	String subject = "X-Y-Coordinates";
-		  	String host = "smtp.gmail.com";
-	        String Password = "9869161525";
-	        String from = "fragbait14@gmail.com";
-	        //String toAddress = "deshmukh.vish@yahoo.com";
-	        //String emailAddresses = new String("fragbait14@gmail.com, amitshob@gmail.com");
-	        String emailAddresses = new String("fragbait14@gmail.com");
-	        //String toAddress = "amitshob@gmail.com";
-	        String filename = pathname+nameOfFile;
-	        //System.out.println("File Path in sendemailwithattachment : "+(pathname+nameOfFile));
-	        // Get system properties
-	        Properties props = System.getProperties();
-	        props.put("mail.smtp.host", host);
-	        props.put("mail.smtps.auth", "true");
-	        props.put("mail.smtp.starttls.enable", "true");
-	        
-	        try {
-		        Session session = Session.getInstance(props, null);
-		        MimeMessage message = new MimeMessage(session);
-		        message.setFrom(new InternetAddress(from));
-		        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailAddresses));
-		        message.setSubject(subject);
-	
-		        BodyPart messageBodyPart = new MimeBodyPart();
-		        messageBodyPart.setText("Here's the file");
-	
-		        Multipart multipart = new MimeMultipart();
-		        multipart.addBodyPart(messageBodyPart);
-		        messageBodyPart = new MimeBodyPart();
-	
-		        DataSource source = new FileDataSource(filename);
-		        messageBodyPart.setDataHandler(new DataHandler(source));
-		        messageBodyPart.setFileName(filename);
-		        multipart.addBodyPart(messageBodyPart);	
-		        message.setContent(multipart);
-	
-	            Transport tr = session.getTransport("smtps");
-	            tr.connect(host, from, Password);
-	            tr.sendMessage(message, message.getAllRecipients());
-	            System.out.println("Mail Sent Successfully");
-	            tr.close();
-	        } catch (Exception sfe) {
-	            System.out.println(sfe);
-	        }
+	        BodyPart messageBodyPart = new MimeBodyPart();
+	        messageBodyPart.setText(emailBody);
+
+	        Multipart multipart = new MimeMultipart();
+	        multipart.addBodyPart(messageBodyPart);
+	        messageBodyPart = new MimeBodyPart();
+
+	        DataSource source = new FileDataSource(filename);
+	        messageBodyPart.setDataHandler(new DataHandler(source));
+	        messageBodyPart.setFileName(filename);
+	        multipart.addBodyPart(messageBodyPart);	
+	        message.setContent(multipart);
+
+            Transport tr = session.getTransport("smtps");
+            tr.connect(emailHost, emailFrom, emailPassword);
+            tr.sendMessage(message, message.getAllRecipients());
+            System.out.println("Mail Sent Successfully");
+            tr.close();
+        } catch (Exception sfe) {
+            System.out.println(sfe);
+        }
 	}
 	
 	@Override
