@@ -4,15 +4,26 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
+import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -36,10 +47,26 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private String pageX;
 	private String pageY;
 	private String timeArray;
+	private File file;
+	private String pathname = "";
+	private String nameOfFile = "X-Y-Coordinates.xls";
 
 	public String firstBlood()
 	{
 		name = "Welcome To Scrbl!";
+		/*String name = System.getProperty("user.dir")+File.separator+BaseAction.class.getPackage().getName()+File.separator;
+        System.out.println("User dir name : "+name);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        //URL url = classLoader.getResource("/WebContent/css/home.css");
+        try {
+			//System.out.println("URL : "+url.toURI());
+        	pathname = (String)getClass().getResource("").toURI().toString();
+			System.out.println("Different way : "+pathname+"X-Y-Coordinates.xls");
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+        
 		return SUCCESS;
 	}
 	
@@ -92,16 +119,75 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		}
 		 
 		try {
-		    FileOutputStream out = new FileOutputStream(new File("C:\\X-Y-Time-Coordinates.xls"));
+			file = new File(pathname+nameOfFile);
+			System.out.println("File Path : "+(pathname+nameOfFile));
+			System.out.println("canonical path : "+file.getCanonicalPath()+ " : abs path : "+ file.getAbsolutePath() +" : path : "+ file.getPath());
+		    FileOutputStream out = new FileOutputStream(file);
 		    workbook.write(out);
 		    out.close();
 		    System.out.println("Excel written successfully..");
-		     
+		    sendEmailWithAttachment();
+		    
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+		 
+	}
+	
+	private void sendEmailWithAttachment()
+	{
+		/*if (args.length != 5) 
+		  {
+		      System.out.println("usage: java sendfile <to> <from> <smtp> <file>");
+		      System.exit(1);
+		  }*/
+
+		  	String subject = "X-Y-Coordinates";
+		  	String host = "smtp.gmail.com";
+	        String Password = "9869161525";
+	        String from = "fragbait14@gmail.com";
+	        //String toAddress = "deshmukh.vish@yahoo.com";
+	        //String emailAddresses = new String("fragbait14@gmail.com, amitshob@gmail.com");
+	        String emailAddresses = new String("fragbait14@gmail.com");
+	        //String toAddress = "amitshob@gmail.com";
+	        String filename = pathname+nameOfFile;
+	        //System.out.println("File Path in sendemailwithattachment : "+(pathname+nameOfFile));
+	        // Get system properties
+	        Properties props = System.getProperties();
+	        props.put("mail.smtp.host", host);
+	        props.put("mail.smtps.auth", "true");
+	        props.put("mail.smtp.starttls.enable", "true");
+	        
+	        try {
+		        Session session = Session.getInstance(props, null);
+		        MimeMessage message = new MimeMessage(session);
+		        message.setFrom(new InternetAddress(from));
+		        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailAddresses));
+		        message.setSubject(subject);
+	
+		        BodyPart messageBodyPart = new MimeBodyPart();
+		        messageBodyPart.setText("Here's the file");
+	
+		        Multipart multipart = new MimeMultipart();
+		        multipart.addBodyPart(messageBodyPart);
+		        messageBodyPart = new MimeBodyPart();
+	
+		        DataSource source = new FileDataSource(filename);
+		        messageBodyPart.setDataHandler(new DataHandler(source));
+		        messageBodyPart.setFileName(filename);
+		        multipart.addBodyPart(messageBodyPart);	
+		        message.setContent(multipart);
+	
+	            Transport tr = session.getTransport("smtps");
+	            tr.connect(host, from, Password);
+	            tr.sendMessage(message, message.getAllRecipients());
+	            System.out.println("Mail Sent Successfully");
+	            tr.close();
+	        } catch (Exception sfe) {
+	            System.out.println(sfe);
+	        }
 	}
 	
 	@Override

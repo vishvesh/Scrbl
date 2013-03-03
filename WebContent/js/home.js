@@ -74,7 +74,7 @@ $(document).ready( function()
 	    	    $('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
 	    	}, false);
 	    	
-	     	document.addEventListener('touchstart', function(event) {
+	     	/*document.addEventListener('touchstart', function(event) {
 	     		event.preventDefault();
 	     		var counter = $('#counter');
 	     		var varCounter = 0;
@@ -85,7 +85,7 @@ $(document).ready( function()
 		    	        clearInterval(varName);
 		    	    }
 		    	}, 1000);
-	     	}, false);
+	     	}, false);*/
 	     	
 	    	//varName;
 	    	
@@ -169,6 +169,7 @@ $(document).ready( function()
   function writeToExcel(){
 	  console.log("pageX.toString() : "+JSON.stringify(pageX));
 	  console.log("pageY.toString() : "+JSON.stringify(pageY));
+	  alert("button clicked");
 		$.ajax({
 		  url: '/Scrbl/writeValues',
 		  type: 'POST',
