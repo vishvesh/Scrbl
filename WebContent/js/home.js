@@ -18,17 +18,17 @@ $(document).ready( function()
       	/** **** For Testing on Browsers with a CLICK EVENT **** **/
 	      $(document).on('mousedown', function(e) {
 	    	  e.preventDefault();
-	    	  var counter = $('#counter');
+	    	  /*var counter = $('#counter');
 				var varCounter = 0;
 				 this.varName = setInterval(function() {
 		  	    if (varCounter <= 10) {
 		  	    	counter.html("Timer in Seconds : "+varCounter++);
 		  	    } 
-		  	}, 1000);
-				
+		  	}, 1000);*/
+
 	    	    $(document).bind('mousemove', function(e) {
-	    	    	var date = new Date();
-		    	    var time = date.getMilliseconds();
+	    	      var date = new Date();
+	  	    	  var time = date.getMilliseconds();
 		    	    pageX.push(e.pageX);
 		    	    pageY.push(e.pageY);
 		    	    timeArray.push(time);
@@ -39,7 +39,7 @@ $(document).ready( function()
 	
 	    	$(document).on('mouseup', function() {
 	    		
-	    		clearInterval(this.varName);
+	    		//clearInterval(this.varName);
 	    	    $(document).unbind('mousemove');
 	    	});
 	    	
@@ -71,12 +71,12 @@ $(document).ready( function()
 	    	    pageY.push(touch.pageY);
 	    	    timeArray.push(time);
 	    	    container.html("page X : "+touch.pageX + " : page Y : "+touch.pageY + " : time in Milli Secs : "+time);
-	    	    $('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
+	    	    //$('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
 	    	}, false);
 	    	
-	     	/*document.addEventListener('touchstart', function(event) {
-	     		event.preventDefault();
-	     		var counter = $('#counter');
+	     	document.addEventListener('touchstart', function() {
+	     		//event.preventDefault();
+	     		/*var counter = $('#counter');
 	     		var varCounter = 0;
 		    	var varName = setInterval(function() {
 		    	    if (varCounter <= 10) {
@@ -84,8 +84,12 @@ $(document).ready( function()
 		    	    } else {
 		    	        clearInterval(varName);
 		    	    }
-		    	}, 1000);
-	     	}, false);*/
+		    	}, 1000);*/
+	     		/*var touch = event.touches[0];
+	     		pageX.push(touch.pageX);
+		    	pageY.push(touch.pageY);
+		    	timeArray.push(0);*/
+	     	}, false);
 	     	
 	    	//varName;
 	    	
@@ -167,16 +171,17 @@ $(document).ready( function()
   );
   
   function writeToExcel(){
-	  console.log("pageX.toString() : "+JSON.stringify(pageX));
-	  console.log("pageY.toString() : "+JSON.stringify(pageY));
-	  alert("button clicked");
+	  console.log("pageX : "+JSON.stringify(pageX));
+	  console.log("pageY : "+JSON.stringify(pageY));
+	  console.log("TimeArray : "+JSON.stringify(timeArray));
+	  alert("Done Scribbling?");
 		$.ajax({
 		  url: '/Scrbl/writeValues',
 		  type: 'POST',
-		  /*dataType: 'json',
-		  contentType: 'application/json, charset=utf-8',*/
+		  dataType: 'json',
+		  contentType: 'application/json, charset=utf-8',
 		  //data: { "pageX=": encodeURIComponent(pageX.toString()), "pageY=": pageY.toString(), "timeArray=": timeArray.toString() },
-		  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY)},
+		  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray)},
 		  success: function(data){
 			  //$('#ajaxResponse').html(data);
 		  }
