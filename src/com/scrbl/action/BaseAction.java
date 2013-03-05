@@ -72,10 +72,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	
 	public String writeValuesToExcel()
 	{
-		System.out.println("Page X : "+pageX);
-		System.out.println("Page Y : "+pageY);
-		System.out.println("Time Array : "+timeArray);
-		writeToExcel(pageX, pageY, timeArray);
+		writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
+		System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
+		System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
+		System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
 		return SUCCESS;
 	}
 	
@@ -128,7 +128,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		    workbook.write(out);
 		    out.close();
 		    System.out.println("Excel written successfully..");
-		    sendEmailWithAttachment();
+		    //sendEmailWithAttachment();
 		    
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
