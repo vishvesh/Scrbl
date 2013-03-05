@@ -71,7 +71,7 @@ $(document).ready( function()
 		    		//console.log("TIME 2 : "+time2);
 		    		//console.log("UTC : "+timez.getUTCMilliseconds());
 		    	    //container.html("page X : "+e.pageX + " : page Y : "+e.pageY + " : time in Milli Secs : "+time);
-		    	    $('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
+		    	    //$('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
 	    	    });
 	    	});
 	
