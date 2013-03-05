@@ -3,7 +3,7 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
-<title> Scrbl - No need to remember passwords anymore!</title >
+<title> MeetYourMakerz!</title >
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <script src="http://code.jquery.com/jquery-1.7.2.min.js" ></script>
 <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js" ></script>

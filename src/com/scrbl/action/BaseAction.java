@@ -74,11 +74,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	{
 		System.out.println("Page X : "+pageX);
 		System.out.println("Page Y : "+pageY);
-		writeToExcel(pageX,pageY);
+		System.out.println("Time Array : "+timeArray);
+		writeToExcel(pageX, pageY, timeArray);
 		return SUCCESS;
 	}
 	
-	private void writeToExcel(String pageX, String pageY)
+	private void writeToExcel(String pageX, String pageY, String timeArray)
 	{
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
@@ -87,12 +88,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time"});
 		String[] pagex = pageX.split(",");
 		String[] pagey = pageY.split(",");
+		String[] timearray = timeArray.split(",");
 		int counter = 1;
 		
 		while(counter <= pagex.length)
 		{
 			//System.out.print("Counter : "+counter + " ");
-			data.put(counter, new String[] {pagex[counter - 1], pagey[counter - 1], Integer.toString(counter)});
+			data.put(counter, new String[] {pagex[counter - 1], pagey[counter - 1], timearray[counter - 1]});
 			counter++;
 		}
 		/*Iterator it = data.entrySet().iterator();
@@ -120,7 +122,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		 
 		try {
 			file = new File(nameOfFile);
-			System.out.println("File Path : "+(nameOfFile));
+			//System.out.println("File Path : "+(nameOfFile));
 			System.out.println("canonical path : "+file.getCanonicalPath()+ " : abs path : "+ file.getAbsolutePath() +" : path : "+ file.getPath());
 		    FileOutputStream out = new FileOutputStream(file);
 		    workbook.write(out);
