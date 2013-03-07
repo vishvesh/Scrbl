@@ -14,7 +14,7 @@
 	#canvas {
     background: #fff;
     display: block;
-    position: absolute;
+    /*position: absolute;*/
     left: 60px;
     top: 0;
     border: 1px solid #ccc
@@ -22,22 +22,39 @@
 body{
 	background: none repeat scroll 0 0 whitesmoke;
 }
+#container{
+	color: blue;
+    font-size: 18px;
+    position: relative;
+    margin: 0 auto;
+    /*width: 400px;*/
+}
+ #writeValues{
+color: blue;
+    font-size: 18px;
+    position: relative;
+    margin: 0 auto;
+   }
+   #counter{
+    color: blue;
+    font-size: 18px;
+    position: relative;
+    margin: 0 auto;
+    }
 </style>
 </head>
 <body>
 <div id="container">
   <!-- s:property value="name"/-->
   <div id="canvasPlaceholder">
-  	<canvas id="canvas" height=208 width=480></canvas>
+  	<canvas id="canvas" height=150 width=380></canvas>
   </div>
-</div>
-<div id="counter">
-</div>
-<div id="displayCoordinates">
-</div>
 <div id="writeValues">
 	<span id="ajaxResponse"></span>
 	<input type="button" value="Write Values" onclick="writeToExcel()"/>
 </div>
+</div>
+
+
 </body>
 </html>

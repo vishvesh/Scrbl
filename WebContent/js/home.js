@@ -1,4 +1,9 @@
-  var pageX = [];
+/**
+ * @author Vishvesh Deshmukh
+ * Created : 2nd February, 2013
+ * Project : Scrbl
+*/
+var pageX = [];
   var pageY = [];
   var timeArray = [];
   var milliseconds;
@@ -185,6 +190,17 @@
 $(document).ready( function()
     {
 	
+
+	var message="";
+	function clickIE() {if (document.all) {(message);return false;}}
+	function clickNS(e) {if
+	(document.layers||(document.getElementById&&!document.all)) {
+	if (e.which==2||e.which==3) {(message);return false;}}}
+	if (document.layers)
+	{document.captureEvents(Event.MOUSEDOWN);document.onmousedown=clickNS;}
+	else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;}
+	document.oncontextmenu=new Function("return false");
+	
 	var lastPoint;
     var context = document.getElementById('canvas').getContext('2d');
     var offset = $('#canvas').offset();
@@ -211,7 +227,7 @@ $(document).ready( function()
       var lastClick;
       
       	/** **** For Testing on Browsers with a CLICK EVENT **** **/
-	      $(document).on('mousedown', function(e) {
+	      $("#canvas").on('mousedown', function(e) {
 	    	  e.preventDefault();
 	    	  /*var counter = $('#counter');
 				var varCounter = 0;
@@ -239,7 +255,7 @@ $(document).ready( function()
 		    	//console.log("1st Touch Time : "+lastClick);
 		    	
 		    	
-	    	    $(document).bind('mousemove', function(event) {
+	    	    $("#canvas").bind('mousemove', function(event) {
 	    	    	//e.preventDefault();
 	    	    	var point = new Point(event.pageX - offset.left, event.pageY - offset.top);
 	    	        if (lastPoint !== undefined && lastPoint !== null) {
@@ -280,11 +296,11 @@ $(document).ready( function()
 	    	    });
 	    	});
 	
-	    	$(document).on('mouseup', function() {
+	    	$("#canvas").on('mouseup', function() {
 	    		
 	    		lastPoint = null;
 	    		//clearInterval(this.varName);
-	    	    $(document).unbind('mousemove');
+	    	    $("#canvas").unbind('mousemove');
 	    	});
 	    	
 	    	//console.log("coming fine");
@@ -304,12 +320,12 @@ $(document).ready( function()
 	    	    $(document).unbind('touchmove');
 	    	});*/
 	    	
-	    	document.addEventListener('touchstart', function() {
+	    	document.getElementById('canvas').addEventListener('touchstart', function() {
 	    		lastClick = 0;
 	    		timeArray.push(lastClick);
 	     	}, false);
 	    	
-	    	document.addEventListener('touchmove', function(event) {
+	    	document.getElementById('canvas').addEventListener('touchmove', function(event) {
 	    	    event.preventDefault();
 	    	    var touch = event.touches[0];
 	    	    /*var date = new Date();
@@ -320,16 +336,25 @@ $(document).ready( function()
 	    	    pageY.push(touch.pageY);
 	    	    timeArray.push(time);*/
 	    	    
+	    	    var point = new Point(touch.pageX - offset.left, touch.pageY - offset.top);
+    	        if (lastPoint !== undefined && lastPoint !== null) {
+    	            context.beginPath();
+    	            context.moveTo(lastPoint.x, lastPoint.y);
+    	            context.lineTo(point.x, point.y);
+    	            context.stroke();
+    	        }
+    	        lastPoint = point;
+	    	    
 	    	    var date = new Date();
 		    	click = date.getTime();
 		    	
 		    	var secondClick = click - lastClick;
-		    	console.log("Second Click : "+secondClick);
+		    	console.log("Time from 1st px to 2nd : "+secondClick);
 		    	
 		    	timeArray.push(secondClick);
 		    	
 		    	lastClick = click;
-		    	console.log("Last CLick : "+lastClick);
+		    	//console.log("Last CLick : "+lastClick);
 		    	
 		    	pageX.push(touch.pageX);
 	    	    pageY.push(touch.pageY);
@@ -337,7 +362,9 @@ $(document).ready( function()
 	    	    //$('#displayCoordinates').html("X : "+pageX.toString()+"\n Y : "+pageY.toString()+"\n Time : "+timeArray.toString());
 	    	}, false);
 	    	
-	     	
+	    	document.getElementById('canvas').addEventListener('touchend', function() {
+	    		lastPoint = null;
+	     	}, false);
 	     	
 	    	//varName;
 	    	
@@ -421,7 +448,7 @@ $(document).ready( function()
   function writeToExcel(){
 	  console.log("pageX.toString() : "+JSON.stringify(pageX));
 	  console.log("pageY.toString() : "+JSON.stringify(pageY));
-	  console.log("pageY.toString() : "+JSON.stringify(timeArray));
+	  console.log("TimeArray.toString() : "+JSON.stringify(timeArray));
 	  alert("Done Scribbling?");
 		$.ajax({
 		  url: '/Scrbl/writeValues',

@@ -128,7 +128,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		    workbook.write(out);
 		    out.close();
 		    System.out.println("Excel written successfully..");
-		    //sendEmailWithAttachment();
+		    sendEmailWithAttachment();
 		    
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
