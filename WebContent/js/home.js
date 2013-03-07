@@ -2,22 +2,214 @@
   var pageY = [];
   var timeArray = [];
   var milliseconds;
+  
+  /*var CanvasDrawr = function(options) {
+		var canvas = document.getElementById(options.id), ctxt = canvas
+				.getContext("2d");
+		canvas.style.width = '100%';
+		canvas.width = canvas.offsetWidth;
+		canvas.style.width = '';
+		ctxt.lineWidth = options.size
+				|| Math.ceil(Math.random() * 35);
+		ctxt.lineCap = options.lineCap || "round";
+		ctxt.pX = undefined;
+		ctxt.pY = undefined;
+		var lines = [ , , ];
+		var offset = $(canvas).offset();
+		var self = {
+			init : function() {
+				canvas.addEventListener('mousedown',
+						self.preDraw, false);
+				canvas.addEventListener('mousemove', self.draw,
+						false);
+			},
+			preDraw : function(event) {
+				$
+						.each(
+								event.touches,
+								function(i, touch) {
+									var id = touch.identifier, colors = [
+											"red", "green",
+											"yellow", "blue",
+											"magenta",
+											"orangered" ], mycolor = colors[Math
+											.floor(Math
+													.random()
+													* colors.length)];
+									lines[id] = {
+										x : this.pageX
+												- offset.left,
+										y : this.pageY
+												- offset.top,
+										color : mycolor
+									};
+								});
+				event.preventDefault();
+			},
+			draw : function(event) {
+				var e = event, hmm = {};
+				$
+						.each(
+								event.touches,
+								function(i, touch) {
+									var id = touch.identifier, moveX = this.pageX
+											- offset.left
+											- lines[id].x, moveY = this.pageY
+											- offset.top
+											- lines[id].y;
+									var ret = self.move(id,
+											moveX, moveY);
+									lines[id].x = ret.x;
+									lines[id].y = ret.y;
+								});
+				event.preventDefault();
+			},
+			move : function(i, changeX, changeY) {
+				ctxt.strokeStyle = lines[i].color;
+				ctxt.beginPath();
+				ctxt.moveTo(lines[i].x, lines[i].y);
+				ctxt.lineTo(lines[i].x + changeX, lines[i].y
+						+ changeY);
+				ctxt.stroke();
+				ctxt.closePath();
+				return {
+					x : lines[i].x + changeX,
+					y : lines[i].y + changeY
+				};
+			}
+		};
+		return self.init();
+	};*/
+  
+  function Point(x, y, z) {
+	    if (x === undefined) {
+	        throw new ReferenceError('At least one dimension is required');
+	    }
+	    if (typeof x != 'number') {
+	        throw new TypeError("Variable 'x' is nonnumerical");
+	    }
+	    else if (y !== undefined && typeof y != 'number') {
+	        throw new TypeError("Variable 'y' is nonnumerical");
+	    }
+	    else if (z !== undefined && typeof z != 'number') {
+	        throw new TypeError("Variable 'z' is nonnumerical");
+	    }
+
+	    this.x = x;
+	    this.y = y;
+	    this.z = z;
+	}
+
+	Point.prototype.add = function(point) {
+	    if (point instanceof Point) {
+	        switch (this.numberOfDimensions) {
+	        case 1:
+	            switch (point.numberOfDimensions) {
+	            case 1:
+	                return new Point(this.x + point.x);
+	            case 2:
+	                return new Point(this.x + point.x, point.y);
+	            case 3:
+	                return new Point(this.x + point.x, point.y, point.z);
+	            default:
+	                throw new RangeError("The variable 'point' has an unsupported number of dimensions");
+	            }
+	            break;
+	        case 2:
+	            switch (point.numberOfDimensions) {
+	            case 1:
+	                return new Point(this.x + point.x, this.y);
+	            case 2:
+	                return new Point(this.x + point.x, this.y + point.y);
+	            case 3:
+	                return new Point(this.x + point.x, this.y + point.y, point.z);
+	            default:
+	                throw new RangeError("The variable 'point' has an unsupported number of dimensions");
+	            }
+	            break;
+	        case 3:
+	            switch (point.numberOfDimensions) {
+	            case 1:
+	                return new Point(this.x + point.x, this.y, this.z);
+	            case 2:
+	                return new Point(this.x + point.x, this.y + point.y, this.z);
+	            case 3:
+	                return new Point(this.x + point.x, this.y + point.y, this.z + point.z);
+	            default:
+	                throw new RangeError("The variable 'point' has an unsupported number of dimensions");
+	            }
+	            break;
+	        default:
+	            throw new RangeError('The calling object has an unsupported number of dimensions');
+	        }
+	    }
+	    throw new TypeError("Variable 'point' is not a point");
+	};
+
+	Point.prototype.__defineGetter__('numberOfDimensions', function() {
+	    if (this.z !== undefined) {
+	        return 3;
+	    }
+	    else if (this.y !== undefined) {
+	        return 2;
+	    }
+	    return 1;
+	});
+
+	Point.prototype.is1D = function() {
+	    return this.y === undefined && this.z === undefined;
+	};
+
+	Point.prototype.is2D = function() {
+	    return this.y !== undefined && this.z === undefined;
+	};
+
+	Point.prototype.is3D = function() {
+	    return this.z !== undefined;
+	};
+
+	Point.prototype.multiplyMagnitude = function(number) {
+	    if (typeof number != 'number') {
+	        throw new TypeError("Variable 'number' is nonnumerical");
+	    }
+
+	    if (this.z !== undefined) {
+	        return new Point(this.x * number, this.y * number, this.z * number);
+	    }
+	    else if (this.y !== undefined) {
+	        return new Point(this.x * number, this.y * number);
+	    }
+	    return new Point(this.x * number);
+	};
+  
 $(document).ready( function()
     {
+	
+	var lastPoint;
+    var context = document.getElementById('canvas').getContext('2d');
+    var offset = $('#canvas').offset();
+    context.lineWidth = 1;
+    
+    /*jQuery('body').mousemove(function (event) {
+        
+    }).mouseleave(function (event) {
+        lastPoint = null;
+    });*/
+
+	
       var container = $('#container');
-      container.draggable();
+      //container.draggable();
       
     /* container.click(function(data){
     	container.mousemove(function(data){
     		console.log("page X : "+data.pageX + " : page Y : "+data.pageY);
     	}); 
-     }); */
-      
-      		
+     }); */		
       var varName;
       var date;
       var click;
       var lastClick;
+      
       	/** **** For Testing on Browsers with a CLICK EVENT **** **/
 	      $(document).on('mousedown', function(e) {
 	    	  e.preventDefault();
@@ -29,7 +221,9 @@ $(document).ready( function()
 		  	    } 
 		  	}, 1000);*/
 	    	  //var touch = event.touches[0];
-	    	  	
+	    	 /* var click = $(e).click();
+	    	  console.log("CLICK : "+click);*/
+
 	    	  	var time = 0;
 	     		pageX.push(e.pageX);
 		    	pageY.push(e.pageY);
@@ -40,25 +234,36 @@ $(document).ready( function()
 		    	//console.log("1st Touch Time : "+m);
 		    	lastClick = 0;
 		    	//milliseconds =
-		    	console.log("Should print this only 1ce");
+		    	//console.log("Should print this only 1ce");
 		    	timeArray.push(lastClick);
-		    	console.log("1st Touch Time : "+lastClick);
+		    	//console.log("1st Touch Time : "+lastClick);
 		    	
 		    	
-	    	    $(document).bind('mousemove', function(e) {
+	    	    $(document).bind('mousemove', function(event) {
+	    	    	//e.preventDefault();
+	    	    	var point = new Point(event.pageX - offset.left, event.pageY - offset.top);
+	    	        if (lastPoint !== undefined && lastPoint !== null) {
+	    	            context.beginPath();
+	    	            context.moveTo(lastPoint.x, lastPoint.y);
+	    	            context.lineTo(point.x, point.y);
+	    	            context.stroke();
+	    	        }
+	    	        lastPoint = point;
+	    	        //console.log("Last Point : "+lastPoint);
+	    	    	
 	    	    	var date = new Date();
 			    	click = date.getTime();
 			    	
 			    	var secondClick = click - lastClick;
-			    	console.log("Second Click : "+secondClick);
+			    	console.log("Time from 1st px to 2nd : "+secondClick);
 			    	
 			    	timeArray.push(secondClick);
 			    	
 			    	lastClick = click;
-			    	console.log("Last CLick : "+lastClick);
+			    	//console.log("Last CLick : "+lastClick);
 			    	
-			    	pageX.push(e.pageX);
-		    	    pageY.push(e.pageY);
+			    	pageX.push(event.pageX);
+		    	    pageY.push(event.pageY);
 			    	//console.log("milliseconds : "+milliseconds);
 		    	    
 		    	    //console.log("TIME 2 : "+time2);
@@ -77,7 +282,7 @@ $(document).ready( function()
 	
 	    	$(document).on('mouseup', function() {
 	    		
-	    		
+	    		lastPoint = null;
 	    		//clearInterval(this.varName);
 	    	    $(document).unbind('mousemove');
 	    	});
@@ -230,6 +435,93 @@ $(document).ready( function()
 		  }
 		});
 	}
+  
+  /*var CanvasDrawr = function(options) {
+		var canvas = document.getElementById(options.id), ctxt = canvas.getContext("2d");
+		canvas.style.width = '100%'
+		canvas.width = canvas.offsetWidth;
+		canvas.style.width = '';
+		ctxt.lineWidth = options.size
+				|| Math.ceil(Math.random() * 35);
+		ctxt.lineCap = options.lineCap || "round";
+		ctxt.pX = undefined;
+		ctxt.pY = undefined;
+		var lines = [ , , ];
+		var offset = $(canvas).offset();
+		
+		
+		
+		var self = {
+			init : function() {
+				canvas.addEventListener('touchstart',
+						self.preDraw, false);
+				canvas.addEventListener('touchmove', self.draw,
+						false);
+			},
+			preDraw : function(event) {
+				$
+						.each(
+								event.touches,
+								function(i, touch) {
+									var id = touch.identifier, colors = [
+											"red", "green",
+											"yellow", "blue",
+											"magenta",
+											"orangered" ], mycolor = colors[Math
+											.floor(Math
+													.random()
+													* colors.length)];
+									lines[id] = {
+										x : this.pageX
+												- offset.left,
+										y : this.pageY
+												- offset.top,
+										color : mycolor
+									};
+								});
+				event.preventDefault();
+			},
+			draw : function(event) {
+				var e = event, hmm = {};
+				$
+						.each(
+								event.touches,
+								function(i, touch) {
+									var id = touch.identifier, moveX = this.pageX
+											- offset.left
+											- lines[id].x, moveY = this.pageY
+											- offset.top
+											- lines[id].y;
+									var ret = self.move(id,
+											moveX, moveY);
+									lines[id].x = ret.x;
+									lines[id].y = ret.y;
+								});
+				event.preventDefault();
+			},
+			move : function(i, changeX, changeY) {
+				ctxt.strokeStyle = lines[i].color;
+				ctxt.beginPath();
+				ctxt.moveTo(lines[i].x, lines[i].y);
+				ctxt.lineTo(lines[i].x + changeX, lines[i].y
+						+ changeY);
+				ctxt.stroke();
+				ctxt.closePath();
+				return {
+					x : lines[i].x + changeX,
+					y : lines[i].y + changeY
+				};
+			}
+		};
+		return self.init();
+	};
+	$(function() {
+		var super_awesome_multitouch_drawing_canvas_thingy = new CanvasDrawr(
+				{
+					id : "example",
+					size : 15
+				});
+	});*/
   
 /*$.ajax({
 	type: "POST",

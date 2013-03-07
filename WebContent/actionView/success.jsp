@@ -10,10 +10,26 @@
 <script src="js/jquery-touch-punch/jquery.ui.touch-punch.min.js" ></script>
 <script src="js/home.js" ></script>
 <link rel="stylesheet" type="text/css" href="css/home.css">
+<style media="screen">
+	#canvas {
+    background: #fff;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 0;
+    border: 1px solid #ccc
+}
+body{
+	background: none repeat scroll 0 0 whitesmoke;
+}
+</style>
 </head>
 <body>
 <div id="container">
   <!-- s:property value="name"/-->
+  <div id="canvasPlaceholder">
+  	<canvas id="canvas" height=208 width=480></canvas>
+  </div>
 </div>
 <div id="counter">
 </div>
