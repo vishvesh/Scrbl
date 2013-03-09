@@ -52,6 +52,7 @@ color: blue;
 <div id="writeValues">
 	<span id="ajaxResponse"></span>
 	<input type="button" value="Write Values" onclick="writeToExcel()"/>
+	<input type="button" value="Clear Screen" onclick="clearScreen()"/>
 </div>
 </div>
 

@@ -3,10 +3,14 @@
  * Created : 2nd February, 2013
  * Project : Scrbl
 */
-var pageX = [];
+  var pageX = [];
   var pageY = [];
   var timeArray = [];
-  var milliseconds;
+  var lastPoint;
+  var click;
+  var lastClick;
+  
+  //var milliseconds;
   
   /*var CanvasDrawr = function(options) {
 		var canvas = document.getElementById(options.id), ctxt = canvas
@@ -201,7 +205,7 @@ $(document).ready( function()
 	else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;}
 	document.oncontextmenu=new Function("return false");
 	
-	var lastPoint;
+	
     var context = document.getElementById('canvas').getContext('2d');
     var offset = $('#canvas').offset();
     context.lineWidth = 1;
@@ -223,8 +227,7 @@ $(document).ready( function()
      }); */		
       var varName;
       var date;
-      var click;
-      var lastClick;
+      
       
       	/** **** For Testing on Browsers with a CLICK EVENT **** **/
 	      $("#canvas").on('mousedown', function(e) {
@@ -446,11 +449,11 @@ $(document).ready( function()
   );
   
   function writeToExcel(){
-	  console.log("pageX.toString() : "+JSON.stringify(pageX));
-	  console.log("pageY.toString() : "+JSON.stringify(pageY));
-	  console.log("TimeArray.toString() : "+JSON.stringify(timeArray));
+	  console.log("pageX : "+JSON.stringify(pageX));
+	  console.log("pageY : "+JSON.stringify(pageY));
+	  console.log("TimeArray : "+JSON.stringify(timeArray));
 	  alert("Done Scribbling?");
-		$.ajax({
+		/*$.ajax({
 		  url: '/Scrbl/writeValues',
 		  type: 'POST',
 		  //dataType: 'json',
@@ -460,8 +463,20 @@ $(document).ready( function()
 		  success: function(data){
 			  //$('#ajaxResponse').html(data);
 		  }
-		});
+		});*/
 	}
+  
+  function clearScreen()
+  {
+	  var canvas = document.getElementById('canvas');
+	  var context = canvas.getContext("2d");
+	  context.clearRect(0,0,context.canvas.width,context.canvas.height);
+	  pageX.length = 0;
+	  pageY.length = 0;
+	  timeArray.length = 0;
+	  //context.clearRect(0, 0, canvas.width, canvas.height);
+	  
+  }
   
   /*var CanvasDrawr = function(options) {
 		var canvas = document.getElementById(options.id), ctxt = canvas.getContext("2d");
