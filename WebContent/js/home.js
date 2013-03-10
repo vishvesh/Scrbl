@@ -9,6 +9,8 @@
   var lastPoint;
   var click;
   var lastClick;
+  var x1, x2, x3, x4, distance;
+  var distanceArray = [];
   
   //var milliseconds;
   
@@ -243,9 +245,11 @@ $(document).ready( function()
 	    	 /* var click = $(e).click();
 	    	  console.log("CLICK : "+click);*/
 
-	    	  	var time = 0;
-	     		pageX.push(e.pageX);
-		    	pageY.push(e.pageY);
+	    	  	//var time = 0;
+	    	  	x1 = e.pageX - offset.left;
+	    	  	y1 = e.pageY - offset.top;
+	     		pageX.push(x1);
+		    	pageY.push(y1);
 		    	//timeArray.push(0);
 		    	
 		    	//var d = new Date();
@@ -256,17 +260,23 @@ $(document).ready( function()
 		    	//console.log("Should print this only 1ce");
 		    	timeArray.push(lastClick);
 		    	//console.log("1st Touch Time : "+lastClick);
+		    	distanceArray.push(0);
 		    	
 		    	
 	    	    $("#canvas").bind('mousemove', function(event) {
 	    	    	//e.preventDefault();
-	    	    	var point = new Point(event.pageX - offset.left, event.pageY - offset.top);
+	    	    	x2 = event.pageX - offset.left;
+	    	    	y2 = event.pageY - offset.top;
+	    	    	
+	    	    	var point = new Point(x2, y2);
+	    	    	
 	    	        if (lastPoint !== undefined && lastPoint !== null) {
 	    	            context.beginPath();
 	    	            context.moveTo(lastPoint.x, lastPoint.y);
 	    	            context.lineTo(point.x, point.y);
 	    	            context.stroke();
 	    	        }
+	    	        
 	    	        lastPoint = point;
 	    	        //console.log("Last Point : "+lastPoint);
 	    	    	
@@ -274,16 +284,21 @@ $(document).ready( function()
 			    	click = date.getTime();
 			    	
 			    	var secondClick = click - lastClick;
-			    	console.log("Time from 1st px to 2nd : "+secondClick);
+			    	//console.log("Time from 1st px to 2nd : "+secondClick);
 			    	
 			    	timeArray.push(secondClick);
 			    	
 			    	lastClick = click;
 			    	//console.log("Last CLick : "+lastClick);
 			    	
-			    	pageX.push(event.pageX);
-		    	    pageY.push(event.pageY);
-			    	//console.log("milliseconds : "+milliseconds);
+			    	pageX.push(x2);
+		    	    pageY.push(y2);
+			    	//console.log("event.pageX - offset.left : "+(event.pageX - offset.left) + " : event.pageX : "+event.pageX);
+			    	
+			    	distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+			    	distanceArray.push(distance);
+			    	
+			    	console.log("X2 : "+x2 + " : X1 : "+x1 + " : Y2 : "+y2 + " : Y1 : "+y1 +" : Distance : "+distance);
 		    	    
 		    	    //console.log("TIME 2 : "+time2);
 		    	    //var timez = new Date();
@@ -452,6 +467,8 @@ $(document).ready( function()
 	  console.log("pageX : "+JSON.stringify(pageX));
 	  console.log("pageY : "+JSON.stringify(pageY));
 	  console.log("TimeArray : "+JSON.stringify(timeArray));
+	  console.log("distanceArray : "+JSON.stringify(distanceArray));
+	  
 	  alert("Done Scribbling?");
 		/*$.ajax({
 		  url: '/Scrbl/writeValues',
