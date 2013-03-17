@@ -86,7 +86,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	{
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		//System.out.println(dateFormat.format(cal.getTime()));
+		System.out.println(dateFormat.format(cal.getTime()));
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
