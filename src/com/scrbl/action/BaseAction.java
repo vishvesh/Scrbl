@@ -92,7 +92,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
 		 
 		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time", "IP Address : ", ""+client, " ", "Date & Time : "+dateFormat.format(cal.getTime())});
+		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time", "IP Address : "+client, "Date & Time : "+dateFormat.format(cal.getTime())});
 		String[] pagex = pageX.split(",");
 		String[] pagey = pageY.split(",");
 		String[] timearray = timeArray.split(",");
