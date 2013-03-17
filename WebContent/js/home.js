@@ -1,7 +1,13 @@
 /**
- * @author Vishvesh Deshmukh Created : 2nd February, 2013 Project : Scrbl
+ * @author Vishvesh Deshmukh 
+ * Created : 2nd February, 2013 Project : Scrbl
  */
-var pageX = [], pageY = [], timeArray = [], lastPoint, click, lastClick;
+var pageX = [], 
+	pageY = [], 
+	timeArray = [], 
+	lastPoint, 
+	click, 
+	lastClick;
 
 function Point(x, y, z) {
 	if (x === undefined) {
