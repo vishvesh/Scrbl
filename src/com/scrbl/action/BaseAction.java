@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
 import java.util.SortedSet;
@@ -47,6 +48,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private String pageX;
 	private String pageY;
 	private String timeArray;
+	private String client;
 	private File file;
 	private String nameOfFile = getText("email.nameOfFile");
 
@@ -76,16 +78,21 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
 		System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
 		System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
+		System.out.println("Client IP Address : "+client);
 		return SUCCESS;
 	}
 	
 	private void writeToExcel(String pageX, String pageY, String timeArray)
 	{
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		//System.out.println(dateFormat.format(cal.getTime()));
+		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
 		 
 		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time"});
+		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time", "IP Address : ", ""+client, " ", "Date & Time : "+dateFormat.format(cal.getTime())});
 		String[] pagex = pageX.split(",");
 		String[] pagey = pageY.split(",");
 		String[] timearray = timeArray.split(",");
@@ -128,7 +135,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		    workbook.write(out);
 		    out.close();
 		    System.out.println("Excel written successfully..");
-		    sendEmailWithAttachment();
+		    //sendEmailWithAttachment();
 		    
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
@@ -227,6 +234,14 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getClient() {
+		return client;
+	}
+	
+	public void setClient(String client) {
+		this.client = client;
 	}
 	
 }

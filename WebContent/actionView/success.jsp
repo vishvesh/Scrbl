@@ -8,6 +8,7 @@
 <script src="http://code.jquery.com/jquery-1.7.2.min.js" ></script>
 <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js" ></script>
 <script src="js/jquery-touch-punch/jquery.ui.touch-punch.min.js" ></script>
+<script type = "text/javascript" src="http://l2.io/ip.js?var=client"></script> 
 <script src="js/home.js" ></script>
 <link rel="stylesheet" type="text/css" href="css/home.css">
 <style media="screen">
