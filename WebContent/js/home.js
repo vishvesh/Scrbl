@@ -7,7 +7,8 @@ var pageX = [],
 	pageY = [], 
 	timeArray = [], 
 	lastPoint, 
-	click, 
+	click,
+	pointArray = [],
 	lastClick;
 	ua = navigator.userAgent,
 	browser = {
@@ -147,7 +148,7 @@ $(document).ready(
 
 	//var container = $('#container');
 	// container.draggable();
-
+	
 	/** **** For Testing on Browsers with a CLICK EVENT **** * */
 	$("#canvas").on('mousedown',function(e) {
 		e.preventDefault();		
@@ -159,6 +160,8 @@ $(document).ready(
 	$("#canvas").bind('mousemove',function(event) {
 		// e.preventDefault();
 		var point = new Point(event.pageX - offset.left, event.pageY - offset.top);
+		pointArray.push(point);
+		console.log(point);
 		if (lastPoint !== undefined && lastPoint !== null) {
 			context.beginPath();
 			context.moveTo(lastPoint.x, lastPoint.y);
@@ -190,11 +193,13 @@ $(document).ready(
 		lastClick = 0;
 		timeArray.push(lastClick);
 	}, false);
-
+	
 	document.getElementById('canvas').addEventListener('touchmove', function(event) {
 		event.preventDefault();
 		var touch = event.touches[0];
 		var point = new Point(touch.pageX - offset.left, touch.pageY - offset.top);
+		pointArray.push(point);
+		console.log(point);
 		if (lastPoint !== undefined && lastPoint !== null) {
 			context.beginPath();
 			context.moveTo(lastPoint.x, lastPoint.y);
@@ -221,6 +226,7 @@ function writeToExcel() {
 	console.log("pageX : " + JSON.stringify(pageX));
 	console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
+	console.log("PointArray : " + JSON.stringify(pointArray));
 	
 	var clientIp;
 	if(typeof client !=='undefined')
@@ -234,7 +240,7 @@ function writeToExcel() {
   $.ajax({ 
 	  url: '/Scrbl/writeValues', 
 	  type: 'POST', 
-	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), client: clientIp}, 
+	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), client: clientIp, pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
 		  //$('#ajaxResponse').html(data); 
 	  } 

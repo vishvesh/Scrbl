@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.SortedSet;
@@ -51,6 +52,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private String client;
 	private File file;
 	private String nameOfFile = getText("email.nameOfFile");
+	private List<Object> pointArray;
+	
+	public void setPointArray(List<Object> pointArray) {
+		this.pointArray = pointArray;
+	}
+	
+	public List<Object> getPointArray() {
+		return pointArray;
+	}
 
 	public String firstBlood()
 	{
@@ -74,7 +84,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	
 	public String writeValuesToExcel()
 	{
-		writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
+		for (Object element : pointArray) {
+			System.out.println("Point Array : "+element);
+		}
+		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 		System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
 		System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
 		System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
