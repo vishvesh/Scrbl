@@ -152,22 +152,28 @@ $(document).ready(
 	/** **** For Testing on Browsers with a CLICK EVENT **** * */
 	$("#canvas").on('mousedown',function(e) {
 		e.preventDefault();		
-		pageX.push(e.pageX);
-		pageY.push(e.pageY);		
+		var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
+		pointArray.push(point);
+		pageX.push(e.pageX - offset.left);
+		pageY.push(e.pageY - offset.top);		
 		lastClick = 0;		
 		timeArray.push(lastClick);
 		
 	$("#canvas").bind('mousemove',function(event) {
 		// e.preventDefault();
 		var point = new Point(event.pageX - offset.left, event.pageY - offset.top);
-		pointArray.push(point);
-		console.log(point);
+		
 		if (lastPoint !== undefined && lastPoint !== null) {
 			context.beginPath();
 			context.moveTo(lastPoint.x, lastPoint.y);
 			context.lineTo(point.x, point.y);
 			context.stroke();
 		}
+		pointArray.push(point);
+		console.log("POINT : "+point);
+		pageX.push(point.x);
+		pageY.push(point.y);
+		
 		lastPoint = point;
 
 		var date = new Date();
@@ -177,8 +183,7 @@ $(document).ready(
 		console.log("Time from 1st px to 2nd : " + secondClick);		
 		timeArray.push(secondClick);	
 		lastClick = click;		
-		pageX.push(event.pageX);
-		pageY.push(event.pageY);
+		
 		});
 	});
 
@@ -198,23 +203,27 @@ $(document).ready(
 		event.preventDefault();
 		var touch = event.touches[0];
 		var point = new Point(touch.pageX - offset.left, touch.pageY - offset.top);
-		pointArray.push(point);
-		console.log(point);
+
 		if (lastPoint !== undefined && lastPoint !== null) {
 			context.beginPath();
 			context.moveTo(lastPoint.x, lastPoint.y);
 			context.lineTo(point.x, point.y);
 			context.stroke();
 		}
+		pointArray.push(point);
+		console.log("POINT : "+point);
+		pageX.push(point.x);
+		pageY.push(point.y);
+		
 		lastPoint = point;
+		
 		var date = new Date();
 		click = date.getTime();
 		var secondClick = click - lastClick;
 		console.log("Time from 1st px to 2nd : "+ secondClick);
 		timeArray.push(secondClick);
 		lastClick = click;
-		pageX.push(touch.pageX);
-		pageY.push(touch.pageY);
+
 	}, false);
 
 	document.getElementById('canvas').addEventListener('touchend', function() {
