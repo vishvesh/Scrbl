@@ -46,8 +46,7 @@ Point.prototype.add = function(point) {
 			case 3:
 				return new Point(this.x + point.x, point.y, point.z);
 			default:
-				throw new RangeError(
-						"The variable 'point' has an unsupported number of dimensions");
+				throw new RangeError("The variable 'point' has an unsupported number of dimensions");
 			}
 			break;
 		case 2:
@@ -59,8 +58,7 @@ Point.prototype.add = function(point) {
 			case 3:
 				return new Point(this.x + point.x, this.y + point.y, point.z);
 			default:
-				throw new RangeError(
-						"The variable 'point' has an unsupported number of dimensions");
+				throw new RangeError("The variable 'point' has an unsupported number of dimensions");
 			}
 			break;
 		case 3:
@@ -73,13 +71,11 @@ Point.prototype.add = function(point) {
 				return new Point(this.x + point.x, this.y + point.y, this.z
 						+ point.z);
 			default:
-				throw new RangeError(
-						"The variable 'point' has an unsupported number of dimensions");
+				throw new RangeError("The variable 'point' has an unsupported number of dimensions");
 			}
 			break;
 		default:
-			throw new RangeError(
-					'The calling object has an unsupported number of dimensions');
+			throw new RangeError('The calling object has an unsupported number of dimensions');
 		}
 	}
 	throw new TypeError("Variable 'point' is not a point");
@@ -149,7 +145,7 @@ $(document).ready(
 	var offset = $('#canvas').offset();
 	context.lineWidth = 1;
 
-	var container = $('#container');
+	//var container = $('#container');
 	// container.draggable();
 
 	/** **** For Testing on Browsers with a CLICK EVENT **** * */
