@@ -9,6 +9,13 @@ var pageX = [],
 	lastPoint, 
 	click, 
 	lastClick;
+	ua = navigator.userAgent,
+	browser = {
+    iPad: /iPad/.test(ua),
+    iPhone: /iPhone/.test(ua),
+    Android4: /Android 4/.test(ua)
+};
+
 
 function Point(x, y, z) {
 	if (x === undefined) {
@@ -158,7 +165,7 @@ $(document).ready(
 		var point = new Point(event.pageX - offset.left, event.pageY - offset.top);
 		if (lastPoint !== undefined && lastPoint !== null) {
 			context.beginPath();
-			context .moveTo(lastPoint.x, lastPoint.y);
+			context.moveTo(lastPoint.x, lastPoint.y);
 			context.lineTo(point.x, point.y);
 			context.stroke();
 		}

@@ -1,10 +1,3 @@
-/*
- Document : home-js
- Created on : Jun 11, 2012, 9:15:23 PM
- Author : Gautham Stalin
- Description:
- Javascript for the website.
- */
 document.createElement("header");
 document.createElement("footer");
 document.createElement("section");
@@ -60,9 +53,9 @@ $(window).load(
 		});
 function load_logo() {
 	var logo_animate_type = "easeOutBounce";
-	var logo = "image/logo/gautham-stalin-logo.png";
-	var top_logo = "image/logo/gautham-stalin-logo-top.png";
-	var bottom_logo = "image/logo/gautham-stalin-logo-reflection.png";
+	var logo = "/path/to/image";
+	var top_logo = "/path/to/image";
+	var bottom_logo = "/path/to/image";
 	var $img = $(document.createElement("img"));
 	var $img1 = $(document.createElement("img"));
 	var $img2 = $(document.createElement("img"));
