@@ -188,7 +188,6 @@ $(document).ready(
 	});
 
 	$("#canvas").on('mouseup', function() {
-
 		lastPoint = null;
 		// clearInterval(this.varName);
 		$("#canvas").unbind('mousemove');
