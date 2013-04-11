@@ -153,7 +153,7 @@ $(document).ready(
 	$("#canvas").on('mousedown',function(e) {
 		e.preventDefault();		
 		var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
-		pointArray.push(point);
+		pointArray.push(e.pageX - offset.left, e.pageY - offset.top);
 		pageX.push(e.pageX - offset.left);
 		pageY.push(e.pageY - offset.top);		
 		lastClick = 0;		
@@ -169,7 +169,7 @@ $(document).ready(
 			context.lineTo(point.x, point.y);
 			context.stroke();
 		}
-		pointArray.push(point);
+		pointArray.push(event.pageX - offset.left, event.pageY - offset.top);
 		console.log("POINT : "+point);
 		pageX.push(point.x);
 		pageY.push(point.y);

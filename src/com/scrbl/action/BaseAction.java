@@ -34,6 +34,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class BaseAction extends ActionSupport implements ServletRequestAware {
@@ -52,13 +53,14 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private String client;
 	private File file;
 	private String nameOfFile = getText("email.nameOfFile");
-	private List<Object> pointArray;
+	//private List<Object> pointArray;
+	private String pointArray;
 	
-	public void setPointArray(List<Object> pointArray) {
+	public void setPointArray(String pointArray) {
 		this.pointArray = pointArray;
 	}
 	
-	public List<Object> getPointArray() {
+	public String getPointArray() {
 		return pointArray;
 	}
 
@@ -84,14 +86,36 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	
 	public String writeValuesToExcel()
 	{
-		for (Object element : pointArray) {
-			System.out.println("Point Array : "+element);
+		//for (Object element : pointArray) {
+		System.out.println("Point Array : "+pointArray);
+		/*String[] points = pointArray.split(",");
+		for (String point : points) {
+			System.out.println("Point is : "+point);
+		}*/
+		pointArray = pointArray.replace("[", "").replace("]", "");
+		//String[] splitString = pointArray.split("(d+),(d+)(,)?");
+		String[] splitString = pointArray.split("([d+,d+])(,)?");
+	    System.out.println(splitString.length);
+	    for (String string : splitString) {
+	      System.out.println("STRING : "+string);
+	    }
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			// read from file, convert it to user class
+			//User user = mapper.readValue(new File("c:\\user.json"), User.class);	 
+			// display to console
+			//System.out.println(user);	 
+		} catch (Exception e) {	 
+			e.printStackTrace();
 		}
+	 
+		//}
 		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
-		System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
-		System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
-		System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
-		System.out.println("Client IP Address : "+client);
+		//System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
+		//System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
+		//System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
+		//System.out.println("Client IP Address : "+client);
 		return SUCCESS;
 	}
 	
@@ -109,6 +133,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		String[] pagex = pageX.split(",");
 		String[] pagey = pageY.split(",");
 		String[] timearray = timeArray.split(",");
+
 		int counter = 1;
 		
 		while(counter <= pagex.length)
