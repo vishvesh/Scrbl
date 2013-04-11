@@ -8,7 +8,6 @@ var pageX = [],
 	timeArray = [], 
 	lastPoint, 
 	click,
-	pointArray = [],
 	lastClick;
 	ua = navigator.userAgent,
 	browser = {
@@ -16,6 +15,11 @@ var pageX = [],
     iPhone: /iPhone/.test(ua),
     Android4: /Android 4/.test(ua)
 };
+	
+/*var pointArray = {
+	points: []
+};*/
+var pointArray = [];
 
 
 function Point(x, y, z) {
@@ -154,6 +158,7 @@ $(document).ready(
 		e.preventDefault();		
 		var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
 		pointArray.push(e.pageX - offset.left, e.pageY - offset.top);
+		//pointArray.points.push(e.pageX - offset.left, e.pageY - offset.top);
 		pageX.push(e.pageX - offset.left);
 		pageY.push(e.pageY - offset.top);		
 		lastClick = 0;		
@@ -169,6 +174,7 @@ $(document).ready(
 			context.lineTo(point.x, point.y);
 			context.stroke();
 		}
+		//pointArray.points.push(event.pageX - offset.left, event.pageY - offset.top);
 		pointArray.push(event.pageX - offset.left, event.pageY - offset.top);
 		console.log("POINT : "+point);
 		pageX.push(point.x);

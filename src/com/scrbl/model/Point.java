@@ -26,4 +26,9 @@ public class Point {
 		return x;
 	}
 
+	@Override
+	public String toString() {
+		return "Point [x=" + x + ", y=" + y + "]";
+	}
+
 }

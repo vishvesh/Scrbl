@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
+import com.scrbl.model.Point;
 
 public class BaseAction extends ActionSupport implements ServletRequestAware {
 
@@ -55,6 +57,24 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private String nameOfFile = getText("email.nameOfFile");
 	//private List<Object> pointArray;
 	private String pointArray;
+	private List<Point> stroke;
+	private List<Integer> points;
+	
+	public void setPoints(List<Integer> points) {
+		this.points = points;
+	}
+	
+	public List<Integer> getPoints() {
+		return points;
+	}
+	
+	public void setStroke(List<Point> stroke) {
+		this.stroke = stroke;
+	}
+	
+	public List<Point> getStroke() {
+		return stroke;
+	}
 	
 	public void setPointArray(String pointArray) {
 		this.pointArray = pointArray;
@@ -96,11 +116,25 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		//String[] splitString = pointArray.split("(d+),(d+)(,)?");
 		String[] splitString = pointArray.split("([d+,d+])(,)?");
 	    System.out.println(splitString.length);
+	    points = new ArrayList<Integer>();
 	    for (String string : splitString) {
-	      System.out.println("STRING : "+string);
+	      points.add(Integer.valueOf(string));
+	      //System.out.println("STRING : "+Integer.valueOf(string));
 	    }
+
+	    stroke = new ArrayList<Point>();
+	    for(int i = 0, j = i + 1; i < points.size() - 1; i++, j++)
+	    {
+	    	Point point = new Point(points.get(i), points.get(j));
+	    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() );
+	    	stroke.add(point);
+	    }
+	    
+	    for (Point value : stroke) {
+			System.out.println("STROKE : "+value);
+		}
 		
-		ObjectMapper mapper = new ObjectMapper();
+		/*ObjectMapper mapper = new ObjectMapper();
 		try {
 			// read from file, convert it to user class
 			//User user = mapper.readValue(new File("c:\\user.json"), User.class);	 
@@ -108,7 +142,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 			//System.out.println(user);	 
 		} catch (Exception e) {	 
 			e.printStackTrace();
-		}
+		}*/
 	 
 		//}
 		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
