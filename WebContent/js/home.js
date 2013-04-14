@@ -160,9 +160,9 @@ $(document).ready(
 		pointArray.push(e.pageX - offset.left, e.pageY - offset.top);
 		//pointArray.points.push(e.pageX - offset.left, e.pageY - offset.top);
 		pageX.push(e.pageX - offset.left);
-		pageY.push(e.pageY - offset.top);		
-		lastClick = 0;		
-		timeArray.push(lastClick);
+		pageY.push(e.pageY - offset.top);
+		timeArray.push(0);
+		
 		
 	$("#canvas").bind('mousemove',function(event) {
 		// e.preventDefault();
@@ -195,6 +195,11 @@ $(document).ready(
 
 	$("#canvas").on('mouseup', function() {
 		lastPoint = null;
+		
+		pageX.push(0);
+		pageY.push(0);
+		timeArray.push(0);
+		
 		// clearInterval(this.varName);
 		$("#canvas").unbind('mousemove');
 	});
@@ -233,6 +238,10 @@ $(document).ready(
 
 	document.getElementById('canvas').addEventListener('touchend', function() {
 				lastPoint = null;
+				
+				pageX.push(0);
+				pageY.push(0);
+				timeArray.push(0);
 			}, false);
 		});
 
@@ -241,6 +250,7 @@ function writeToExcel() {
 	console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
 	console.log("PointArray : " + JSON.stringify(pointArray));
+	console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
 	
 	var clientIp;
 	if(typeof client !=='undefined')
