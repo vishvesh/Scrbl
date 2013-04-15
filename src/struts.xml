@@ -19,5 +19,13 @@
             <result name="success">/actionView/success.jsp</result>
         </action>
         
+        <action name="saveTemplate" class="com.scrbl.action.BaseAction" method="saveExistingFigure">
+            <result name="success">/actionView/success.jsp</result>
+        </action>
+        
+        <action name="match" class="com.scrbl.action.BaseAction" method="match">
+            <result name="success">/actionView/success.jsp</result>
+        </action>
+        
     </package>
 </struts>

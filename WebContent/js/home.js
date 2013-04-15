@@ -198,6 +198,7 @@ $(document).ready(
 		
 		pageX.push(0);
 		pageY.push(0);
+		pointArray.push(0,0);
 		timeArray.push(0);
 		
 		// clearInterval(this.varName);
@@ -271,6 +272,28 @@ function writeToExcel() {
   }); 
 }
 
+function saveTemplate() {
+	$.ajax({ 
+		  url: '/Scrbl/saveTemplate', 
+		  type: 'POST', 
+		  success: function(data){
+			  //$('#ajaxResponse').html(data); 
+			  alert("Template Saved!");
+		  } 
+	  });
+}
+
+function match() {
+	$.ajax({ 
+		  url: '/Scrbl/match', 
+		  type: 'POST', 
+		  success: function(data){
+			  //$('#ajaxResponse').html(data); 
+			  //alert("Template Saved!");
+		  } 
+	  });
+}
+
 function clearScreen() {
 	var canvas = document.getElementById('canvas');
 	var context = canvas.getContext("2d");
@@ -278,5 +301,6 @@ function clearScreen() {
 	pageX.length = 0;
 	pageY.length = 0;
 	timeArray.length = 0;
+	pointArray.length = 0;
 	// context.clearRect(0, 0, canvas.width, canvas.height);
 }

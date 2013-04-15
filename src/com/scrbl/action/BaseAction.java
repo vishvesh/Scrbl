@@ -37,7 +37,9 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 //import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
+import com.scrbl.model.Figure;
 import com.scrbl.model.Point;
+import com.scrbl.model.Stroke;
 
 public class BaseAction extends ActionSupport implements ServletRequestAware {
 
@@ -57,8 +59,45 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private String nameOfFile = getText("email.nameOfFile");
 	//private List<Object> pointArray;
 	private String pointArray;
-	private List<Point> stroke;
+	//private List<Point> stroke;
 	private List<Integer> points;
+	
+	private Figure figure;
+	private Stroke stroke;
+	private Figure template;
+	private String matchedValue;
+	
+	public void setMatchedValue(String matchedValue) {
+		this.matchedValue = matchedValue;
+	}
+	
+	public String getMatchedValue() {
+		return matchedValue;
+	}
+	
+	public void setStroke(Stroke stroke) {
+		this.stroke = stroke;
+	}
+	
+	public Stroke getStroke() {
+		return stroke;
+	}
+	
+	public void setTemplate(Figure template) {
+		this.template = template;
+	}
+	
+	public Figure getTemplate() {
+		return template;
+	}
+	
+	public void setFigure(Figure figure) {
+		this.figure = figure;
+	}
+	
+	public Figure getFigure() {
+		return figure;
+	}
 	
 	public void setPoints(List<Integer> points) {
 		this.points = points;
@@ -68,13 +107,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		return points;
 	}
 	
-	public void setStroke(List<Point> stroke) {
+	/*public void setStroke(List<Point> stroke) {
 		this.stroke = stroke;
 	}
 	
 	public List<Point> getStroke() {
 		return stroke;
-	}
+	}*/
 	
 	public void setPointArray(String pointArray) {
 		this.pointArray = pointArray;
@@ -104,35 +143,95 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		return SUCCESS;
 	}
 	
+	public String saveExistingFigure() {
+		setTemplate(figure);
+		System.out.println("Template Saved SUCCESSFULLY! : LENGTH: "+getTemplate().getLength());
+		return SUCCESS;
+	}
+	
+	public String match()
+	{
+		try{
+		System.out.println(figure.getLength());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		//matchedValue = (new Double(getTemplate().Match(getFigure()))).toString();
+		//System.out.println("Matched VALUE : "+matchedValue);
+		//System.out.println("template : "+template.getLength() + " : Figure : "+figure.getLength());
+		
+		return SUCCESS;
+	}
+	
 	public String writeValuesToExcel()
 	{
 		//for (Object element : pointArray) {
-		System.out.println("Point Array : "+pointArray);
 		/*String[] points = pointArray.split(",");
 		for (String point : points) {
 			System.out.println("Point is : "+point);
 		}*/
+		figure = new Figure();
+		
 		pointArray = pointArray.replace("[", "").replace("]", "");
+		System.out.println("Point Array : "+pointArray);
 		//String[] splitString = pointArray.split("(d+),(d+)(,)?");
-		String[] splitString = pointArray.split("([d+,d+])(,)?");
+		//String[] splitString = pointArray.split("([d+,d+])(,)?");
+		
+		String[] splitString = pointArray.split("(,0,0)(,)?");
+		
 	    System.out.println(splitString.length);
 	    points = new ArrayList<Integer>();
+	    //stroke = new ArrayList<Point>();
+	    
 	    for (String string : splitString) {
-	      points.add(Integer.valueOf(string));
-	      //System.out.println("STRING : "+Integer.valueOf(string));
-	    }
+	    	if (stroke == null)
+			{
+	    		System.out.println("STROKE NULL");
+				stroke = new Stroke();
+				figure.Add(stroke);
+			}
+			//stroke.Add(new Point(args.X, args.Y));
 
-	    stroke = new ArrayList<Point>();
-	    for(int i = 0, j = i + 1; i < points.size() - 1; i++, j++)
+	    	System.out.println("COMPLETE STROKE ARRAY : "+string);
+	    	String[] theString = string.split("([d+,d+])(,)?");
+	    	for (String allPoints : theString) {
+	    		//System.out.println("APP POINTS : "+Integer.valueOf(allPoints));
+	    		points.add(Integer.valueOf(allPoints));
+			}
+	    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
+		    {
+		    	Point point = new Point(points.get(i), points.get(j));
+		    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() ); 
+		    	stroke.Add(point);
+		    	
+		    }
+	    	//figure.Add(stroke);
+	    	
+	    	if (stroke != null)
+			{
+	    		System.out.println("STROKE NOT NULL");
+				stroke = null;
+				figure.CurveLastStroke();
+			}
+	    	//figure.Add(stroke);
+	    	System.out.println("1st Stroke Completed!");
+	    }
+	    
+	    setFigure(figure);
+	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
+	    
+	    /*for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
 	    {
 	    	Point point = new Point(points.get(i), points.get(j));
 	    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() );
 	    	stroke.add(point);
-	    }
+	    }*/
 	    
-	    for (Point value : stroke) {
+	    /*for (Point value : stroke) {
 			System.out.println("STROKE : "+value);
-		}
+		}*/
 		
 		/*ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -148,6 +247,26 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 		//System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
 		//System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
+		
+		/*String replacedX = pageX.replaceAll(",", " ").replace("[", "").replace("]", "");
+		System.out.println("Replaced PAGE X : "+replacedX);
+		String[] pagex = replacedX.split("\\s0");
+		for (String stringx : pagex) {
+			String x = stringx;
+			String[] splitStringX  = x.split(" ");
+			for (String string : splitStringX) {
+				System.out.print(" : splitString : "+string);
+			}
+			System.out.println();
+			System.out.println("PAGE X : "+stringx);
+		}
+		
+		String replacedY = pageY.replaceAll(",", " ").replace("[", "").replace("]", "");
+		System.out.println("Replaced PAGE Y : "+replacedY);
+		String[] pagey = replacedY.split("\\s0");
+		for (String stringy : pagey) {
+			System.out.println("PAGE Y : "+stringy);
+		}*/
 		//System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
 		//System.out.println("Client IP Address : "+client);
 		return SUCCESS;
