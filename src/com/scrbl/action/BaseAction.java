@@ -34,6 +34,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.SessionAware;
 
 //import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
@@ -41,7 +42,7 @@ import com.scrbl.model.Figure;
 import com.scrbl.model.Point;
 import com.scrbl.model.Stroke;
 
-public class BaseAction extends ActionSupport implements ServletRequestAware {
+public class BaseAction extends ActionSupport implements ServletRequestAware, SessionAware {
 
 	/**
 	 * @author Vishvesh Deshmukh
@@ -66,61 +67,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	private Stroke stroke;
 	private Figure template;
 	private String matchedValue;
-	
-	public void setMatchedValue(String matchedValue) {
-		this.matchedValue = matchedValue;
+	private Map<String, Object> sessionMap;
+
+	@Override
+	public void setSession(Map<String, Object> sessionMap) {
+		this.sessionMap = sessionMap;
 	}
 	
-	public String getMatchedValue() {
-		return matchedValue;
-	}
-	
-	public void setStroke(Stroke stroke) {
-		this.stroke = stroke;
-	}
-	
-	public Stroke getStroke() {
-		return stroke;
-	}
-	
-	public void setTemplate(Figure template) {
-		this.template = template;
-	}
-	
-	public Figure getTemplate() {
-		return template;
-	}
-	
-	public void setFigure(Figure figure) {
-		this.figure = figure;
-	}
-	
-	public Figure getFigure() {
-		return figure;
-	}
-	
-	public void setPoints(List<Integer> points) {
-		this.points = points;
-	}
-	
-	public List<Integer> getPoints() {
-		return points;
-	}
-	
-	/*public void setStroke(List<Point> stroke) {
-		this.stroke = stroke;
-	}
-	
-	public List<Point> getStroke() {
-		return stroke;
-	}*/
-	
-	public void setPointArray(String pointArray) {
-		this.pointArray = pointArray;
-	}
-	
-	public String getPointArray() {
-		return pointArray;
+	@Override
+	public String execute() throws Exception {
+		return super.execute();
 	}
 
 	public String firstBlood()
@@ -152,7 +108,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	public String match()
 	{
 		try{
-		System.out.println(figure.getLength());
+		//System.out.println(figure.getLength());
+			compute();
+			Figure template = (Figure) sessionMap.get("figure");
+			System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
+			matchedValue = (new Double(template.Match(getFigure()))).toString();
+			System.out.println("Matched VALUE : "+matchedValue);
 		}
 		catch(Exception e)
 		{
@@ -172,54 +133,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		for (String point : points) {
 			System.out.println("Point is : "+point);
 		}*/
-		figure = new Figure();
-		
-		pointArray = pointArray.replace("[", "").replace("]", "");
-		System.out.println("Point Array : "+pointArray);
-		//String[] splitString = pointArray.split("(d+),(d+)(,)?");
-		//String[] splitString = pointArray.split("([d+,d+])(,)?");
-		
-		String[] splitString = pointArray.split("(,0,0)(,)?");
-		
-	    System.out.println(splitString.length);
-	    points = new ArrayList<Integer>();
-	    //stroke = new ArrayList<Point>();
-	    
-	    for (String string : splitString) {
-	    	if (stroke == null)
-			{
-	    		System.out.println("STROKE NULL");
-				stroke = new Stroke();
-				figure.Add(stroke);
-			}
-			//stroke.Add(new Point(args.X, args.Y));
-
-	    	System.out.println("COMPLETE STROKE ARRAY : "+string);
-	    	String[] theString = string.split("([d+,d+])(,)?");
-	    	for (String allPoints : theString) {
-	    		//System.out.println("APP POINTS : "+Integer.valueOf(allPoints));
-	    		points.add(Integer.valueOf(allPoints));
-			}
-	    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
-		    {
-		    	Point point = new Point(points.get(i), points.get(j));
-		    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() ); 
-		    	stroke.Add(point);
-		    	
-		    }
-	    	//figure.Add(stroke);
-	    	
-	    	if (stroke != null)
-			{
-	    		System.out.println("STROKE NOT NULL");
-				stroke = null;
-				figure.CurveLastStroke();
-			}
-	    	//figure.Add(stroke);
-	    	System.out.println("1st Stroke Completed!");
-	    }
+		compute();
 	    
 	    setFigure(figure);
+	    sessionMap.put("figure", figure);
+	    
+	    System.out.println("Session MAP Size : "+sessionMap.size());
+	    
 	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
 	    
 	    /*for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
@@ -270,6 +190,55 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 		//System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
 		//System.out.println("Client IP Address : "+client);
 		return SUCCESS;
+	}
+
+	private void compute() {
+		figure = new Figure();
+		
+		pointArray = pointArray.replace("[", "").replace("]", "");
+		System.out.println("Point Array : "+pointArray);
+		//String[] splitString = pointArray.split("(d+),(d+)(,)?");
+		//String[] splitString = pointArray.split("([d+,d+])(,)?");
+		
+		String[] splitString = pointArray.split("(,0,0)(,)?");
+		
+	    System.out.println(splitString.length);
+	    points = new ArrayList<Integer>();
+	    //stroke = new ArrayList<Point>();
+	    
+	    for (String string : splitString) {
+	    	if (stroke == null)
+			{
+	    		System.out.println("STROKE NULL");
+				stroke = new Stroke();
+				figure.Add(stroke);
+			}
+			//stroke.Add(new Point(args.X, args.Y));
+
+	    	System.out.println("COMPLETE STROKE ARRAY : "+string);
+	    	String[] theString = string.split("([d+,d+])(,)?");
+	    	for (String allPoints : theString) {
+	    		//System.out.println("APP POINTS : "+Integer.valueOf(allPoints));
+	    		points.add(Integer.valueOf(allPoints));
+			}
+	    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
+		    {
+		    	Point point = new Point(points.get(i), points.get(j));
+		    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() ); 
+		    	stroke.Add(point);
+		    	
+		    }
+	    	//figure.Add(stroke);
+	    	
+	    	if (stroke != null)
+			{
+	    		System.out.println("STROKE NOT NULL");
+				stroke = null;
+				figure.CurveLastStroke();
+			}
+	    	//figure.Add(stroke);
+	    	System.out.println("1st Stroke Completed!");
+	    }
 	}
 	
 	private void writeToExcel(String pageX, String pageY, String timeArray)
@@ -384,11 +353,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
             System.out.println(sfe);
         }
 	}
-	
-	@Override
-	public String execute() throws Exception {
-		return super.execute();
-	}
 
 	@Override
 	public void setServletRequest(HttpServletRequest arg0) {
@@ -434,5 +398,63 @@ public class BaseAction extends ActionSupport implements ServletRequestAware {
 	public void setClient(String client) {
 		this.client = client;
 	}
+	
+	
+	public void setMatchedValue(String matchedValue) {
+		this.matchedValue = matchedValue;
+	}
+	
+	public String getMatchedValue() {
+		return matchedValue;
+	}
+	
+	public void setStroke(Stroke stroke) {
+		this.stroke = stroke;
+	}
+	
+	public Stroke getStroke() {
+		return stroke;
+	}
+	
+	public void setTemplate(Figure template) {
+		this.template = template;
+	}
+	
+	public Figure getTemplate() {
+		return template;
+	}
+	
+	public void setFigure(Figure figure) {
+		this.figure = figure;
+	}
+	
+	public Figure getFigure() {
+		return figure;
+	}
+	
+	public void setPoints(List<Integer> points) {
+		this.points = points;
+	}
+	
+	public List<Integer> getPoints() {
+		return points;
+	}
+	
+	/*public void setStroke(List<Point> stroke) {
+		this.stroke = stroke;
+	}
+	
+	public List<Point> getStroke() {
+		return stroke;
+	}*/
+	
+	public void setPointArray(String pointArray) {
+		this.pointArray = pointArray;
+	}
+	
+	public String getPointArray() {
+		return pointArray;
+	}
+	
 	
 }

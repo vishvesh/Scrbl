@@ -21,6 +21,13 @@ var pageX = [],
 };*/
 var pointArray = [];
 
+var clientIp;
+if(typeof client !=='undefined')
+	clientIp = client;
+else
+	clientIp = null;
+console.log("Client : "+clientIp);
+
 
 function Point(x, y, z) {
 	if (x === undefined) {
@@ -253,13 +260,6 @@ function writeToExcel() {
 	console.log("PointArray : " + JSON.stringify(pointArray));
 	console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
 	
-	var clientIp;
-	if(typeof client !=='undefined')
-		clientIp = client;
-	else
-		clientIp = null;
-	console.log("Client : "+clientIp);
-	
 	alert("Done Scribbling?");
 	
   $.ajax({ 
@@ -286,7 +286,8 @@ function saveTemplate() {
 function match() {
 	$.ajax({ 
 		  url: '/Scrbl/match', 
-		  type: 'POST', 
+		  type: 'POST',
+		  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), client: clientIp, pointArray: JSON.stringify(pointArray)},
 		  success: function(data){
 			  //$('#ajaxResponse').html(data); 
 			  //alert("Template Saved!");
