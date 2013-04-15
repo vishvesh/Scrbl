@@ -55,7 +55,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String pageX;
 	private String pageY;
 	private String timeArray;
-	private String client;
+	private String ci;
 	private File file;
 	private String nameOfFile = getText("email.nameOfFile");
 	//private List<Object> pointArray;
@@ -96,99 +96,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		}*/
 		//System.out.println(getText("emailfile.nameOfFile"));
         
-		return SUCCESS;
-	}
-	
-	public String saveExistingFigure() {
-		setTemplate(figure);
-		System.out.println("Template Saved SUCCESSFULLY! : LENGTH: "+getTemplate().getLength());
-		return SUCCESS;
-	}
-	
-	public String match()
-	{
-		try{
-		//System.out.println(figure.getLength());
-			compute();
-			Figure template = (Figure) sessionMap.get("figure");
-			System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
-			matchedValue = (new Double(template.Match(getFigure()))).toString();
-			System.out.println("Matched VALUE : "+matchedValue);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		//matchedValue = (new Double(getTemplate().Match(getFigure()))).toString();
-		//System.out.println("Matched VALUE : "+matchedValue);
-		//System.out.println("template : "+template.getLength() + " : Figure : "+figure.getLength());
-		
-		return SUCCESS;
-	}
-	
-	public String writeValuesToExcel()
-	{
-		//for (Object element : pointArray) {
-		/*String[] points = pointArray.split(",");
-		for (String point : points) {
-			System.out.println("Point is : "+point);
-		}*/
-		compute();
-	    
-	    setFigure(figure);
-	    sessionMap.put("figure", figure);
-	    
-	    System.out.println("Session MAP Size : "+sessionMap.size());
-	    
-	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
-	    
-	    /*for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
-	    {
-	    	Point point = new Point(points.get(i), points.get(j));
-	    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() );
-	    	stroke.add(point);
-	    }*/
-	    
-	    /*for (Point value : stroke) {
-			System.out.println("STROKE : "+value);
-		}*/
-		
-		/*ObjectMapper mapper = new ObjectMapper();
-		try {
-			// read from file, convert it to user class
-			//User user = mapper.readValue(new File("c:\\user.json"), User.class);	 
-			// display to console
-			//System.out.println(user);	 
-		} catch (Exception e) {	 
-			e.printStackTrace();
-		}*/
-	 
-		//}
-		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
-		//System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
-		//System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
-		
-		/*String replacedX = pageX.replaceAll(",", " ").replace("[", "").replace("]", "");
-		System.out.println("Replaced PAGE X : "+replacedX);
-		String[] pagex = replacedX.split("\\s0");
-		for (String stringx : pagex) {
-			String x = stringx;
-			String[] splitStringX  = x.split(" ");
-			for (String string : splitStringX) {
-				System.out.print(" : splitString : "+string);
-			}
-			System.out.println();
-			System.out.println("PAGE X : "+stringx);
-		}
-		
-		String replacedY = pageY.replaceAll(",", " ").replace("[", "").replace("]", "");
-		System.out.println("Replaced PAGE Y : "+replacedY);
-		String[] pagey = replacedY.split("\\s0");
-		for (String stringy : pagey) {
-			System.out.println("PAGE Y : "+stringy);
-		}*/
-		//System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
-		//System.out.println("Client IP Address : "+client);
 		return SUCCESS;
 	}
 
@@ -241,6 +148,105 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    }
 	}
 	
+	public String saveFigure() {
+
+		compute();
+
+	    sessionMap.put("figure", figure);
+	    
+	    System.out.println("Session MAP Size : "+sessionMap.size());
+	    
+	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
+		return SUCCESS;
+	}
+	
+	public String matchFigure()
+	{
+		try{
+		//System.out.println(figure.getLength());
+			compute();
+			Figure template = (Figure) sessionMap.get("figure");
+			System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
+			matchedValue = (new Double(template.Match(getFigure()))).toString();
+			System.out.println("Matched VALUE : "+matchedValue);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		//matchedValue = (new Double(getTemplate().Match(getFigure()))).toString();
+		//System.out.println("Matched VALUE : "+matchedValue);
+		//System.out.println("template : "+template.getLength() + " : Figure : "+figure.getLength());
+		
+		return SUCCESS;
+	}
+	
+	public String writeValues()
+	{
+		//for (Object element : pointArray) {
+		/*String[] points = pointArray.split(",");
+		for (String point : points) {
+			System.out.println("Point is : "+point);
+		}*/
+		/*compute();
+	    
+	    setFigure(figure);
+	    sessionMap.put("figure", figure);
+	    
+	    System.out.println("Session MAP Size : "+sessionMap.size());
+	    
+	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());*/
+	    
+	    /*for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
+	    {
+	    	Point point = new Point(points.get(i), points.get(j));
+	    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() );
+	    	stroke.add(point);
+	    }*/
+	    
+	    /*for (Point value : stroke) {
+			System.out.println("STROKE : "+value);
+		}*/
+		
+		/*ObjectMapper mapper = new ObjectMapper();
+		try {
+			// read from file, convert it to user class
+			//User user = mapper.readValue(new File("c:\\user.json"), User.class);	 
+			// display to console
+			//System.out.println(user);	 
+		} catch (Exception e) {	 
+			e.printStackTrace();
+		}*/
+	 
+		//}
+		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
+		//System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
+		//System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
+		
+		/*String replacedX = pageX.replaceAll(",", " ").replace("[", "").replace("]", "");
+		System.out.println("Replaced PAGE X : "+replacedX);
+		String[] pagex = replacedX.split("\\s0");
+		for (String stringx : pagex) {
+			String x = stringx;
+			String[] splitStringX  = x.split(" ");
+			for (String string : splitStringX) {
+				System.out.print(" : splitString : "+string);
+			}
+			System.out.println();
+			System.out.println("PAGE X : "+stringx);
+		}
+		
+		String replacedY = pageY.replaceAll(",", " ").replace("[", "").replace("]", "");
+		System.out.println("Replaced PAGE Y : "+replacedY);
+		String[] pagey = replacedY.split("\\s0");
+		for (String stringy : pagey) {
+			System.out.println("PAGE Y : "+stringy);
+		}*/
+		//System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
+		//System.out.println("Client IP Address : "+ci);
+		return SUCCESS;
+	}
+	
 	private void writeToExcel(String pageX, String pageY, String timeArray)
 	{
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -251,7 +257,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
 		 
 		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time", "IP Address : "+client, "Date & Time : "+dateFormat.format(cal.getTime())});
+		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time", "IP Address : "+ci, "Date & Time : "+dateFormat.format(cal.getTime())});
 		String[] pagex = pageX.split(",");
 		String[] pagey = pageY.split(",");
 		String[] timearray = timeArray.split(",");
@@ -391,15 +397,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		this.name = name;
 	}
 	
-	public String getClient() {
-		return client;
-	}
-	
-	public void setClient(String client) {
-		this.client = client;
-	}
-	
-	
 	public void setMatchedValue(String matchedValue) {
 		this.matchedValue = matchedValue;
 	}
@@ -438,6 +435,14 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public List<Integer> getPoints() {
 		return points;
+	}
+	
+	public void setCi(String ci) {
+		this.ci = ci;
+	}
+	
+	public String getCi() {
+		return ci;
 	}
 	
 	/*public void setStroke(List<Point> stroke) {

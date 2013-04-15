@@ -21,13 +21,11 @@ var pageX = [],
 };*/
 var pointArray = [];
 
-var clientIp;
-if(typeof client !=='undefined')
-	clientIp = client;
+var ci;
+if(typeof c !=='undefined')
+	ci = c;
 else
-	clientIp = null;
-console.log("Client : "+clientIp);
-
+	ci = null;
 
 function Point(x, y, z) {
 	if (x === undefined) {
@@ -183,7 +181,7 @@ $(document).ready(
 		}
 		//pointArray.points.push(event.pageX - offset.left, event.pageY - offset.top);
 		pointArray.push(event.pageX - offset.left, event.pageY - offset.top);
-		console.log("POINT : "+point);
+		//console.log("POINT : "+point);
 		pageX.push(point.x);
 		pageY.push(point.y);
 		
@@ -193,7 +191,7 @@ $(document).ready(
 		click = date.getTime();
 
 		var secondClick = click - lastClick;
-		console.log("Time from 1st px to 2nd : " + secondClick);		
+		//console.log("Time from 1st px to 2nd : " + secondClick);		
 		timeArray.push(secondClick);	
 		lastClick = click;		
 		
@@ -229,7 +227,7 @@ $(document).ready(
 			context.stroke();
 		}
 		pointArray.push(point);
-		console.log("POINT : "+point);
+		//console.log("POINT : "+point);
 		pageX.push(point.x);
 		pageY.push(point.y);
 		
@@ -238,7 +236,7 @@ $(document).ready(
 		var date = new Date();
 		click = date.getTime();
 		var secondClick = click - lastClick;
-		console.log("Time from 1st px to 2nd : "+ secondClick);
+		//console.log("Time from 1st px to 2nd : "+ secondClick);
 		timeArray.push(secondClick);
 		lastClick = click;
 
@@ -253,7 +251,7 @@ $(document).ready(
 			}, false);
 		});
 
-function writeToExcel() {
+function writeValues() {
 	console.log("pageX : " + JSON.stringify(pageX));
 	console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
@@ -265,29 +263,37 @@ function writeToExcel() {
   $.ajax({ 
 	  url: '/Scrbl/writeValues', 
 	  type: 'POST', 
-	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), client: clientIp, pointArray: JSON.stringify(pointArray)}, 
+	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
 		  //$('#ajaxResponse').html(data); 
 	  } 
   }); 
 }
 
-function saveTemplate() {
-	$.ajax({ 
-		  url: '/Scrbl/saveTemplate', 
-		  type: 'POST', 
-		  success: function(data){
-			  //$('#ajaxResponse').html(data); 
-			  alert("Template Saved!");
-		  } 
-	  });
+function save() {
+	console.log("pageX : " + JSON.stringify(pageX));
+	console.log("pageY : " + JSON.stringify(pageY));
+	console.log("TimeArray : " + JSON.stringify(timeArray));
+	console.log("PointArray : " + JSON.stringify(pointArray));
+	console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
+	
+	alert("Done Scribbling?");
+	
+  $.ajax({ 
+	  url: '/Scrbl/save', 
+	  type: 'POST', 
+	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
+	  success: function(data){
+		  //$('#ajaxResponse').html(data); 
+	  } 
+  }); 
 }
 
 function match() {
 	$.ajax({ 
 		  url: '/Scrbl/match', 
 		  type: 'POST',
-		  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), client: clientIp, pointArray: JSON.stringify(pointArray)},
+		  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)},
 		  success: function(data){
 			  //$('#ajaxResponse').html(data); 
 			  //alert("Template Saved!");

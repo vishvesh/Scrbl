@@ -8,7 +8,7 @@
 <script src="http://code.jquery.com/jquery-1.7.2.min.js" ></script>
 <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js" ></script>
 <script src="js/jquery-touch-punch/jquery.ui.touch-punch.min.js" ></script>
-<script type = "text/javascript" src="http://l2.io/ip.js?var=client"></script> 
+<script type = "text/javascript" src="http://l2.io/ip.js?var=c"></script> 
 <script src="js/home.js" ></script>
 <link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
@@ -20,10 +20,10 @@
   </div>
 <div id="writeValues">
 	<span id="ajaxResponse"></span>
-	<input type="button" value="Write Values" onclick="writeToExcel()"/>
-	<input type="button" value="Template" onclick="saveTemplate()"/>
+	<!-- <input type="button" value="Write Values" onclick="writeValues()"/> -->
+	<input type="button" value="Save" onclick="save()"/>
 	<input type="button" value="Match" onclick="match()"/>
-	<input type="button" value="Clear Screen" onclick="clearScreen()"/>
+	<input type="button" value="Clear" onclick="clearScreen()"/>
 </div>
 </div>
 

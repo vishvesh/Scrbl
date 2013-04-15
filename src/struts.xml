@@ -15,15 +15,15 @@
             <result name="success">/actionView/success.jsp</result>
         </action>
         
-        <action name="writeValues" class="com.scrbl.action.BaseAction" method="writeValuesToExcel">
+        <action name="writeValues" class="com.scrbl.action.BaseAction" method="writeValues">
             <result name="success">/actionView/success.jsp</result>
         </action>
         
-        <action name="saveTemplate" class="com.scrbl.action.BaseAction" method="saveExistingFigure">
+        <action name="save" class="com.scrbl.action.BaseAction" method="saveFigure">
             <result name="success">/actionView/success.jsp</result>
         </action>
-        
-        <action name="match" class="com.scrbl.action.BaseAction" method="match">
+
+        <action name="match" class="com.scrbl.action.BaseAction" method="matchFigure">
             <result name="success">/actionView/success.jsp</result>
         </action>
         
