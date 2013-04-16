@@ -185,7 +185,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    setRequestAttribute("figure", figure);
 	    System.out.println("Session MAP Size : "+sessionMap.size());
 	    
-	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
+	    System.out.println("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
 		return SUCCESS;
 	}
 	
