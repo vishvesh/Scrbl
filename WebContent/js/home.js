@@ -226,7 +226,7 @@ $(document).ready(
 			context.lineTo(point.x, point.y);
 			context.stroke();
 		}
-		pointArray.push(point);
+		pointArray.push(touch.pageX - offset.left, touch.pageY - offset.top);
 		//console.log("POINT : "+point);
 		pageX.push(point.x);
 		pageY.push(point.y);

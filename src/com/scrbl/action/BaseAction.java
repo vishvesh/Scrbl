@@ -68,6 +68,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private Figure template;
 	private String matchedValue;
 	private Map<String, Object> sessionMap;
+	protected HttpServletRequest request;
 
 	@Override
 	public void setSession(Map<String, Object> sessionMap) {
@@ -77,6 +78,33 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	@Override
 	public String execute() throws Exception {
 		return super.execute();
+	}
+
+	@Override
+	public void setServletRequest(HttpServletRequest arg0) {
+		request = arg0;
+	}
+	
+	protected Object getValueBySessionAttribute(String sessionAttribute) {
+		return request.getSession().getAttribute(sessionAttribute);
+	}
+	
+	protected void setValueBySessionAttribute(String sessionAttributeName, Object value)
+	{
+		request.getSession().setAttribute(sessionAttributeName, value);
+	}
+	
+	protected void removeSessionAttribute(String sessionAttributeName)
+	{
+		request.getSession().removeAttribute(sessionAttributeName);
+	}
+	
+	protected void setRequestAttribute(String requestAttributeName, Object value) {
+		request.getSession().setAttribute(requestAttributeName, value);
+	}
+	
+	protected Object getRequestAttribute(String key) {
+		return request.getSession().getAttribute(key);
 	}
 
 	public String firstBlood()
@@ -154,6 +182,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 
 	    sessionMap.put("figure", figure);
 	    
+	    setRequestAttribute("figure", figure);
 	    System.out.println("Session MAP Size : "+sessionMap.size());
 	    
 	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
@@ -165,8 +194,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		try{
 		//System.out.println(figure.getLength());
 			compute();
-			Figure template = (Figure) sessionMap.get("figure");
-			System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
+			//Figure template = (Figure) sessionMap.get("figure");
+			//System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
+			
+			Figure template = (Figure) getRequestAttribute("figure");
 			matchedValue = (new Double(template.Match(getFigure()))).toString();
 			System.out.println("Matched VALUE : "+matchedValue);
 		}
@@ -360,11 +391,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
         }
 	}
 
-	@Override
-	public void setServletRequest(HttpServletRequest arg0) {
-		
-	}
-	
 	public String getPageX() {
 		return pageX;
 	}
