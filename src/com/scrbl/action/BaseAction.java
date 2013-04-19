@@ -61,7 +61,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	//private List<Object> pointArray;
 	private String pointArray;
 	//private List<Point> stroke;
-	private List<Integer> points;
+	private List<Double> points;
 	
 	private Figure figure;
 	private Stroke stroke;
@@ -138,7 +138,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		String[] splitString = pointArray.split("(,0,0)(,)?");
 		
 	    System.out.println(splitString.length);
-	    points = new ArrayList<Integer>();
+	    points = new ArrayList<Double>();
 	    //stroke = new ArrayList<Point>();
 	    
 	    for (String string : splitString) {
@@ -146,7 +146,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			{
 	    		System.out.println("STROKE NULL");
 				stroke = new Stroke();
-				figure.Add(stroke);
 			}
 			//stroke.Add(new Point(args.X, args.Y));
 
@@ -154,7 +153,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    	String[] theString = string.split("([d+,d+])(,)?");
 	    	for (String allPoints : theString) {
 	    		//System.out.println("APP POINTS : "+Integer.valueOf(allPoints));
-	    		points.add(Integer.valueOf(allPoints));
+	    		points.add(Double.valueOf(allPoints));
 			}
 	    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
 		    {
@@ -163,7 +162,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		    	stroke.Add(point);
 		    	
 		    }
-	    	//figure.Add(stroke);
+	    	figure.Add(stroke);
 	    	
 	    	if (stroke != null)
 			{
@@ -455,11 +454,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return figure;
 	}
 	
-	public void setPoints(List<Integer> points) {
+	public void setPoints(List<Double> points) {
 		this.points = points;
 	}
 	
-	public List<Integer> getPoints() {
+	public List<Double> getPoints() {
 		return points;
 	}
 	
