@@ -5,13 +5,17 @@
 
 <struts>
     
-    <!-- constant name="struts.action.extension" value="/" /-->
+    <constant name="struts.action.extension" value=""/> 
     <!-- constant name="struts.devMode" value="true" /-->
     <constant name="struts.custom.i18n.resources" value="configs" />
     
     <package name="default" extends="struts-default">
         
         <action name="baseAction" class="com.scrbl.action.BaseAction" method="firstBlood">
+            <result name="success">/actionView/index.jsp</result>
+        </action>
+        
+        <action name="scrbl" class="com.scrbl.action.BaseAction" method="saveUserEmail">
             <result name="success">/actionView/success.jsp</result>
         </action>
         

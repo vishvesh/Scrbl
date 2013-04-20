@@ -8,16 +8,24 @@
 <script src="http://code.jquery.com/jquery-1.7.2.min.js" ></script>
 <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js" ></script>
 <script type = "text/javascript" src="http://l2.io/ip.js?var=c"></script> 
-<script src="js/home.js" ></script>
+<%-- <script src="js/home.js" ></script> --%>
 <link rel="stylesheet" type="text/css" href="css/home.css">
+<style>
+#wrapper{
+     position:absolute;
+     left:40%;
+}
+</style>
 </head>
 <body>
 
-	<div id="container">
+	<div id="container" style="text-align:center">
 	  <!-- s:property value="name"/-->
-	
-		<div id="writeValues">
-			<input type="button" value="Save" onclick="saveUser()"/>
+	  <div id="wrapper">
+			<s:form action="scrbl" id="login-form" style="text-align:center">
+				<s:textfield label="Enter Email " type="text" name="userEmail" id="userEmail" placeholder = "Enter Email Here" />
+				<s:submit type="button" value="Save"/>
+			</s:form>
 		</div>
 	</div>
 
