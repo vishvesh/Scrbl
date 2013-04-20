@@ -12,10 +12,14 @@
     <package name="default" extends="struts-default">
         
         <action name="baseAction" class="com.scrbl.action.BaseAction" method="firstBlood">
-            <result name="success">/actionView/success.jsp</result>
+            <result name="success">/actionView/index.jsp</result>
         </action>
         
         <action name="writeValues" class="com.scrbl.action.BaseAction" method="writeValues">
+            <result name="success">/actionView/success.jsp</result>
+        </action>
+        
+        <action name="saveEmail" class="com.scrbl.action.BaseAction" method="saveEmail">
             <result name="success">/actionView/success.jsp</result>
         </action>
         

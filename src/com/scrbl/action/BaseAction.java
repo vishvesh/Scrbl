@@ -69,6 +69,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String matchedValue;
 	private Map<String, Object> sessionMap;
 	protected HttpServletRequest request;
+	private String userEmail;
+	
+	public String getUserEmail() {
+		return userEmail;
+	}
+	
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
 
 	@Override
 	public void setSession(Map<String, Object> sessionMap) {
@@ -124,6 +133,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		}*/
 		//System.out.println(getText("emailfile.nameOfFile"));
         
+		return SUCCESS;
+	}
+	
+	public String saveEmail() {
+		System.out.println("USER EMAIL : "+userEmail);
 		return SUCCESS;
 	}
 
