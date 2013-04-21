@@ -13,7 +13,8 @@
 <style type="text/css">
 #wrapper{
   position:absolute;
-  left:40%;
+  left:36%;
+  top: 36px;
 }
 #submitButton {
   color: #900;
@@ -35,16 +36,14 @@
 </style>
 <script type="text/javascript">
 	/* $(document).ready(function() {
-	}); */
+   });  */
 	
 	function checkVal() {
-		console.log("comes in ");
 		var userEmail = $('#userEmail').val();
 		
 		
 		if(userEmail == '' || userEmail.length == 0) {
 			$('#error').html("Email Cannot Be Blank!").addClass('errorClass');
-			console.log("returning false");
 			return false;
 		}
 		else if($.trim(userEmail) == '') {
@@ -75,7 +74,6 @@
 	  <div id="wrapper">
 			<s:form action="saveEmail" id="userEmailForm" style="text-align:center" onsubmit="return false;">
 				<s:textfield label="Enter Email " type="text" name="userEmail" id="userEmail"/>
-				
 				<s:submit type="button" id="submitButton" value="Save" onclick="checkVal();"/>
 				<div id="error"></div>
 			</s:form>
