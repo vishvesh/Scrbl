@@ -70,7 +70,6 @@
 <body>
 
 	<div id="container" style="text-align:center">
-	  <!-- s:property value="name"/-->
 	  <div id="wrapper">
 			<s:form action="saveEmail" id="userEmailForm" style="text-align:center" onsubmit="return false;">
 				<s:textfield label="Enter Email " type="text" name="userEmail" id="userEmail"/>

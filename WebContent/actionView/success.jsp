@@ -14,7 +14,6 @@
 </head>
 <body>
 <div id="container">
-  <!-- s:property value="name"/-->
   <div id="canvasPlaceholder">
   	<canvas id="canvas" height=150 width=380></canvas>
   </div>
