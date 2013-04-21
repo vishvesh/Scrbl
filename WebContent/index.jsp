@@ -1,1 +1,1 @@
-<meta http-equiv="refresh" content="0;url=/Scrbl/baseAction">
+<meta HTTP-EQUIV="REFRESH" content="0; url=baseAction.html"> 
