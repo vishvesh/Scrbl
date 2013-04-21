@@ -261,7 +261,7 @@ function writeValues() {
 	alert("Done Scribbling?");
 	
   $.ajax({ 
-	  url: '/Scrbl/writeValues', 
+	  url: 'writeValues.html', 
 	  type: 'POST', 
 	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
@@ -280,7 +280,7 @@ function save() {
 	alert("Done Scribbling?");
 	
   $.ajax({ 
-	  url: '/Scrbl/save', 
+	  url: 'save.html', 
 	  type: 'POST', 
 	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
@@ -291,7 +291,7 @@ function save() {
 
 function match() {
 	$.ajax({ 
-		  url: '/Scrbl/match', 
+		  url: 'match.html', 
 		  type: 'POST',
 		  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)},
 		  success: function(data){

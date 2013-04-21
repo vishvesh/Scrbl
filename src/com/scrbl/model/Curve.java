@@ -40,6 +40,9 @@ public class Curve
 			stroke.Average(i + STROKE_WINDOW_SIZE, STROKE_WINDOW_SIZE, tempRef_x2, tempRef_y2);
 			x2 = tempRef_x2.argvalue;
 			y2 = tempRef_y2.argvalue;
+			
+			//System.out.println("x1 : "+x1 +" : y1 : "+y1 +" : x2 : "+x2+" : y2 : "+y2);
+			
 			double dx = x2 - x1;
 			double dy = y2 - y1;
 			double len = Math.sqrt(dx * dx + dy * dy);
@@ -175,11 +178,7 @@ public class Curve
 
 	public final double Match(Curve other)
 	{
-		if (Math.abs(segments.size() - other.segments.size()) > MAX_EXCLUSIONS)
-		{
-			return Figure.MAX_MISSMATCH;
-		}
-		if (segments.isEmpty())
+		if (segments.isEmpty() || Math.abs(segments.size() - other.segments.size()) > MAX_EXCLUSIONS)
 		{
 			return Figure.MAX_MISSMATCH;
 		}

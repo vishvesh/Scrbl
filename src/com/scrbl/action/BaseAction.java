@@ -185,7 +185,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				figure.CurveLastStroke();
 			}
 	    	//figure.Add(stroke);
-	    	System.out.println("1st Stroke Completed!");
+	    	System.out.println("Stroke Completed!");
 	    }
 	}
 	
