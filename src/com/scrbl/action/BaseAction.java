@@ -144,14 +144,52 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private void compute() {
 		figure = new Figure();
 		
+		
 		pointArray = pointArray.replace("[", "").replace("]", "");
 		System.out.println("Point Array : "+pointArray);
+		
+		//TODO: Computing Velocity Vector using Euclidean Distance!
+	    timeArray = timeArray.replace("[", "").replace("]", "").replaceAll(",0", "");
+		System.out.println("TIME ARRAY : "+timeArray);
+		String[] timeSplit = timeArray.split(",");
+
+		String pointString = pointArray.replaceAll("(,0,0)", "");
+		System.out.println("Point STRING : "+pointString);
+		
+		List<Point> listOfPoints = new ArrayList<Point>();
+		
+		String[] pointArr = pointString.split(",");
+		
+		List<Double> velocityVector = new ArrayList<Double>();
+		
+		for(int i = 0, j = i + 1; i < pointArr.length - 1; i+=2, j+=2) {
+			Point point = new Point(Double.valueOf(pointArr[i]), Double.valueOf(pointArr[j]));
+			listOfPoints.add(point);
+		}
+		
+		for(int i = 0; i < listOfPoints.size() - 1; i++) {	
+			double x2 = listOfPoints.get(i+1).getX() - listOfPoints.get(i).getX();
+	    	double y2 = listOfPoints.get(i+1).getY() - listOfPoints.get(i).getY();
+	    	double t2 = Double.valueOf(timeSplit[i + 1]) - Double.valueOf(timeSplit[i]);
+	    	
+	    	double velocity = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2)) / (t2); 
+	    	velocityVector.add(velocity);
+	    	System.out.println("X2 - X1 : "+x2 + " : Y2 - Y1 : "+y2 +" : T2 - T1 : "+t2 + " : Velocity : "+velocity);
+		}
+		System.out.println("Velocity Vector's Size : "+velocityVector.size());
+		
+		System.out.println("TIME LENGTH : "+timeSplit.length + " POINT ARR LENGTH : "+listOfPoints.size());
+		//TODO: Computing Velocity Vector using Euclidean Distance!
+		
+		
+	
+		
 		//String[] splitString = pointArray.split("(d+),(d+)(,)?");
 		//String[] splitString = pointArray.split("([d+,d+])(,)?");
 		
 		String[] splitString = pointArray.split("(,0,0)(,)?");
-		
 	    System.out.println(splitString.length);
+	    
 	    points = new ArrayList<Double>();
 	    //stroke = new ArrayList<Point>();
 	    

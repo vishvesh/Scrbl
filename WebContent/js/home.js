@@ -161,12 +161,16 @@ $(document).ready(
 	/** **** For Testing on Browsers with a CLICK EVENT **** * */
 	$("#canvas").on('mousedown',function(e) {
 		e.preventDefault();		
-		var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
+		//var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
 		pointArray.push(e.pageX - offset.left, e.pageY - offset.top);
 		//pointArray.points.push(e.pageX - offset.left, e.pageY - offset.top);
-		pageX.push(e.pageX - offset.left);
-		pageY.push(e.pageY - offset.top);
-		timeArray.push(0);
+		//pageX.push(e.pageX - offset.left);
+		//pageY.push(e.pageY - offset.top);
+		
+		var date = new Date();
+		lastClick = date.getTime();
+		
+		timeArray.push(lastClick);
 		
 		
 	$("#canvas").bind('mousemove',function(event) {
@@ -182,18 +186,18 @@ $(document).ready(
 		//pointArray.points.push(event.pageX - offset.left, event.pageY - offset.top);
 		pointArray.push(event.pageX - offset.left, event.pageY - offset.top);
 		//console.log("POINT : "+point);
-		pageX.push(point.x);
-		pageY.push(point.y);
+		//pageX.push(point.x);
+		//pageY.push(point.y);
 		
 		lastPoint = point;
 
 		var date = new Date();
 		click = date.getTime();
 
-		var secondClick = click - lastClick;
+		//var secondClick = click - lastClick;
 		//console.log("Time from 1st px to 2nd : " + secondClick);		
-		timeArray.push(secondClick);	
-		lastClick = click;		
+		timeArray.push(click);	
+		//lastClick = click;		
 		
 		});
 	});
@@ -201,8 +205,8 @@ $(document).ready(
 	$("#canvas").on('mouseup', function() {
 		lastPoint = null;
 		
-		pageX.push(0);
-		pageY.push(0);
+		//pageX.push(0);
+		//pageY.push(0);
 		pointArray.push(0,0);
 		timeArray.push(0);
 		
@@ -228,8 +232,8 @@ $(document).ready(
 		}
 		pointArray.push(touch.pageX - offset.left, touch.pageY - offset.top);
 		//console.log("POINT : "+point);
-		pageX.push(point.x);
-		pageY.push(point.y);
+		//pageX.push(point.x);
+		//pageY.push(point.y);
 		
 		lastPoint = point;
 		
@@ -245,25 +249,25 @@ $(document).ready(
 	document.getElementById('canvas').addEventListener('touchend', function() {
 				lastPoint = null;
 				
-				pageX.push(0);
-				pageY.push(0);
+				//pageX.push(0);
+				//pageY.push(0);
 				timeArray.push(0);
 			}, false);
 		});
 
 function writeValues() {
-	console.log("pageX : " + JSON.stringify(pageX));
-	console.log("pageY : " + JSON.stringify(pageY));
+	//console.log("pageX : " + JSON.stringify(pageX));
+	//console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
 	console.log("PointArray : " + JSON.stringify(pointArray));
-	console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
+	//console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
 	
 	alert("Done Scribbling?");
 	
   $.ajax({ 
 	  url: 'writeValues.html', 
 	  type: 'POST', 
-	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
+	  data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
 		  //$('#ajaxResponse').html(data); 
 	  } 
@@ -271,18 +275,18 @@ function writeValues() {
 }
 
 function save() {
-	console.log("pageX : " + JSON.stringify(pageX));
-	console.log("pageY : " + JSON.stringify(pageY));
+	//console.log("pageX : " + JSON.stringify(pageX));
+	//console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
 	console.log("PointArray : " + JSON.stringify(pointArray));
-	console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
+	//console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
 	
 	alert("Done Scribbling?");
 	
   $.ajax({ 
 	  url: 'save.html', 
 	  type: 'POST', 
-	  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
+	  data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
 		  //$('#ajaxResponse').html(data); 
 	  } 
@@ -293,7 +297,7 @@ function match() {
 	$.ajax({ 
 		  url: 'match.html', 
 		  type: 'POST',
-		  data: {pageX:JSON.stringify(pageX), pageY: JSON.stringify(pageY), timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)},
+		  data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)},
 		  success: function(data){
 			  //$('#ajaxResponse').html(data); 
 			  //alert("Template Saved!");
@@ -305,8 +309,8 @@ function clearScreen() {
 	var canvas = document.getElementById('canvas');
 	var context = canvas.getContext("2d");
 	context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-	pageX.length = 0;
-	pageY.length = 0;
+	//pageX.length = 0;
+	//pageY.length = 0;
 	timeArray.length = 0;
 	pointArray.length = 0;
 	// context.clearRect(0, 0, canvas.width, canvas.height);
