@@ -161,11 +161,11 @@ $(document).ready(
 	/** **** For Testing on Browsers with a CLICK EVENT **** * */
 	$("#canvas").on('mousedown',function(e) {
 		e.preventDefault();		
-		//var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
-		pointArray.push(e.pageX - offset.left, e.pageY - offset.top);
+		var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
+		pointArray.push(point.x, point.y);
 		//pointArray.points.push(e.pageX - offset.left, e.pageY - offset.top);
-		//pageX.push(e.pageX - offset.left);
-		//pageY.push(e.pageY - offset.top);
+		pageX.push(point.x);
+		pageY.push(point.y);
 		
 		var date = new Date();
 		lastClick = date.getTime();
@@ -186,8 +186,8 @@ $(document).ready(
 		//pointArray.points.push(event.pageX - offset.left, event.pageY - offset.top);
 		pointArray.push(event.pageX - offset.left, event.pageY - offset.top);
 		//console.log("POINT : "+point);
-		//pageX.push(point.x);
-		//pageY.push(point.y);
+		pageX.push(point.x);
+		pageY.push(point.y);
 		
 		lastPoint = point;
 
@@ -205,8 +205,8 @@ $(document).ready(
 	$("#canvas").on('mouseup', function() {
 		lastPoint = null;
 		
-		//pageX.push(0);
-		//pageY.push(0);
+		pageX.push(0);
+		pageY.push(0);
 		pointArray.push(0,0);
 		timeArray.push(0);
 		
@@ -214,9 +214,19 @@ $(document).ready(
 		$("#canvas").unbind('mousemove');
 	});
 
-	document.getElementById('canvas').addEventListener('touchstart', function() {
-		lastClick = 0;
+	document.getElementById('canvas').addEventListener('touchstart', function(e) {
+
+		var point = new Point(e.pageX - offset.left, e.pageY - offset.top);
+		pointArray.push(point.x, point.y);
+		//pointArray.points.push(e.pageX - offset.left, e.pageY - offset.top);
+		pageX.push(point.x);
+		pageY.push(point.y);
+		
+		var date = new Date();
+		lastClick = date.getTime();
+		
 		timeArray.push(lastClick);
+		
 	}, false);
 	
 	document.getElementById('canvas').addEventListener('touchmove', function(event) {
@@ -230,27 +240,30 @@ $(document).ready(
 			context.lineTo(point.x, point.y);
 			context.stroke();
 		}
+		//pointArray.points.push(event.pageX - offset.left, event.pageY - offset.top);
 		pointArray.push(touch.pageX - offset.left, touch.pageY - offset.top);
 		//console.log("POINT : "+point);
-		//pageX.push(point.x);
-		//pageY.push(point.y);
+		pageX.push(point.x);
+		pageY.push(point.y);
 		
 		lastPoint = point;
-		
+
 		var date = new Date();
 		click = date.getTime();
-		var secondClick = click - lastClick;
-		//console.log("Time from 1st px to 2nd : "+ secondClick);
-		timeArray.push(secondClick);
-		lastClick = click;
+
+		//var secondClick = click - lastClick;
+		//console.log("Time from 1st px to 2nd : " + secondClick);		
+		timeArray.push(click);	
+		//lastClick = click;
 
 	}, false);
 
 	document.getElementById('canvas').addEventListener('touchend', function() {
 				lastPoint = null;
 				
-				//pageX.push(0);
-				//pageY.push(0);
+				pageX.push(0);
+				pageY.push(0);
+				pointArray.push(0,0);
 				timeArray.push(0);
 			}, false);
 		});
@@ -275,8 +288,8 @@ function writeValues() {
 }
 
 function save() {
-	//console.log("pageX : " + JSON.stringify(pageX));
-	//console.log("pageY : " + JSON.stringify(pageY));
+	console.log("pageX : " + JSON.stringify(pageX));
+	console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
 	console.log("PointArray : " + JSON.stringify(pointArray));
 	//console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
@@ -286,7 +299,7 @@ function save() {
   $.ajax({ 
 	  url: 'save.html', 
 	  type: 'POST', 
-	  data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
+	  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY),timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
 		  //$('#ajaxResponse').html(data); 
 	  } 

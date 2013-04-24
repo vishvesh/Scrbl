@@ -70,6 +70,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private Map<String, Object> sessionMap;
 	protected HttpServletRequest request;
 	private String userEmail;
+	private List<Double> velocityVector;
+	
+	public void setVelocityVector(List<Double> velocityVector) {
+		this.velocityVector = velocityVector;
+	}
+	
+	public List<Double> getVelocityVector() {
+		return velocityVector;
+	}
 	
 	public String getUserEmail() {
 		return userEmail;
@@ -149,9 +158,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		System.out.println("Point Array : "+pointArray);
 		
 		//TODO: Computing Velocity Vector using Euclidean Distance!
-	    timeArray = timeArray.replace("[", "").replace("]", "").replaceAll(",0", "");
-		System.out.println("TIME ARRAY : "+timeArray);
-		String[] timeSplit = timeArray.split(",");
+	    String timeArr = timeArray.replace("[", "").replace("]", "").replaceAll(",0", "");
+		System.out.println("TIME ARRAY : "+timeArr);
+		String[] timeSplit = timeArr.split(",");
 
 		String pointString = pointArray.replaceAll("(,0,0)", "");
 		System.out.println("Point STRING : "+pointString);
@@ -160,7 +169,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		
 		String[] pointArr = pointString.split(",");
 		
-		List<Double> velocityVector = new ArrayList<Double>();
+		velocityVector = new ArrayList<Double>();
 		
 		for(int i = 0, j = i + 1; i < pointArr.length - 1; i+=2, j+=2) {
 			Point point = new Point(Double.valueOf(pointArr[i]), Double.valueOf(pointArr[j]));
@@ -174,7 +183,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    	
 	    	double velocity = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2)) / (t2); 
 	    	velocityVector.add(velocity);
-	    	System.out.println("X2 - X1 : "+x2 + " : Y2 - Y1 : "+y2 +" : T2 - T1 : "+t2 + " : Velocity : "+velocity);
+	    	//System.out.println("X2 - X1 : "+x2 + " : Y2 - Y1 : "+y2 +" : T2 - T1 : "+t2 + " : Velocity : "+velocity);
+	    	
+	    	System.out.println("Velocity : "+velocity);
 		}
 		System.out.println("Velocity Vector's Size : "+velocityVector.size());
 		
@@ -235,6 +246,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    
 	    setRequestAttribute("figure", figure);
 	    System.out.println("Session MAP Size : "+sessionMap.size());
+	    
+	    writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 	    
 	    System.out.println("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
 		return SUCCESS;
@@ -339,17 +352,24 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
 		 
 		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time", "IP Address : "+ci, "Date & Time : "+dateFormat.format(cal.getTime())});
+		data.put(0, new String[] {"X-Coordinate", "Y-Coordinate", "Time", "Velocity Vector", "IP Address : "+ci, "Date & Time : "+dateFormat.format(cal.getTime())});
 		String[] pagex = pageX.split(",");
 		String[] pagey = pageY.split(",");
 		String[] timearray = timeArray.split(",");
 
 		int counter = 1;
 		
+		if(velocityVector.size() < pagex.length)
+			while(velocityVector.size() < pagex.length)
+				velocityVector.add(0.0);
+		
+		System.out.println("PAGE X LENGTH : "+pagex.length + " : VECTOR SIZEEEEEEEEEEE : "+velocityVector.size());
 		while(counter <= pagex.length)
 		{
 			//System.out.print("Counter : "+counter + " ");
-			data.put(counter, new String[] {pagex[counter - 1], pagey[counter - 1], timearray[counter - 1]});
+			
+				
+			data.put(counter, new String[] {pagex[counter - 1], pagey[counter - 1], timearray[counter - 1], velocityVector.get(counter - 1).toString()});
 			counter++;
 		}
 		/*Iterator it = data.entrySet().iterator();
