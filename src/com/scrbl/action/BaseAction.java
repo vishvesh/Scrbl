@@ -116,14 +116,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	{
 		request.getSession().removeAttribute(sessionAttributeName);
 	}
-	
-	protected void setRequestAttribute(String requestAttributeName, Object value) {
-		request.getSession().setAttribute(requestAttributeName, value);
-	}
-	
-	protected Object getRequestAttribute(String key) {
-		return request.getSession().getAttribute(key);
-	}
 
 	public String firstBlood()
 	{
@@ -244,10 +236,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 
 	    sessionMap.put("figure", figure);
 	    
-	    setRequestAttribute("figure", figure);
+	    setValueBySessionAttribute("figure", figure);
+	    setValueBySessionAttribute("velocityVector", velocityVector);
 	    System.out.println("Session MAP Size : "+sessionMap.size());
 	    
-	    writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
+	    //writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 	    
 	    System.out.println("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
 		return SUCCESS;
@@ -260,10 +253,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			compute();
 			//Figure template = (Figure) sessionMap.get("figure");
 			//System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
+			List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+			double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
 			
-			Figure template = (Figure) getRequestAttribute("figure");
+			Figure template = (Figure) getValueBySessionAttribute("figure");
 			matchedValue = (new Double(template.Match(getFigure()))).toString();
-			System.out.println("Matched VALUE : "+matchedValue);
+			System.out.println("Matched VALUE : "+matchedValue + " Cosine Similarity : "+cosineSimilarity);
 		}
 		catch(Exception e)
 		{
@@ -274,6 +269,28 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		//System.out.println("template : "+template.getLength() + " : Figure : "+figure.getLength());
 		
 		return SUCCESS;
+	}
+	
+	private double CalculateCosineSimilarity(List<Double> vecA, List<Double> vecB) {
+		double dotProduct = DotProduct(vecA, vecB);
+		double magnitudeOfA = Magnitude(vecA);
+		double magnitudeOfB = Magnitude(vecB);
+
+		return dotProduct / (magnitudeOfA * magnitudeOfB);
+	}
+
+	private double DotProduct(List<Double> vectorA, List<Double> vectorB) {
+		double dotProduct = 0;
+		for (int i = 0; i < vectorA.size() - 1; i++) {
+			if(vectorB.get(i) != null)
+				dotProduct += (vectorA.get(i) * vectorB.get(i));
+		}
+		return dotProduct;
+	}
+	
+	private double Magnitude(List<Double> vector)
+	{
+		return Math.sqrt(DotProduct(vector, vector));
 	}
 	
 	public String writeValues()

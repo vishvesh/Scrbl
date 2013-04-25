@@ -25,4 +25,9 @@
 				dotProduct += (vecA[i] * vecB[i]);
 			}
 		}
+		
+		private static double Magnitude(int[] vector)
+		{
+			return Math.Sqrt(DotProduct(vector, vector));
+		}
 	}
