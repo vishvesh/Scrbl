@@ -114,7 +114,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	protected void removeSessionAttribute(String sessionAttributeName)
 	{
-		request.getSession().removeAttribute(sessionAttributeName);
+		if(request.getSession().getAttribute(sessionAttributeName) != null)
+			request.getSession().removeAttribute(sessionAttributeName);
 	}
 
 	public String firstBlood()
@@ -243,6 +244,24 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    //writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 	    
 	    System.out.println("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
+		return SUCCESS;
+	}
+	
+	public String clean() {
+		try {
+			pageX = null;
+			pageY = null;
+			timeArray = null;
+			figure = null;
+			stroke = null;
+			template = null;
+			if (velocityVector != null && velocityVector.size() > 0)
+				velocityVector.clear();
+			removeSessionAttribute("figure"); //null checks are handled inside the method!
+			removeSessionAttribute("velocityVector"); //null checks are handled inside the method!
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return SUCCESS;
 	}
 	

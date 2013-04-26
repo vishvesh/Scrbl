@@ -326,5 +326,15 @@ function clearScreen() {
 	//pageY.length = 0;
 	timeArray.length = 0;
 	pointArray.length = 0;
+	
+	$.ajax({ 
+		  url: 'clean.html', 
+		  type: 'POST',
+		  //data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)},
+		  success: function(data){
+			  //$('#ajaxResponse').html(data); 
+			  //alert("Template Saved!");
+		  } 
+	  });
 	// context.clearRect(0, 0, canvas.width, canvas.height);
 }

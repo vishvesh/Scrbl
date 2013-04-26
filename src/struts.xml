@@ -31,5 +31,9 @@
             <result name="success">/actionView/success.jsp</result>
         </action>
         
+         <action name="clean" class="com.scrbl.action.BaseAction" method="clean">
+            <result name="success">/actionView/success.jsp</result>
+        </action>
+        
     </package>
 </struts>
