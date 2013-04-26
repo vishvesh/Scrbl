@@ -71,6 +71,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	protected HttpServletRequest request;
 	private String userEmail;
 	private List<Double> velocityVector;
+	private int strokeLength;
+	
+	public int getStrokeLength() {
+		return strokeLength;
+	}
 	
 	public void setVelocityVector(List<Double> velocityVector) {
 		this.velocityVector = velocityVector;
@@ -192,46 +197,54 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		//String[] splitString = pointArray.split("([d+,d+])(,)?");
 		
 		String[] splitString = pointArray.split("(,0,0)(,)?");
-	    System.out.println(splitString.length);
+	    System.out.println("splitString LENGTH : " +splitString.length);
+	    
+	    if(getValueBySessionAttribute("lengthOfStrokes") == null)
+	    	setValueBySessionAttribute("lengthOfStrokes", splitString.length);
+	    
+	    strokeLength = splitString.length;
 	    
 	    points = new ArrayList<Double>();
 	    //stroke = new ArrayList<Point>();
 	    
-	    for (String string : splitString) {
-	    	if (stroke == null)
-			{
-	    		System.out.println("STROKE NULL");
-				stroke = new Stroke();
-			}
-			//stroke.Add(new Point(args.X, args.Y));
-
-	    	System.out.println("COMPLETE STROKE ARRAY : "+string);
-	    	String[] theString = string.split("([d+,d+])(,)?");
-	    	for (String allPoints : theString) {
-	    		//System.out.println("APP POINTS : "+Integer.valueOf(allPoints));
-	    		points.add(Double.valueOf(allPoints));
-			}
-	    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
-		    {
-		    	Point point = new Point(points.get(i), points.get(j));
-		    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() ); 
-		    	stroke.Add(point);
+	    if(splitString != null && splitString.equals("") && strokeLength > 0) {
+		    for (String string : splitString) {
+		    	if (stroke == null)
+				{
+		    		System.out.println("STROKE NULL");
+					stroke = new Stroke();
+				}
+				//stroke.Add(new Point(args.X, args.Y));
+	
+		    	System.out.println("COMPLETE STROKE ARRAY : "+string);
+		    	String[] theString = string.split("([d+,d+])(,)?");
+		    	for (String allPoints : theString) {
+		    		//System.out.println("APP POINTS : "+Integer.valueOf(allPoints));
+		    		if(allPoints != null)
+		    			points.add(Double.valueOf(allPoints));
+				}
+		    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
+			    {
+			    	Point point = new Point(points.get(i), points.get(j));
+			    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() ); 
+			    	stroke.Add(point);
+			    	
+			    }
+		    	figure.Add(stroke);
 		    	
+		    	if (stroke != null)
+				{
+		    		System.out.println("STROKE NOT NULL");
+					stroke = null;
+					figure.CurveLastStroke();
+				}
+		    	//figure.Add(stroke);
+		    	System.out.println("Stroke Completed!");
 		    }
-	    	figure.Add(stroke);
-	    	
-	    	if (stroke != null)
-			{
-	    		System.out.println("STROKE NOT NULL");
-				stroke = null;
-				figure.CurveLastStroke();
-			}
-	    	//figure.Add(stroke);
-	    	System.out.println("Stroke Completed!");
 	    }
 	}
 	
-	public String saveFigure() {
+	public String saveFigure() throws Exception {
 
 		compute();
 
@@ -259,6 +272,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				velocityVector.clear();
 			removeSessionAttribute("figure"); //null checks are handled inside the method!
 			removeSessionAttribute("velocityVector"); //null checks are handled inside the method!
+			removeSessionAttribute("lengthOfStrokes");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -267,17 +281,23 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public String matchFigure()
 	{
-		try{
+		try {
 		//System.out.println(figure.getLength());
 			compute();
 			//Figure template = (Figure) sessionMap.get("figure");
 			//System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
-			List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-			double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
-			
+			int lengthOfStrokes = (Integer) getValueBySessionAttribute("lengthOfStrokes");
+			System.out.println("LENGTH IN MATCH : "+lengthOfStrokes);
+			/*if((lengthOfStrokes != null) && (lengthOfStrokes < strokeLength)) {
+				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+				double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
+				System.out.println("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
+			}*/
+					
 			Figure template = (Figure) getValueBySessionAttribute("figure");
-			matchedValue = (new Double(template.Match(getFigure()))).toString();
-			System.out.println("Matched VALUE : "+matchedValue + " Cosine Similarity : "+cosineSimilarity);
+			if(!getFigure().equals(null) || getFigure() != null)
+				matchedValue = (new Double(template.Match(getFigure()))).toString();
+			System.out.println("Matched VALUE : "+matchedValue);
 		}
 		catch(Exception e)
 		{
