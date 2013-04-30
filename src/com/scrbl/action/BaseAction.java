@@ -207,7 +207,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    points = new ArrayList<Double>();
 	    //stroke = new ArrayList<Point>();
 	    
-	    if(splitString != null && splitString.equals("") && strokeLength > 0) {
+	    //if(splitString != null && splitString.equals("") && strokeLength > 0) {
 		    for (String string : splitString) {
 		    	if (stroke == null)
 				{
@@ -241,7 +241,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		    	//figure.Add(stroke);
 		    	System.out.println("Stroke Completed!");
 		    }
-	    }
+	   // }
 	}
 	
 	public String saveFigure() throws Exception {
@@ -270,9 +270,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			template = null;
 			if (velocityVector != null && velocityVector.size() > 0)
 				velocityVector.clear();
-			removeSessionAttribute("figure"); //null checks are handled inside the method!
+			/*removeSessionAttribute("figure"); //null checks are handled inside the method!
 			removeSessionAttribute("velocityVector"); //null checks are handled inside the method!
-			removeSessionAttribute("lengthOfStrokes");
+			removeSessionAttribute("lengthOfStrokes");*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -295,6 +295,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			}*/
 					
 			Figure template = (Figure) getValueBySessionAttribute("figure");
+			System.out.println("GIFURE L "+getFigure());
 			if(!getFigure().equals(null) || getFigure() != null)
 				matchedValue = (new Double(template.Match(getFigure()))).toString();
 			System.out.println("Matched VALUE : "+matchedValue);
