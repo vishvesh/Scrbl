@@ -207,7 +207,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    points = new ArrayList<Double>();
 	    //stroke = new ArrayList<Point>();
 	    
-	    //if(splitString != null && splitString.equals("") && strokeLength > 0) {
+	    if(splitString != null && !splitString.equals("") && strokeLength > 0) {
 		    for (String string : splitString) {
 		    	if (stroke == null)
 				{
@@ -241,7 +241,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		    	//figure.Add(stroke);
 		    	System.out.println("Stroke Completed!");
 		    }
-	   // }
+	    }
 	}
 	
 	public String saveFigure() throws Exception {
@@ -252,7 +252,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    
 	    setValueBySessionAttribute("figure", figure);
 	    setValueBySessionAttribute("velocityVector", velocityVector);
-	    System.out.println("Session MAP Size : "+sessionMap.size());
+	    System.out.println("Session MAP Size : "+sessionMap.size() + " : Velocity Vector's Size : "+velocityVector.size());
 	    
 	    //writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 	    
@@ -268,7 +268,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			figure = null;
 			stroke = null;
 			template = null;
-			if (velocityVector != null && velocityVector.size() > 0)
+			if(velocityVector != null && velocityVector.size() > 0)
 				velocityVector.clear();
 			/*removeSessionAttribute("figure"); //null checks are handled inside the method!
 			removeSessionAttribute("velocityVector"); //null checks are handled inside the method!
@@ -287,7 +287,17 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			//Figure template = (Figure) sessionMap.get("figure");
 			//System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
 			int lengthOfStrokes = (Integer) getValueBySessionAttribute("lengthOfStrokes");
-			System.out.println("LENGTH IN MATCH : "+lengthOfStrokes);
+			System.out.println("Session Templates lengthOfStrokes : "+lengthOfStrokes);
+			System.out.println("Current Figures strokeLength : "+strokeLength);
+			System.out.println("Should be Greater than or Equal to 75% of original Length of strokes : "+strokeLength * 0.75);
+			if(strokeLength * 0.75 >= 0.75) {
+				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+				System.out.println("Session Velocity Vector's length : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
+				double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
+				System.out.println("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
+			}
+			//double x = (lengthOfStrokes * strokeLength) / 100;
+			//System.out.println("LENGTH IN MATCH : "+x);
 			/*if((lengthOfStrokes != null) && (lengthOfStrokes < strokeLength)) {
 				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
 				double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
@@ -295,7 +305,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			}*/
 					
 			Figure template = (Figure) getValueBySessionAttribute("figure");
-			System.out.println("GIFURE L "+getFigure());
+			//System.out.println("GIFURE L "+getFigure());
 			if(!getFigure().equals(null) || getFigure() != null)
 				matchedValue = (new Double(template.Match(getFigure()))).toString();
 			System.out.println("Matched VALUE : "+matchedValue);
@@ -320,10 +330,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	}
 
 	private double DotProduct(List<Double> vectorA, List<Double> vectorB) {
+		System.out.println("VECTOR A : "+vectorA.size()+" : VECTOR B : "+vectorB.size());
 		double dotProduct = 0;
 		for (int i = 0; i < vectorA.size() - 1; i++) {
-			if(vectorB.get(i) != null)
+			if(vectorB.get(i) != null) {
+				//System.out.println("LEMGTGH LESS STILL COMES IN WTF");
 				dotProduct += (vectorA.get(i) * vectorB.get(i));
+			}
 		}
 		return dotProduct;
 	}
