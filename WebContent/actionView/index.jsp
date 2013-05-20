@@ -8,6 +8,8 @@
 <script src="http://code.jquery.com/jquery-1.7.2.min.js" ></script>
 <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js" ></script>
 <%-- <script type = "text/javascript" src="http://l2.io/ip.js?var=c"></script> --%> 
+<%-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script> --%>
 <%-- <script src="js/home.js" ></script> --%>
 <link rel="stylesheet" type="text/css" href="css/home.css">
 <style type="text/css">
@@ -35,36 +37,17 @@
 }
 </style>
 <script type="text/javascript">
-	/* $(document).ready(function() {
-   });  */
-	
-	function checkVal() {
-		var userEmail = $('#userEmail').val();
-		
-		
-		if(userEmail == '' || userEmail.length == 0) {
-			$('#error').html("Email Cannot Be Blank!").addClass('errorClass');
-			return false;
-		}
-		else if($.trim(userEmail) == '') {
-			$('#error').html("Umm! So many Spaces?").addClass('errorClass');
-			return false;
-		}
-		else if(!IsEmail(userEmail)) {
-			$('#error').html("Please Enter a Valid Email").addClass('errorClass');
-			return false;
-		}
-		else {
-			//$('#userEmailForm').submit();
-			document.forms["userEmailForm"].submit();
-		}
-		//return false;
-	}
-	
-	function IsEmail(email) {
-	  var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-	  return regex.test(email);
-	}
+    //$(document).ready(function() {
+    //});
+	   function validate() {
+		    var informedConsentCheckbox = document.getElementById('informedConsentCheckbox');
+			if (informedConsentCheckbox.checked == 1) {
+				console.log("checked");
+				window.location.href = "submitPersonalInfo.html";
+			} else {
+				console.log("You didn't check it! Let me check it for you.");
+			} 
+		}	
 </script>
 </head>
 <body>
@@ -77,8 +60,8 @@
 				<div id="error"></div>
 			<%-- </s:form> --%>
 			
-			<input type = "checkbox" id = "informedConsentCheckbox"/>
-			I am 18 years of age or older and hereby give my consent having read the <a href = "<s:url action="viewInformedConsentPdf"/>">Informed Consent Form</a>
+			<input type = "checkbox" name = "informedConsentCheckbox" id = "informedConsentCheckbox" onclick="validate();"/>
+			I am 18 years of age or older and hereby give my consent having read the <a href = "<s:url action="viewInformedConsentPdf"/>">Informed Consent Form.</a>
 		</div>
 		
 	</div>

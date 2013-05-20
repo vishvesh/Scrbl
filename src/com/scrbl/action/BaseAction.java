@@ -72,9 +72,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String matchedValue;
 	private Map<String, Object> sessionMap;
 	protected HttpServletRequest request;
+	private String userName;
 	private String userEmail;
+	private String ageGroup;
 	private List<Double> velocityVector;
-	private int strokeLength;
+	private int currentNumberOfStrokes;
 	
 	private InputStream inputStream;
 	
@@ -86,8 +88,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return inputStream;
 	}
 	
-	public int getStrokeLength() {
-		return strokeLength;
+	public int getCurrentNumberOfStrokes() {
+		return currentNumberOfStrokes;
 	}
 	
 	public void setVelocityVector(List<Double> velocityVector) {
@@ -96,6 +98,22 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public List<Double> getVelocityVector() {
 		return velocityVector;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+	
+	public void setAgeGroup(String ageGroup) {
+		this.ageGroup = ageGroup;
+	}
+	
+	public String getAgeGroup() {
+		return ageGroup;
 	}
 	
 	public String getUserEmail() {
@@ -139,11 +157,18 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	public String viewPdf() throws Exception {
 		try {
 			File file = new File(informedConsentPdf);
+			System.out.println("Informed Consent's abs file path : "+file.getAbsolutePath());
 			inputStream = new DataInputStream(new FileInputStream(file));
 		} catch (IOException ioEx) {
 			ioEx.printStackTrace();
 		}
 		return SUCCESS;
+	}
+	
+	public String saveUserDetails() throws Exception {
+		System.out.println("Inside saveUserDetails() : User's Name : "+userName +" : " +
+				"User's Email : "+userEmail + " : Age Group : "+ageGroup);
+		return super.execute();
 	}
 
 	public String firstBlood()
@@ -166,8 +191,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return SUCCESS;
 	}
 	
-	public String saveEmail() {
-		System.out.println("USER EMAIL : "+userEmail);
+	public String startScribbling() {
+		System.out.println("Forwarding User Start Scribbling!");
 		return SUCCESS;
 	}
 
@@ -222,15 +247,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		String[] splitString = pointArray.split("(,0,0)(,)?");
 	    System.out.println("splitString LENGTH : " +splitString.length);
 	    
-	    if(getValueBySessionAttribute("lengthOfStrokes") == null)
-	    	setValueBySessionAttribute("lengthOfStrokes", splitString.length);
+	    if(getValueBySessionAttribute("numberOfStrokes") == null)
+	    	setValueBySessionAttribute("numberOfStrokes", splitString.length);
 	    
-	    strokeLength = splitString.length;
+	    currentNumberOfStrokes = splitString.length;
 	    
 	    points = new ArrayList<Double>();
 	    //stroke = new ArrayList<Point>();
 	    
-	    if(splitString != null && !splitString.equals("") && strokeLength > 0) {
+	    if(splitString != null && !splitString.equals("") && currentNumberOfStrokes > 0) {
 		    for (String string : splitString) {
 		    	if (stroke == null)
 				{
@@ -295,7 +320,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				velocityVector.clear();
 			/*removeSessionAttribute("figure"); //null checks are handled inside the method!
 			removeSessionAttribute("velocityVector"); //null checks are handled inside the method!
-			removeSessionAttribute("lengthOfStrokes");*/
+			removeSessionAttribute("numberOfStrokes");*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -309,24 +334,28 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			compute();
 			//Figure template = (Figure) sessionMap.get("figure");
 			//System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
-			int lengthOfStrokes = (Integer) getValueBySessionAttribute("lengthOfStrokes");
-			System.out.println("Session Templates lengthOfStrokes : "+lengthOfStrokes);
-			System.out.println("Current Figures strokeLength : "+strokeLength);
-			System.out.println("Should be Greater than or Equal to 75% of original Length of strokes : "+strokeLength * 0.75);
-			if(strokeLength * 0.75 >= 0.75) {
+			int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
+			System.out.println("Session Template's numberOfStrokes : "+numberOfStrokes);
+			System.out.println("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
+			
+			if(currentNumberOfStrokes == numberOfStrokes) {
+				System.out.println("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
+				
 				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-				System.out.println("Session Velocity Vector's length : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
-				double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
+				System.out.println("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
+				
+				double cosineSimilarity = calculateCosineSimilarity(initialVelocityVector, velocityVector);
 				System.out.println("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
 			}
-			//double x = (lengthOfStrokes * strokeLength) / 100;
+			//double x = (numberOfStrokes * currentNumberOfStrokes) / 100;
 			//System.out.println("LENGTH IN MATCH : "+x);
-			/*if((lengthOfStrokes != null) && (lengthOfStrokes < strokeLength)) {
+			/*if((numberOfStrokes != null) && (numberOfStrokes < currentNumberOfStrokes)) {
 				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
 				double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
 				System.out.println("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
 			}*/
 					
+			System.out.println("Executing Logic to Match the Two Figures!!!!!");
 			Figure template = (Figure) getValueBySessionAttribute("figure");
 			//System.out.println("GIFURE L "+getFigure());
 			if(!getFigure().equals(null) || getFigure() != null)
@@ -344,7 +373,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return SUCCESS;
 	}
 	
-	private double CalculateCosineSimilarity(List<Double> vecA, List<Double> vecB) {
+	private double calculateCosineSimilarity(List<Double> vecA, List<Double> vecB) {
 		double dotProduct = DotProduct(vecA, vecB);
 		double magnitudeOfA = Magnitude(vecA);
 		double magnitudeOfB = Magnitude(vecB);
@@ -353,7 +382,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	}
 
 	private double DotProduct(List<Double> vectorA, List<Double> vectorB) {
-		System.out.println("VECTOR A : "+vectorA.size()+" : VECTOR B : "+vectorB.size());
+		System.out.println("Initial VECTOR's size : "+vectorA.size()+" : Current VECTOR's size : "+vectorB.size());
 		double dotProduct = 0;
 		for (int i = 0; i < vectorA.size() - 1; i++) {
 			if(vectorB.get(i) != null) {
