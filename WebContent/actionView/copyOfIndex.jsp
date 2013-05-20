@@ -71,14 +71,11 @@
 
 	<div id="container" style="text-align:center">
 	  <div id="wrapper">
-			<%-- <s:form action="saveEmail" id="userEmailForm" style="text-align:center" onsubmit="return false;"> --%>
-				<%-- <s:textfield label="Enter Email " type="text" name="userEmail" id="userEmail"/> --%>
-				<%-- <s:submit type="button" id="submitButton" value="Save" onclick="checkVal();"/> --%>
+			<s:form action="saveEmail" id="userEmailForm" style="text-align:center" onsubmit="return false;">
+				<s:textfield label="Enter Email " type="text" name="userEmail" id="userEmail"/>
+				<s:submit type="button" id="submitButton" value="Save" onclick="checkVal();"/>
 				<div id="error"></div>
-			<%-- </s:form> --%>
-			
-			<input type = "checkbox" id = "informedConsentCheckbox"/>
-			I am 18 years of age or older and hereby give my consent having read the <a href = "<s:url action="viewInformedConsentPdf"/>">Informed Consent Form</a>
+			</s:form>
 		</div>
 		
 	</div>

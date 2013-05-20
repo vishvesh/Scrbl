@@ -15,6 +15,15 @@
             <result name="success">/actionView/index.jsp</result>
         </action>
         
+        <action name="viewInformedConsentPdf" class="com.scrbl.action.BaseAction" method="viewPdf">
+       		<result name="success" type="stream">
+		        <param name="contentType">application/pdf</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="INFORMED_CONSENT-1.pdf"</param>
+                <param name="bufferSize">1024</param>
+       		</result>
+    	</action>
+        
         <action name="writeValues" class="com.scrbl.action.BaseAction" method="writeValues">
             <result name="success">/actionView/success.jsp</result>
         </action>

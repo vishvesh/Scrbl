@@ -1,9 +1,12 @@
 package com.scrbl.action;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +39,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 
-//import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
 import com.scrbl.model.Figure;
 import com.scrbl.model.Point;
@@ -58,6 +60,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String ci;
 	private File file;
 	private String nameOfFile = getText("email.nameOfFile");
+	private String informedConsentPdf = getText("informedConsentPdf");
 	//private List<Object> pointArray;
 	private String pointArray;
 	//private List<Point> stroke;
@@ -72,6 +75,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String userEmail;
 	private List<Double> velocityVector;
 	private int strokeLength;
+	
+	private InputStream inputStream;
+	
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
+	
+	public InputStream getInputStream() {
+		return inputStream;
+	}
 	
 	public int getStrokeLength() {
 		return strokeLength;
@@ -121,6 +134,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	{
 		if(request.getSession().getAttribute(sessionAttributeName) != null)
 			request.getSession().removeAttribute(sessionAttributeName);
+	}
+	
+	public String viewPdf() throws Exception {
+		try {
+			File file = new File(informedConsentPdf);
+			inputStream = new DataInputStream(new FileInputStream(file));
+		} catch (IOException ioEx) {
+			ioEx.printStackTrace();
+		}
+		return SUCCESS;
 	}
 
 	public String firstBlood()
