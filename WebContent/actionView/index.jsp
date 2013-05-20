@@ -37,8 +37,15 @@
 }
 </style>
 <script type="text/javascript">
-    //$(document).ready(function() {
-    //});
+    $(document).ready(function() {
+    	var host = location.host;
+   	 	console.log("Host : "+host);
+   	 
+    	$('#pdf').on('click', function() {
+  		  window.location.href = "viewInformedConsentPdf.html?host="+host+"";
+  	   });	
+     });
+    
 	   function validate() {
 		    var informedConsentCheckbox = document.getElementById('informedConsentCheckbox');
 			if (informedConsentCheckbox.checked == 1) {
@@ -47,7 +54,8 @@
 			} else {
 				console.log("You didn't check it! Let me check it for you.");
 			} 
-		}	
+		}
+	   
 </script>
 </head>
 <body>
@@ -61,7 +69,7 @@
 			<%-- </s:form> --%>
 			
 			<input type = "checkbox" name = "informedConsentCheckbox" id = "informedConsentCheckbox" onclick="validate();"/>
-			I am 18 years of age or older and hereby give my consent having read the <a href = "<s:url action="viewInformedConsentPdf"/>">Informed Consent Form.</a>
+			I am 18 years of age or older and hereby give my consent having read the <a id="pdf" href="javascript:void(0);">Informed Consent Form.</a>
 		</div>
 		
 	</div>

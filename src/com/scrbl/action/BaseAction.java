@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -77,6 +78,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String ageGroup;
 	private List<Double> velocityVector;
 	private int currentNumberOfStrokes;
+	private String host;
+	
+	public void setHost(String host) {
+		this.host = host;
+	}
+	
+	public String getHost() {
+		return host;
+	}
 	
 	private InputStream inputStream;
 	
@@ -156,9 +166,17 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public String viewPdf() throws Exception {
 		try {
-			File file = new File(informedConsentPdf);
+			if(host.startsWith("localhost"))
+				System.out.println("Is Development : Host : "+host);
+			else
+				System.out.println("Is Production : Host : "+host);
+
+			URL url = getClass().getResource(informedConsentPdf);
+			File file = new File(url.getPath());
 			System.out.println("Informed Consent's abs file path : "+file.getAbsolutePath());
+			
 			inputStream = new DataInputStream(new FileInputStream(file));
+			
 		} catch (IOException ioEx) {
 			ioEx.printStackTrace();
 		}
