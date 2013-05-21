@@ -37,25 +37,52 @@
 }
 </style>
 <script type="text/javascript">
+	
+		//Supportive function for HTML5 Geolocation!
+	    function showLocation(position) {
+		  var latitude = position.coords.latitude;
+		  var longitude = position.coords.longitude;
+		  console.log("Latitude : " + latitude + " Longitude: " + longitude);
+		}
+	
+	  //Supportive function for HTML5 Geolocation!
+		function errorHandler(err) {
+		  if(err.code == 1) {
+			  console.log("Error: Access is denied!");
+		  }else if( err.code == 2) {
+			  console.log("Error: Position is unavailable!");
+		  }
+		}
+	
+		 //Function which routes user to view the pdf on the checkbox toggle!
+		 function validate() {
+		    var informedConsentCheckbox = document.getElementById('informedConsentCheckbox');
+			if (informedConsentCheckbox.checked == 1) {
+				console.log("Checked");
+				window.location.href = "submitPersonalInfo.html";
+			} else {
+				console.log("Unchecked");
+			} 
+		}
+	 
     $(document).ready(function() {
     	var host = location.host;
    	 	console.log("Host : "+host);
+   	 	
+   	 	//Try the HTML5 geolocation to get user's location!
+   	 	if(navigator.geolocation) {
+	      // timeout at 60000 milliseconds (60 seconds)
+	      //var options = {timeout:60000}; //can add options as a parameter to getCurrentPosition()
+	      navigator.geolocation.getCurrentPosition(showLocation, errorHandler);
+	      
+	   } else {
+	      console.log("Sorry, browser does not support geolocation!");
+	   }
    	 
     	$('#pdf').on('click', function() {
   		  window.location.href = "viewInformedConsentPdf.html?host="+host+"";
   	   });	
      });
-    
-	   function validate() {
-		    var informedConsentCheckbox = document.getElementById('informedConsentCheckbox');
-			if (informedConsentCheckbox.checked == 1) {
-				console.log("checked");
-				window.location.href = "submitPersonalInfo.html";
-			} else {
-				console.log("You didn't check it! Let me check it for you.");
-			} 
-		}
-	   
 </script>
 </head>
 <body>
