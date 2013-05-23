@@ -1,5 +1,7 @@
 ﻿package com.scrbl.model;
 
+import com.scrbl.logic.Figure;
+
 public class FigureSet
 {
 	private java.util.ArrayList<Figure> figures;

@@ -42,9 +42,11 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.scrbl.model.Figure;
+import com.scrbl.logic.CosineSimilarity;
+import com.scrbl.logic.Figure;
+import com.scrbl.logic.Stroke;
+import com.scrbl.logic.VelocityVector;
 import com.scrbl.model.Point;
-import com.scrbl.model.Stroke;
 
 public class BaseAction extends ActionSupport implements ServletRequestAware, SessionAware {
 
@@ -242,17 +244,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			listOfPoints.add(point);
 		}
 		
-		for(int i = 0; i < listOfPoints.size() - 1; i++) {	
-			double x2 = listOfPoints.get(i+1).getX() - listOfPoints.get(i).getX();
-	    	double y2 = listOfPoints.get(i+1).getY() - listOfPoints.get(i).getY();
-	    	double t2 = Double.valueOf(timeSplit[i + 1]) - Double.valueOf(timeSplit[i]);
-	    	
-	    	double velocity = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2)) / (t2); 
-	    	velocityVector.add(velocity);
-	    	//logger.info("X2 - X1 : "+x2 + " : Y2 - Y1 : "+y2 +" : T2 - T1 : "+t2 + " : Velocity : "+velocity);
-	    	
-	    	logger.info("Velocity : "+velocity);
-		}
+		VelocityVector velocityVectorObj = new VelocityVector();
+		//Calculate Velocity Vector using Euclidean Distance Formula!
+		velocityVector = velocityVectorObj.calculateVelocityVector(listOfPoints, timeSplit, velocityVector);
+				
 		logger.info("Velocity Vector's Size : "+velocityVector.size());
 		
 		logger.info("TIME LENGTH : "+timeSplit.length + " POINT ARR LENGTH : "+listOfPoints.size());
@@ -364,8 +359,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
 				logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
 				
-				double cosineSimilarity = calculateCosineSimilarity(initialVelocityVector, velocityVector);
-				logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
+				CosineSimilarity cosineSimilarity = new CosineSimilarity();
+				
+				double cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
+				logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
 			}
 			//double x = (numberOfStrokes * currentNumberOfStrokes) / 100;
 			//logger.info("LENGTH IN MATCH : "+x);
@@ -375,7 +372,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
 			}*/
 					
-			logger.info("Executing Logic to Match the Two Figures!!!!!");
+			//logger.info("Executing Logic to Match the Two Figures!!!!!");
 			Figure template = (Figure) getValueBySessionAttribute("figure");
 			//logger.info("GIFURE L "+getFigure());
 			if(!getFigure().equals(null) || getFigure() != null)
@@ -392,31 +389,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		
 		return SUCCESS;
 	}
-	
-	private double calculateCosineSimilarity(List<Double> vecA, List<Double> vecB) {
-		double dotProduct = DotProduct(vecA, vecB);
-		double magnitudeOfA = Magnitude(vecA);
-		double magnitudeOfB = Magnitude(vecB);
-
-		return dotProduct / (magnitudeOfA * magnitudeOfB);
-	}
-
-	private double DotProduct(List<Double> vectorA, List<Double> vectorB) {
-		logger.info("Initial VECTOR's size : "+vectorA.size()+" : Current VECTOR's size : "+vectorB.size());
-		double dotProduct = 0;
-		for (int i = 0; i < vectorA.size() - 1; i++) {
-			if(vectorB.get(i) != null) {
-				//logger.info("LEMGTGH LESS STILL COMES IN WTF");
-				dotProduct += (vectorA.get(i) * vectorB.get(i));
-			}
-		}
-		return dotProduct;
-	}
-	
-	private double Magnitude(List<Double> vector)
-	{
-		return Math.sqrt(DotProduct(vector, vector));
-	}
+		
 	
 	public String writeValues()
 	{

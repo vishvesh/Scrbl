@@ -1,4 +1,7 @@
-﻿package com.scrbl.model;
+﻿package com.scrbl.logic;
+
+import com.scrbl.model.Point;
+import com.scrbl.model.RefObject;
 
 public class Stroke
 {

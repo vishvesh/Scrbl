@@ -3,6 +3,8 @@
 public class Segment
 {
 	private double privateTheta;
+	private double privateST;
+	
 	public final double getTheta()
 	{
 		return privateTheta;
@@ -11,7 +13,7 @@ public class Segment
 	{
 		privateTheta = value;
 	}
-	private double privateST;
+	
 	public final double getST()
 	{
 		return privateST;

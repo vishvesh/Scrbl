@@ -1,4 +1,4 @@
-﻿package com.scrbl.model;
+﻿package com.scrbl.logic;
 
 public class Figure
 {

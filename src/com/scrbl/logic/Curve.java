@@ -1,7 +1,14 @@
-﻿package com.scrbl.model;
+﻿package com.scrbl.logic;
+
+import org.apache.log4j.Logger;
+
+import com.scrbl.model.RefObject;
+import com.scrbl.model.Segment;
 
 public class Curve
 {
+	Logger logger = Logger.getLogger(getClass());
+	
 	private static final double TWO_PI = 2.0 * Math.PI;
 
 	private static final int STROKE_WINDOW_SIZE = 8;
@@ -26,7 +33,8 @@ public class Curve
 	{
 		curve = new java.util.ArrayList<Double>();
 		int end = stroke.getLength() - 2 * STROKE_WINDOW_SIZE;
-		System.out.println("END Inside CURVE : "+end);
+		logger.info("END Inside CURVE : "+end);
+		
 		for (int i = 0; i < end; i++)
 		{
 			double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -41,7 +49,7 @@ public class Curve
 			x2 = tempRef_x2.argvalue;
 			y2 = tempRef_y2.argvalue;
 			
-			//System.out.println("x1 : "+x1 +" : y1 : "+y1 +" : x2 : "+x2+" : y2 : "+y2);
+			//logger.info("x1 : "+x1 +" : y1 : "+y1 +" : x2 : "+x2+" : y2 : "+y2);
 			
 			double dx = x2 - x1;
 			double dy = y2 - y1;
@@ -51,7 +59,7 @@ public class Curve
 			{
 				theta = TWO_PI - theta;
 			}
-			System.out.println("THETA : "+theta);
+			logger.info("THETA : "+theta);
 			curve.add(theta / TWO_PI);
 		}
 	}
@@ -68,14 +76,14 @@ public class Curve
 			}
 			curve.set(i, Math.floor(x * DIRECTIONS) / DIRECTIONS);
 		}
-		System.out.println("Inside CURVE DOWN SAMPLE : SIZE of Curve : "+curve.size());
+		logger.info("Inside CURVE DOWN SAMPLE : SIZE of Curve : "+curve.size());
 	}
 
 	public final void Segment()
 	{
 		if (curve.isEmpty())
 		{
-			System.out.println("CURVE IS EMPTY");
+			logger.info("CURVE IS EMPTY");
 			return;
 		}
 		segments = new java.util.ArrayList<Segment>();
@@ -89,7 +97,7 @@ public class Curve
 				segments.add(new Segment(last_theta, st));
 				last_theta = curve.get(i);
 				st = 0;
-				System.out.println("SEGMENT SIZE : "+segments.size());
+				logger.info("SEGMENT SIZE : "+segments.size());
 			}
 		}
 		segments.add(new Segment(last_theta, st));
@@ -295,7 +303,7 @@ public class Curve
 		}
 		for (int i = 0; i < segments.size(); i++)
 		{
-			System.out.println(segments.get(i));
+			logger.info(segments.get(i));
 		}
 		System.out.println();
 	}
