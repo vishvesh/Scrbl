@@ -46,12 +46,15 @@
 	   console.log("IP : "+ci);
    });  
 
-	function checkVal() {
+	function checkVal(event) {
 		var userEmail = $('#userEmail').val();
-		var userName = $('#userName').val();
+		var userFirstName = $('#userFirstName').val();
+		var userLastName = $('#userLastName').val();
 		var ageGroup = $('#ageGroup').val();
 		
-		if(userEmail == '' || userEmail.length == 0 || userName == '' || userName.length == 0) {
+		//console.log("YO Entered : "+event.which || event.keyCode);
+		
+		if(userEmail == '' || userEmail.length == 0 || userFirstName == '' || userFirstName.length == 0 || userLastName == '' || userLastName.length == 0) {
 			$('#error').html("Name / Email Cannot Be Blank!").addClass('errorClass');
 			return false;
 		}
@@ -59,7 +62,7 @@
 			$('#error').html("Please Select an Age Group").addClass('errorClass');
 			return false;
 		}
-		else if($.trim(userEmail) == '' || $.trim(userName) == '') {
+		else if($.trim(userEmail) == '' || $.trim(userFirstName) == '' || $.trim(userLastName) == '') {
 			$('#error').html("Umm! So many Spaces?").addClass('errorClass');
 			return false;
 		}
@@ -69,6 +72,7 @@
 		}
 		else {
 			//$('#userEmailForm').submit();
+			
 			document.forms["userForm"].submit();
 		}
 		//return false;
@@ -86,7 +90,8 @@
 	  <div id="wrapper">
 			<s:form action="saveUserDetails" id="userForm" style="text-align:center" onsubmit="return false;">
 			
-				<s:textfield label="Enter Name" type="text" name="userName" id="userName" required="true"/>
+				<s:textfield label="First Name" type="text" name="userFirstName" id="userFirstName" required="true"/>
+				<s:textfield label="Last Name" type="text" name="userLastName" id="userLastName" required="true"/>
 				<s:textfield label="Enter Email" type="text" name="userEmail" id="userEmail" required="true"/>
 
 				<s:select label="Age Group"
@@ -99,7 +104,7 @@
 			        
 			     <s:hidden id="ci" name="ci"></s:hidden>
 				
-				<s:submit type="button" id="submitButton" value="Next Step ->" onclick="checkVal();"/>
+				<s:submit type="button" id="submitButton" value="Next Step ->" onclick="checkVal(event);"/>
 				<div id="error"></div>
 			</s:form>
 		</div>

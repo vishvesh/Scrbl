@@ -47,6 +47,7 @@ import com.scrbl.logic.Figure;
 import com.scrbl.logic.Stroke;
 import com.scrbl.logic.VelocityVector;
 import com.scrbl.model.Point;
+import com.scrbl.model.Users;
 
 public class BaseAction extends ActionSupport implements ServletRequestAware, SessionAware {
 
@@ -77,7 +78,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String matchedValue;
 	private Map<String, Object> sessionMap;
 	protected HttpServletRequest request;
-	private String userName;
+	private String userFirstName;
+	private String userLastName;
 	private String userEmail;
 	private String ageGroup;
 	private List<Double> velocityVector;
@@ -113,12 +115,20 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return velocityVector;
 	}
 	
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
 	}
 	
-	public String getUserName() {
-		return userName;
+	public String getUserFirstName() {
+		return userFirstName;
+	}
+	
+	public void setUserLastName(String userLastName) {
+		this.userLastName = userLastName;
+	}
+	
+	public String getUserLastName() {
+		return userLastName;
 	}
 	
 	public void setAgeGroup(String ageGroup) {
@@ -187,8 +197,18 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	}
 	
 	public String saveUserDetails() throws Exception {
-		logger.info("Inside saveUserDetails() : User's Name : "+userName +" : " +
-				"User's Email : "+userEmail + " : Age Group : "+ageGroup + " : Ip Address : "+ci);
+		logger.info("Inside saveUserDetails() : User's First Name : "+userFirstName +" : User's Last Name : "+ userLastName +
+				" : \nUser's Email : "+userEmail + " : Age Group : "+ageGroup + " : Ip Address : "+ci);
+		
+		Users users = new Users();
+		users.setFirstName(userFirstName);
+		users.setLastName(userLastName);
+		users.setEmail(userEmail);
+		users.setAgeGroup(ageGroup);
+		users.setIpAddress(ci);
+		
+		users.toString();
+		
 		return super.execute();
 	}
 
@@ -217,98 +237,111 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return SUCCESS;
 	}
 
-	private void compute() {
-		figure = new Figure();
-		
-		
-		pointArray = pointArray.replace("[", "").replace("]", "");
-		logger.info("Point Array : "+pointArray);
-		
-		//TODO: Computing Velocity Vector using Euclidean Distance!
-	    String timeArr = timeArray.replace("[", "").replace("]", "").replaceAll(",0", "");
-		logger.info("TIME ARRAY : "+timeArr);
-		String[] timeSplit = timeArr.split(",");
+	private List<Point> compute() {
+		List<Point> listOfPoints = null;
+		try {
+			figure = new Figure();
+			
+			
+			pointArray = pointArray.replace("[", "").replace("]", "");
+			logger.info("Point Array : "+pointArray);
+			
+			//TODO: Computing Velocity Vector using Euclidean Distance!
+			String timeArr = timeArray.replace("[", "").replace("]", "").replaceAll(",0", "");
+			logger.info("TIME ARRAY : "+timeArr);
+			String[] timeSplit = timeArr.split(",");
 
-		String pointString = pointArray.replaceAll("(,0,0)", "");
-		logger.info("Point STRING : "+pointString);
-		
-		List<Point> listOfPoints = new ArrayList<Point>();
-		
-		String[] pointArr = pointString.split(",");
-		
-		velocityVector = new ArrayList<Double>();
-		
-		for(int i = 0, j = i + 1; i < pointArr.length - 1; i+=2, j+=2) {
-			Point point = new Point(Double.valueOf(pointArr[i]), Double.valueOf(pointArr[j]));
-			listOfPoints.add(point);
-		}
-		
-		VelocityVector velocityVectorObj = new VelocityVector();
-		//Calculate Velocity Vector using Euclidean Distance Formula!
-		velocityVector = velocityVectorObj.calculateVelocityVector(listOfPoints, timeSplit, velocityVector);
-				
-		logger.info("Velocity Vector's Size : "+velocityVector.size());
-		
-		logger.info("TIME LENGTH : "+timeSplit.length + " POINT ARR LENGTH : "+listOfPoints.size());
-		//TODO: Computing Velocity Vector using Euclidean Distance!
-		
-		
-	
-		
-		//String[] splitString = pointArray.split("(d+),(d+)(,)?");
-		//String[] splitString = pointArray.split("([d+,d+])(,)?");
-		
-		String[] splitString = pointArray.split("(,0,0)(,)?");
-	    logger.info("splitString LENGTH : " +splitString.length);
-	    
-	    if(getValueBySessionAttribute("numberOfStrokes") == null)
-	    	setValueBySessionAttribute("numberOfStrokes", splitString.length);
-	    
-	    currentNumberOfStrokes = splitString.length;
-	    
-	    points = new ArrayList<Double>();
-	    //stroke = new ArrayList<Point>();
-	    
-	    if(splitString != null && !splitString.equals("") && currentNumberOfStrokes > 0) {
-		    for (String string : splitString) {
-		    	if (stroke == null)
-				{
-		    		logger.info("STROKE NULL");
-					stroke = new Stroke();
-				}
-				//stroke.Add(new Point(args.X, args.Y));
-	
-		    	logger.info("COMPLETE STROKE ARRAY : "+string);
-		    	String[] theString = string.split("([d+,d+])(,)?");
-		    	for (String allPoints : theString) {
-		    		//logger.info("APP POINTS : "+Integer.valueOf(allPoints));
-		    		if(allPoints != null)
-		    			points.add(Double.valueOf(allPoints));
-				}
-		    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
-			    {
-			    	Point point = new Point(points.get(i), points.get(j));
-			    	//logger.info("X : "+point.getX() + " : Y : "+point.getY() ); 
-			    	stroke.Add(point);
+			String pointString = pointArray.replaceAll("(,0,0)", "");
+			logger.info("Point STRING : "+pointString);
+			
+			listOfPoints = new ArrayList<Point>();
+			
+			String[] pointArr = pointString.split(",");
+			
+			velocityVector = new ArrayList<Double>();
+
+			for(int i = 0, j = i + 1, t = 0; i < pointArr.length - 1; i+=2, j+=2, t++) {
+				Point point = new Point(Double.valueOf(pointArr[i]), Double.valueOf(pointArr[j]), Double.valueOf(timeSplit[t]));
+				listOfPoints.add(point);
+			}
+			
+			/*for (Point point : listOfPoints) {
+				logger.info(point.toString());
+			}*/
+			
+			VelocityVector velocityVectorObj = new VelocityVector();
+			//Calculate Velocity Vector using Euclidean Distance Formula!
+			velocityVector = velocityVectorObj.calculateVelocityVector(listOfPoints, timeSplit, velocityVector);
+					
+			logger.info("Velocity Vector's Size : "+velocityVector.size());
+			
+			logger.info("TIME LENGTH : "+timeSplit.length + " POINT ARR LENGTH : "+listOfPoints.size());
+			//TODO: Computing Velocity Vector using Euclidean Distance!
+			
+						
+			//String[] splitString = pointArray.split("(d+),(d+)(,)?");
+			//String[] splitString = pointArray.split("([d+,d+])(,)?");
+			
+			String[] splitString = pointArray.split("(,0,0)(,)?");
+			logger.info("splitString LENGTH : " +splitString.length);
+			
+			if(getValueBySessionAttribute("numberOfStrokes") == null)
+				setValueBySessionAttribute("numberOfStrokes", splitString.length);
+			
+			currentNumberOfStrokes = splitString.length;
+			
+			points = new ArrayList<Double>();
+			//stroke = new ArrayList<Point>();
+			
+			if(splitString != null && !splitString.equals("") && currentNumberOfStrokes > 0) {
+			    for (String string : splitString) {
+			    	if (stroke == null)
+					{
+			    		logger.info("STROKE NULL");
+						stroke = new Stroke();
+					}
+					//stroke.Add(new Point(args.X, args.Y));
+
+			    	logger.info("COMPLETE STROKE ARRAY : "+string);
+			    	String[] theString = string.split("([d+,d+])(,)?");
+			    	for (String allPoints : theString) {
+			    		//logger.info("APP POINTS : "+Integer.valueOf(allPoints));
+			    		if(allPoints != null)
+			    			points.add(Double.valueOf(allPoints));
+					}
+			    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
+				    {
+				    	Point point = new Point(points.get(i), points.get(j));
+				    	//logger.info("X : "+point.getX() + " : Y : "+point.getY() ); 
+				    	stroke.Add(point);
+				    	
+				    }
+			    	figure.Add(stroke);
 			    	
+			    	if (stroke != null)
+					{
+			    		logger.info("STROKE NOT NULL");
+						stroke = null;
+						figure.CurveLastStroke();
+					}
+			    	//figure.Add(stroke);
+			    	logger.info("Stroke Completed!");
 			    }
-		    	figure.Add(stroke);
-		    	
-		    	if (stroke != null)
-				{
-		    		logger.info("STROKE NOT NULL");
-					stroke = null;
-					figure.CurveLastStroke();
-				}
-		    	//figure.Add(stroke);
-		    	logger.info("Stroke Completed!");
-		    }
-	    }
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("Exception : "+e);
+		}
+		return listOfPoints;
 	}
 	
 	public String saveFigure() throws Exception {
 
-		compute();
+		logger.info("Inside Save Figure() : Printing Template Data : --v");
+		List<Point> templateData = compute();
+		for (Point point : templateData) {
+			point.toString();
+		}
 
 	    sessionMap.put("figure", figure);
 	    
@@ -345,7 +378,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	{
 		try {
 		//logger.info(figure.getLength());
-			compute();
+			List<Point> matchData = compute();
 			//Figure template = (Figure) sessionMap.get("figure");
 			//logger.info("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
 			int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
