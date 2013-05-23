@@ -33,6 +33,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -53,6 +54,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	 * Project : Scrbl
 	 */
 	private static final long serialVersionUID = 1L;
+	Logger logger = Logger.getLogger(getClass());
 	
 	private String name;
 	private String pageX;
@@ -184,7 +186,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	}
 	
 	public String saveUserDetails() throws Exception {
-		System.out.println("Inside saveUserDetails() : User's Name : "+userName +" : " +
+		logger.info("Inside saveUserDetails() : User's Name : "+userName +" : " +
 				"User's Email : "+userEmail + " : Age Group : "+ageGroup);
 		return super.execute();
 	}
