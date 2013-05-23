@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <script src="http://code.jquery.com/jquery-1.7.2.min.js" ></script>
 <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js" ></script>
-<%-- <script type = "text/javascript" src="http://l2.io/ip.js?var=c"></script> --%> 
+<script type = "text/javascript" src="http://l2.io/ip.js?var=c"></script> 
 <%-- <script src="js/home.js" ></script> --%>
 <link rel="stylesheet" type="text/css" href="css/home.css">
 <style type="text/css">
@@ -35,9 +35,17 @@
 }
 </style>
 <script type="text/javascript">
-	/* $(document).ready(function() {
-   });  */
-	
+   $(document).ready(function() {
+	   var ci;
+	   if(typeof c !=='undefined')
+	   	ci = c;
+	   else
+	   	ci = null;
+	   
+	   document.getElementById('ci').value = ci;
+	   console.log("IP : "+ci);
+   });  
+
 	function checkVal() {
 		var userEmail = $('#userEmail').val();
 		var userName = $('#userName').val();
@@ -88,6 +96,8 @@
 			        list="#{'18-25':'18-25', '25-30':'25-30', '30-35':'30-35', '35-50':'35-50'}"
 			        value="selectedAgeGroup"
 			        required="true" />
+			        
+			     <s:hidden id="ci" name="ci"></s:hidden>
 				
 				<s:submit type="button" id="submitButton" value="Next Step ->" onclick="checkVal();"/>
 				<div id="error"></div>

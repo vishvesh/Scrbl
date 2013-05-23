@@ -82,6 +82,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String ageGroup;
 	private List<Double> velocityVector;
 	private int currentNumberOfStrokes;
+	private InputStream inputStream;
 	private String host;
 	
 	public void setHost(String host) {
@@ -91,9 +92,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	public String getHost() {
 		return host;
 	}
-	
-	private InputStream inputStream;
-	
+
 	public void setInputStream(InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
@@ -189,7 +188,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public String saveUserDetails() throws Exception {
 		logger.info("Inside saveUserDetails() : User's Name : "+userName +" : " +
-				"User's Email : "+userEmail + " : Age Group : "+ageGroup);
+				"User's Email : "+userEmail + " : Age Group : "+ageGroup + " : Ip Address : "+ci);
 		return super.execute();
 	}
 

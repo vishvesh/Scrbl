@@ -21,11 +21,11 @@ var pageX = [],
 };*/
 var pointArray = [];
 
-var ci;
+/*var ci;
 if(typeof c !=='undefined')
 	ci = c;
 else
-	ci = null;
+	ci = null;*/
 
 function Point(x, y, z) {
 	if (x === undefined) {
@@ -280,7 +280,7 @@ function writeValues() {
   $.ajax({ 
 	  url: 'writeValues.html', 
 	  type: 'POST', 
-	  data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
+	  data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
 		  //$('#ajaxResponse').html(data); 
 	  } 
@@ -299,7 +299,7 @@ function save() {
   $.ajax({ 
 	  url: 'save.html', 
 	  type: 'POST', 
-	  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY),timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)}, 
+	  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY),timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)}, 
 	  success: function(data){
 		  //$('#ajaxResponse').html(data); 
 	  } 
@@ -310,7 +310,7 @@ function match() {
 	$.ajax({ 
 		  url: 'match.html', 
 		  type: 'POST',
-		  data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)},
+		  data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)},
 		  success: function(data){
 			  //$('#ajaxResponse').html(data); 
 			  //alert("Template Saved!");
@@ -330,7 +330,7 @@ function clearScreen() {
 	$.ajax({ 
 		  url: 'clean.html', 
 		  type: 'POST',
-		  //data: {timeArray: JSON.stringify(timeArray), ci: ci, pointArray: JSON.stringify(pointArray)},
+		  //data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)},
 		  success: function(data){
 			  //$('#ajaxResponse').html(data); 
 			  //alert("Template Saved!");
