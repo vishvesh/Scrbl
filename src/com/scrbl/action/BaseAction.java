@@ -169,13 +169,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	public String viewPdf() throws Exception {
 		try {
 			if(host.startsWith("localhost"))
-				System.out.println("Is Development : Host : "+host);
+				logger.info("Is Development : Host : "+host);
 			else
-				System.out.println("Is Production : Host : "+host);
+				logger.info("Is Production : Host : "+host);
 
 			URL url = getClass().getResource(informedConsentPdf);
 			File file = new File(url.getPath());
-			System.out.println("Informed Consent's abs file path : "+file.getAbsolutePath());
+			logger.info("Informed Consent's abs file path : "+file.getAbsolutePath());
 			
 			inputStream = new DataInputStream(new FileInputStream(file));
 			
@@ -195,24 +195,24 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	{
 		name = "Welcome To Scrbl!";
 		/*String name = System.getProperty("user.dir")+File.separator+BaseAction.class.getPackage().getName()+File.separator;
-        System.out.println("User dir name : "+name);
+        logger.info("User dir name : "+name);
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         //URL url = classLoader.getResource("/WebContent/css/home.css");
         try {
-			//System.out.println("URL : "+url.toURI());
+			//logger.info("URL : "+url.toURI());
         	pathname = (String)getClass().getResource("").toURI().toString();
-			System.out.println("Different way : "+pathname+"X-Y-Coordinates.xls");
+			logger.info("Different way : "+pathname+"X-Y-Coordinates.xls");
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		//System.out.println(getText("emailfile.nameOfFile"));
+		//logger.info(getText("emailfile.nameOfFile"));
         
 		return SUCCESS;
 	}
 	
 	public String startScribbling() {
-		System.out.println("Forwarding User Start Scribbling!");
+		logger.info("Forwarding User Start Scribbling!");
 		return SUCCESS;
 	}
 
@@ -221,15 +221,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		
 		
 		pointArray = pointArray.replace("[", "").replace("]", "");
-		System.out.println("Point Array : "+pointArray);
+		logger.info("Point Array : "+pointArray);
 		
 		//TODO: Computing Velocity Vector using Euclidean Distance!
 	    String timeArr = timeArray.replace("[", "").replace("]", "").replaceAll(",0", "");
-		System.out.println("TIME ARRAY : "+timeArr);
+		logger.info("TIME ARRAY : "+timeArr);
 		String[] timeSplit = timeArr.split(",");
 
 		String pointString = pointArray.replaceAll("(,0,0)", "");
-		System.out.println("Point STRING : "+pointString);
+		logger.info("Point STRING : "+pointString);
 		
 		List<Point> listOfPoints = new ArrayList<Point>();
 		
@@ -249,13 +249,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    	
 	    	double velocity = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2)) / (t2); 
 	    	velocityVector.add(velocity);
-	    	//System.out.println("X2 - X1 : "+x2 + " : Y2 - Y1 : "+y2 +" : T2 - T1 : "+t2 + " : Velocity : "+velocity);
+	    	//logger.info("X2 - X1 : "+x2 + " : Y2 - Y1 : "+y2 +" : T2 - T1 : "+t2 + " : Velocity : "+velocity);
 	    	
-	    	System.out.println("Velocity : "+velocity);
+	    	logger.info("Velocity : "+velocity);
 		}
-		System.out.println("Velocity Vector's Size : "+velocityVector.size());
+		logger.info("Velocity Vector's Size : "+velocityVector.size());
 		
-		System.out.println("TIME LENGTH : "+timeSplit.length + " POINT ARR LENGTH : "+listOfPoints.size());
+		logger.info("TIME LENGTH : "+timeSplit.length + " POINT ARR LENGTH : "+listOfPoints.size());
 		//TODO: Computing Velocity Vector using Euclidean Distance!
 		
 		
@@ -265,7 +265,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		//String[] splitString = pointArray.split("([d+,d+])(,)?");
 		
 		String[] splitString = pointArray.split("(,0,0)(,)?");
-	    System.out.println("splitString LENGTH : " +splitString.length);
+	    logger.info("splitString LENGTH : " +splitString.length);
 	    
 	    if(getValueBySessionAttribute("numberOfStrokes") == null)
 	    	setValueBySessionAttribute("numberOfStrokes", splitString.length);
@@ -279,22 +279,22 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		    for (String string : splitString) {
 		    	if (stroke == null)
 				{
-		    		System.out.println("STROKE NULL");
+		    		logger.info("STROKE NULL");
 					stroke = new Stroke();
 				}
 				//stroke.Add(new Point(args.X, args.Y));
 	
-		    	System.out.println("COMPLETE STROKE ARRAY : "+string);
+		    	logger.info("COMPLETE STROKE ARRAY : "+string);
 		    	String[] theString = string.split("([d+,d+])(,)?");
 		    	for (String allPoints : theString) {
-		    		//System.out.println("APP POINTS : "+Integer.valueOf(allPoints));
+		    		//logger.info("APP POINTS : "+Integer.valueOf(allPoints));
 		    		if(allPoints != null)
 		    			points.add(Double.valueOf(allPoints));
 				}
 		    	for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
 			    {
 			    	Point point = new Point(points.get(i), points.get(j));
-			    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() ); 
+			    	//logger.info("X : "+point.getX() + " : Y : "+point.getY() ); 
 			    	stroke.Add(point);
 			    	
 			    }
@@ -302,12 +302,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		    	
 		    	if (stroke != null)
 				{
-		    		System.out.println("STROKE NOT NULL");
+		    		logger.info("STROKE NOT NULL");
 					stroke = null;
 					figure.CurveLastStroke();
 				}
 		    	//figure.Add(stroke);
-		    	System.out.println("Stroke Completed!");
+		    	logger.info("Stroke Completed!");
 		    }
 	    }
 	}
@@ -320,11 +320,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	    
 	    setValueBySessionAttribute("figure", figure);
 	    setValueBySessionAttribute("velocityVector", velocityVector);
-	    System.out.println("Session MAP Size : "+sessionMap.size() + " : Velocity Vector's Size : "+velocityVector.size());
+	    logger.info("Session MAP Size : "+sessionMap.size() + " : Velocity Vector's Size : "+velocityVector.size());
 	    
 	    //writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 	    
-	    System.out.println("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
+	    logger.info("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
 		return SUCCESS;
 	}
 	
@@ -350,45 +350,45 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	public String matchFigure()
 	{
 		try {
-		//System.out.println(figure.getLength());
+		//logger.info(figure.getLength());
 			compute();
 			//Figure template = (Figure) sessionMap.get("figure");
-			//System.out.println("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
+			//logger.info("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
 			int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
-			System.out.println("Session Template's numberOfStrokes : "+numberOfStrokes);
-			System.out.println("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
+			logger.info("Session Template's numberOfStrokes : "+numberOfStrokes);
+			logger.info("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
 			
 			if(currentNumberOfStrokes == numberOfStrokes) {
-				System.out.println("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
+				logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
 				
 				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-				System.out.println("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
+				logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
 				
 				double cosineSimilarity = calculateCosineSimilarity(initialVelocityVector, velocityVector);
-				System.out.println("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
+				logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
 			}
 			//double x = (numberOfStrokes * currentNumberOfStrokes) / 100;
-			//System.out.println("LENGTH IN MATCH : "+x);
+			//logger.info("LENGTH IN MATCH : "+x);
 			/*if((numberOfStrokes != null) && (numberOfStrokes < currentNumberOfStrokes)) {
 				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
 				double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
-				System.out.println("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
+				logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
 			}*/
 					
-			System.out.println("Executing Logic to Match the Two Figures!!!!!");
+			logger.info("Executing Logic to Match the Two Figures!!!!!");
 			Figure template = (Figure) getValueBySessionAttribute("figure");
-			//System.out.println("GIFURE L "+getFigure());
+			//logger.info("GIFURE L "+getFigure());
 			if(!getFigure().equals(null) || getFigure() != null)
 				matchedValue = (new Double(template.Match(getFigure()))).toString();
-			System.out.println("Matched VALUE : "+matchedValue);
+			logger.info("Matched VALUE : "+matchedValue);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		//matchedValue = (new Double(getTemplate().Match(getFigure()))).toString();
-		//System.out.println("Matched VALUE : "+matchedValue);
-		//System.out.println("template : "+template.getLength() + " : Figure : "+figure.getLength());
+		//logger.info("Matched VALUE : "+matchedValue);
+		//logger.info("template : "+template.getLength() + " : Figure : "+figure.getLength());
 		
 		return SUCCESS;
 	}
@@ -402,11 +402,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	}
 
 	private double DotProduct(List<Double> vectorA, List<Double> vectorB) {
-		System.out.println("Initial VECTOR's size : "+vectorA.size()+" : Current VECTOR's size : "+vectorB.size());
+		logger.info("Initial VECTOR's size : "+vectorA.size()+" : Current VECTOR's size : "+vectorB.size());
 		double dotProduct = 0;
 		for (int i = 0; i < vectorA.size() - 1; i++) {
 			if(vectorB.get(i) != null) {
-				//System.out.println("LEMGTGH LESS STILL COMES IN WTF");
+				//logger.info("LEMGTGH LESS STILL COMES IN WTF");
 				dotProduct += (vectorA.get(i) * vectorB.get(i));
 			}
 		}
@@ -423,26 +423,26 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		//for (Object element : pointArray) {
 		/*String[] points = pointArray.split(",");
 		for (String point : points) {
-			System.out.println("Point is : "+point);
+			logger.info("Point is : "+point);
 		}*/
 		/*compute();
 	    
 	    setFigure(figure);
 	    sessionMap.put("figure", figure);
 	    
-	    System.out.println("Session MAP Size : "+sessionMap.size());
+	    logger.info("Session MAP Size : "+sessionMap.size());
 	    
-	    System.out.println("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());*/
+	    logger.info("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());*/
 	    
 	    /*for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
 	    {
 	    	Point point = new Point(points.get(i), points.get(j));
-	    	//System.out.println("X : "+point.getX() + " : Y : "+point.getY() );
+	    	//logger.info("X : "+point.getX() + " : Y : "+point.getY() );
 	    	stroke.add(point);
 	    }*/
 	    
 	    /*for (Point value : stroke) {
-			System.out.println("STROKE : "+value);
+			logger.info("STROKE : "+value);
 		}*/
 		
 		/*ObjectMapper mapper = new ObjectMapper();
@@ -450,18 +450,18 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			// read from file, convert it to user class
 			//User user = mapper.readValue(new File("c:\\user.json"), User.class);	 
 			// display to console
-			//System.out.println(user);	 
+			//logger.info(user);	 
 		} catch (Exception e) {	 
 			e.printStackTrace();
 		}*/
 	 
 		//}
 		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
-		//System.out.println("Page X : "+pageX.replace("[", "").replace("]", ""));
-		//System.out.println("Page Y : "+pageY.replace("[", "").replace("]", ""));
+		//logger.info("Page X : "+pageX.replace("[", "").replace("]", ""));
+		//logger.info("Page Y : "+pageY.replace("[", "").replace("]", ""));
 		
 		/*String replacedX = pageX.replaceAll(",", " ").replace("[", "").replace("]", "");
-		System.out.println("Replaced PAGE X : "+replacedX);
+		logger.info("Replaced PAGE X : "+replacedX);
 		String[] pagex = replacedX.split("\\s0");
 		for (String stringx : pagex) {
 			String x = stringx;
@@ -469,18 +469,18 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			for (String string : splitStringX) {
 				System.out.print(" : splitString : "+string);
 			}
-			System.out.println();
-			System.out.println("PAGE X : "+stringx);
+			logger.info();
+			logger.info("PAGE X : "+stringx);
 		}
 		
 		String replacedY = pageY.replaceAll(",", " ").replace("[", "").replace("]", "");
-		System.out.println("Replaced PAGE Y : "+replacedY);
+		logger.info("Replaced PAGE Y : "+replacedY);
 		String[] pagey = replacedY.split("\\s0");
 		for (String stringy : pagey) {
-			System.out.println("PAGE Y : "+stringy);
+			logger.info("PAGE Y : "+stringy);
 		}*/
-		//System.out.println("Time Array : "+timeArray.replace("[", "").replace("]", ""));
-		//System.out.println("Client IP Address : "+ci);
+		//logger.info("Time Array : "+timeArray.replace("[", "").replace("]", ""));
+		//logger.info("Client IP Address : "+ci);
 		return SUCCESS;
 	}
 	
@@ -488,7 +488,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	{
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		System.out.println(dateFormat.format(cal.getTime()));
+		logger.info(dateFormat.format(cal.getTime()));
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Sample sheet");
@@ -505,7 +505,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			while(velocityVector.size() < pagex.length)
 				velocityVector.add(0.0);
 		
-		System.out.println("PAGE X LENGTH : "+pagex.length + " : VECTOR SIZEEEEEEEEEEE : "+velocityVector.size());
+		logger.info("PAGE X LENGTH : "+pagex.length + " : VECTOR SIZEEEEEEEEEEE : "+velocityVector.size());
 		while(counter <= pagex.length)
 		{
 			//System.out.print("Counter : "+counter + " ");
@@ -517,7 +517,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		/*Iterator it = data.entrySet().iterator();
 		while (it.hasNext()) {
 		Map.Entry pairs = (Map.Entry)it.next();
-		 System.out.println(pairs.getKey()+",");
+		 logger.info(pairs.getKey()+",");
 		}*/
 		SortedSet<Integer> keySet = new TreeSet<Integer>(data.keySet());
 		//List<Integer> keySet=new ArrayList(data.keySet());
@@ -525,13 +525,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		//keySet =  (TreeSet<String>) data.keySet();
 		int rownum = 0;
 		for (int key : keySet) {
-			//System.out.println("KEYSET KEY : "+key);
+			//logger.info("KEYSET KEY : "+key);
 		    Row row = sheet.createRow(rownum++);
 		    String [] objArr = (String[]) data.get(key);
 		    int cellnum = 0;
 		    for (String obj : objArr) {
 		        Cell cell = row.createCell(cellnum++);
-		        //System.out.println("String is : "+obj);
+		        //logger.info("String is : "+obj);
 		        if(obj instanceof String)
 		            cell.setCellValue((String)obj);
 		    }
@@ -539,12 +539,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		 
 		try {
 			file = new File(nameOfFile);
-			//System.out.println("File Path : "+(nameOfFile));
-			System.out.println("canonical path : "+file.getCanonicalPath()+ " : abs path : "+ file.getAbsolutePath() +" : path : "+ file.getPath());
+			//logger.info("File Path : "+(nameOfFile));
+			logger.info("canonical path : "+file.getCanonicalPath()+ " : abs path : "+ file.getAbsolutePath() +" : path : "+ file.getPath());
 		    FileOutputStream out = new FileOutputStream(file);
 		    workbook.write(out);
 		    out.close();
-		    System.out.println("Excel written successfully..");
+		    logger.info("Excel written successfully..");
 		    sendEmailWithAttachment();
 		    
 		} catch (FileNotFoundException e) {
@@ -567,7 +567,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
         String emailAddresses = getText("email.emailAddresses");
         //String toAddress = "amitshob@gmail.com";
         String filename = nameOfFile;
-        //System.out.println("File Path in sendemailwithattachment : "+(pathname+nameOfFile));
+        //logger.info("File Path in sendemailwithattachment : "+(pathname+nameOfFile));
         // Get system properties
         Properties props = System.getProperties();
         props.put("mail.smtp.host", emailHost);
@@ -597,10 +597,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
             Transport tr = session.getTransport("smtps");
             tr.connect(emailHost, emailFrom, emailPassword);
             tr.sendMessage(message, message.getAllRecipients());
-            System.out.println("Mail Sent Successfully");
+            logger.info("Mail Sent Successfully");
             tr.close();
         } catch (Exception sfe) {
-            System.out.println(sfe);
+            logger.info(sfe);
         }
 	}
 

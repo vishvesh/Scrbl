@@ -42,8 +42,7 @@
 	    function showLocation(position) {
 		  var latitude = position.coords.latitude;
 		  var longitude = position.coords.longitude;
-		  var pos = new google.maps.LatLng(42.671329, -73.779545);
-		  console.log("Latitude : " + latitude + " Longitude: " + longitude + " : pos : "+pos);
+		  console.log("Latitude : " + latitude + " Longitude: " + longitude);
 		}
 	
 	  //Supportive function for HTML5 Geolocation!
