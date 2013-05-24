@@ -228,8 +228,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		if(user == null) {
 			logger.info("User Not Found! So saving new user!");
 			Users newUser = usersService.saveNewUser(users);
+			setValueBySessionAttribute("sessionUser", newUser.getEmail());
 		} else {
 			logger.info("User already present : User Email : "+user.getEmail());
+			setValueBySessionAttribute("sessionUser", user.getEmail());
 		}
 		
 		List<Users> allUsers = usersService.getAllUsers();
@@ -370,8 +372,25 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		if(templateData.size() > 0) {
 			//**Convert List to JSON....
 			final ObjectMapper mapper = new ObjectMapper();
-			final String data = mapper.writeValueAsString(templateData);
-			logger.info("TEMPLATE DATA : "+data);
+			final String templateDataString = mapper.writeValueAsString(templateData);
+			logger.info("TEMPLATE DATA : "+templateDataString);
+			logger.info("TEMPLATE DATA LENGTH : "+templateDataString.length());
+			
+			try {
+				String email = (String) getValueBySessionAttribute("sessionUser");
+				if (email != null) {
+					//Check if the user already exists!
+					Users user = usersService.getUserByEmail(email);
+					if (user != null) {
+						user.setTemplateData(templateDataString);
+						usersService.saveNewUser(user);
+						logger.info("TEMPLATE Data Saved for User : "+user.getFirstName() + " "+user.getLastName());
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			
 			//**** FOR Converting back to LIST Object****
 			//List<Point> x = mapper.readValue(data, new TypeReference<List<Object>>() {});
@@ -422,39 +441,53 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			if(matchData.size() > 0) {
 				//**Convert List to JSON....
 				final ObjectMapper mapper = new ObjectMapper();
-				final String data = mapper.writeValueAsString(matchData);
-				logger.info("MATCH DATA : "+data);
-
-				int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
-				logger.info("Session Template's numberOfStrokes : "+numberOfStrokes);
-				logger.info("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
-				
-				if(currentNumberOfStrokes == numberOfStrokes) {
-					logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
-					
-					List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-					logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
-					
-					CosineSimilarity cosineSimilarity = new CosineSimilarity();
-					
-					double cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
-					logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
-				}
-				
-				//double x = (numberOfStrokes * currentNumberOfStrokes) / 100;
-				//logger.info("LENGTH IN MATCH : "+x);
-				/*if((numberOfStrokes != null) && (numberOfStrokes < currentNumberOfStrokes)) {
-					List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-					double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
-					logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
-				}*/
+				final String matchDataString = mapper.writeValueAsString(matchData);
+				logger.info("MATCH DATA : "+matchDataString);
+							
+				double cosineSimilarityValue = 0.0;
+				String email = (String) getValueBySessionAttribute("sessionUser");
+				if(email != null) {
+					//Check if the user already exists!
+					Users user = usersService.getUserByEmail(email);
+					if(user != null) {
+						user.setMatchData(matchDataString);
 						
-				//logger.info("Executing Logic to Match the Two Figures!!!!!");
-				Figure template = (Figure) getValueBySessionAttribute("figure");
-				//logger.info("GIFURE L "+getFigure());
-				if(!getFigure().equals(null) || getFigure() != null)
-					matchedValue = (new Double(template.Match(getFigure()))).toString();
-				logger.info("Matched VALUE : "+matchedValue);
+						int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
+						logger.info("Session Template's numberOfStrokes : "+numberOfStrokes);
+						logger.info("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
+						
+						if(currentNumberOfStrokes == numberOfStrokes) {
+							logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
+							
+							List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+							logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
+							
+							CosineSimilarity cosineSimilarity = new CosineSimilarity();
+							
+							cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
+							logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
+						}
+		
+						//logger.info("Executing Logic to Match the Two Figures!!!!!");
+						Figure template = (Figure) getValueBySessionAttribute("figure");
+						//logger.info("GIFURE L "+getFigure());
+						if(!getFigure().equals(null) || getFigure() != null) {
+							matchedValue = (new Double(template.Match(getFigure()))).toString();
+							logger.info("MATCH VALUE CALCULATED SUCESSFULY : "+matchedValue);
+						}
+						else {
+							logger.info("Comes in Else part.. Setting matched value to 10000.00.. Because the Template was NULL");
+							matchedValue = "10000.00";
+						}
+						logger.info("Cosine Similarity Value : "+cosineSimilarityValue +" : MATCH VALUE : "+matchedValue);
+						
+						user.setCosValue(Double.toString(cosineSimilarityValue));
+						user.setShpValue(matchedValue);
+						
+						usersService.saveNewUser(user);
+						logger.info("MATCH Data Saved for User : "+user.getFirstName() + " "+user.getLastName());
+					}
+				}				
 			}
 		}
 		catch(Exception e)
