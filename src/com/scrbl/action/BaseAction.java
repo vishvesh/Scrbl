@@ -41,6 +41,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
 import com.scrbl.logic.CosineSimilarity;
 import com.scrbl.logic.Figure;
@@ -362,20 +364,33 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	public String saveFigure() throws Exception {
 
 		logger.info("Inside Save Figure() : Printing Template Data : --v");
+		
 		List<Point> templateData = compute();
-		for (Point point : templateData) {
-			point.toString();
+		
+		if(templateData.size() > 0) {
+			//**Convert List to JSON....
+			final ObjectMapper mapper = new ObjectMapper();
+			final String data = mapper.writeValueAsString(templateData);
+			logger.info("TEMPLATE DATA : "+data);
+			
+			//**** FOR Converting back to LIST Object****
+			//List<Point> x = mapper.readValue(data, new TypeReference<List<Object>>() {});
+			//logger.info("X SIZEEEEEEE : "+x.size());
+			
+			for (Point point : templateData) {
+				point.toString();
+			}
+	
+		    sessionMap.put("figure", figure);
+		    
+		    setValueBySessionAttribute("figure", figure);
+		    setValueBySessionAttribute("velocityVector", velocityVector);
+		    logger.info("Session MAP Size : "+sessionMap.size() + " : Velocity Vector's Size : "+velocityVector.size());
+		    
+		    //writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
+		    
+		    logger.info("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
 		}
-
-	    sessionMap.put("figure", figure);
-	    
-	    setValueBySessionAttribute("figure", figure);
-	    setValueBySessionAttribute("velocityVector", velocityVector);
-	    logger.info("Session MAP Size : "+sessionMap.size() + " : Velocity Vector's Size : "+velocityVector.size());
-	    
-	    //writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
-	    
-	    logger.info("GET FIGURES STROKES LENGTH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());
 		return SUCCESS;
 	}
 	
@@ -401,39 +416,46 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	public String matchFigure()
 	{
 		try {
-		//logger.info(figure.getLength());
+			//logger.info(figure.getLength());
 			List<Point> matchData = compute();
-			//Figure template = (Figure) sessionMap.get("figure");
-			//logger.info("INSIDE MATCH : SESSIONMAP : "+sessionMap.size());
-			int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
-			logger.info("Session Template's numberOfStrokes : "+numberOfStrokes);
-			logger.info("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
 			
-			if(currentNumberOfStrokes == numberOfStrokes) {
-				logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
+			if(matchData.size() > 0) {
+				//**Convert List to JSON....
+				final ObjectMapper mapper = new ObjectMapper();
+				final String data = mapper.writeValueAsString(matchData);
+				logger.info("MATCH DATA : "+data);
+
+				int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
+				logger.info("Session Template's numberOfStrokes : "+numberOfStrokes);
+				logger.info("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
 				
-				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-				logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
-				
-				CosineSimilarity cosineSimilarity = new CosineSimilarity();
-				
-				double cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
-				logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
-			}
-			//double x = (numberOfStrokes * currentNumberOfStrokes) / 100;
-			//logger.info("LENGTH IN MATCH : "+x);
-			/*if((numberOfStrokes != null) && (numberOfStrokes < currentNumberOfStrokes)) {
-				List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-				double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
-				logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
-			}*/
+				if(currentNumberOfStrokes == numberOfStrokes) {
+					logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
 					
-			//logger.info("Executing Logic to Match the Two Figures!!!!!");
-			Figure template = (Figure) getValueBySessionAttribute("figure");
-			//logger.info("GIFURE L "+getFigure());
-			if(!getFigure().equals(null) || getFigure() != null)
-				matchedValue = (new Double(template.Match(getFigure()))).toString();
-			logger.info("Matched VALUE : "+matchedValue);
+					List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+					logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
+					
+					CosineSimilarity cosineSimilarity = new CosineSimilarity();
+					
+					double cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
+					logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
+				}
+				
+				//double x = (numberOfStrokes * currentNumberOfStrokes) / 100;
+				//logger.info("LENGTH IN MATCH : "+x);
+				/*if((numberOfStrokes != null) && (numberOfStrokes < currentNumberOfStrokes)) {
+					List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+					double cosineSimilarity = CalculateCosineSimilarity(initialVelocityVector, velocityVector);
+					logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarity);
+				}*/
+						
+				//logger.info("Executing Logic to Match the Two Figures!!!!!");
+				Figure template = (Figure) getValueBySessionAttribute("figure");
+				//logger.info("GIFURE L "+getFigure());
+				if(!getFigure().equals(null) || getFigure() != null)
+					matchedValue = (new Double(template.Match(getFigure()))).toString();
+				logger.info("Matched VALUE : "+matchedValue);
+			}
 		}
 		catch(Exception e)
 		{
