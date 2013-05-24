@@ -32,7 +32,7 @@
             <result name="success">/actionView/success.jsp</result>
         </action>
         
-         <action name="saveUserDetails" class="com.scrbl.action.BaseAction" method="saveUserDetails">
+         <action name="saveUserDetails" class="baseAction" method="saveUserDetails">
             <result name="success">/actionView/stepWiseInstructions.jsp</result>
         </action>
         

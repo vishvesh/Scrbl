@@ -1,5 +1,8 @@
 package com.scrbl.service;
 
+import java.util.List;
+
+import com.scrbl.model.Users;
 
 public interface UsersService {
 
@@ -16,4 +19,10 @@ public interface UsersService {
 	public Users changeUserPassword(Users user);
 	
 	public Users resetUserPassword(Users user);*/
+	
+	public List<Users> getAllUsers();
+	
+	public Users saveNewUser(Users user);
+	
+	public Users getUserByEmail(String userName);
 }

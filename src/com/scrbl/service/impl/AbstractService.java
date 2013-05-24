@@ -1,16 +1,18 @@
 package com.scrbl.service.impl;
 
-public abstract class AbstractService {
+import org.apache.log4j.Logger;
 
-	/*protected PizzaStoresDao pizzaStoresDao;
+import com.scrbl.dao.UsersDao;
+
+public abstract class AbstractService {
+	
+	Logger logger = Logger.getLogger(getClass());
+	
 	protected UsersDao userDao;	
 
-	public void setStateProvinceDao(StateProvinceDao stateProvinceDao) {
-		this.stateProvinceDao = stateProvinceDao;
-	}
-
 	public void setUserDao(UsersDao userDao) {
+		logger.info("Comes inside abs service");
 		this.userDao = userDao;
-	}*/
+	}
 
 }

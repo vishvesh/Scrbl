@@ -1,10 +1,35 @@
 package com.scrbl.service.impl;
 
-import org.apache.log4j.Logger;
+import java.util.List;
 
-public class UsersServiceImpl extends AbstractService {// implements UsersService {
+import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.scrbl.model.Users;
+import com.scrbl.service.UsersService;
+
+public class UsersServiceImpl extends AbstractService implements UsersService {
 
 	Logger logger = Logger.getLogger(getClass());
+
+	@Transactional
+	@Override
+	public Users saveNewUser(Users user) {
+		Users newUser = userDao.saveOrUpdate(user);
+		return newUser;
+	}
+
+	@Transactional
+	@Override
+	public Users getUserByEmail(String email) {
+		return userDao.getUserByEmail(email);
+	}
+
+	@Transactional
+	@Override
+	public List<Users> getAllUsers() {
+		return userDao.getAll();
+	}
 	
 	/*private ShaPasswordEncoder userPasswordEncoder;
     
@@ -29,7 +54,7 @@ public class UsersServiceImpl extends AbstractService {// implements UsersServic
     
     @Transactional
     @Override
-    public Users getUserByUserName(String userName) {
+    public Users getUserByEmail(String userName) {
     	return userDao.getUserByUserNameWithAuthorities(userName);
     }
 

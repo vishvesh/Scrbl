@@ -48,6 +48,7 @@ import com.scrbl.logic.Stroke;
 import com.scrbl.logic.VelocityVector;
 import com.scrbl.model.Point;
 import com.scrbl.model.Users;
+import com.scrbl.service.UsersService;
 
 public class BaseAction extends ActionSupport implements ServletRequestAware, SessionAware {
 
@@ -86,6 +87,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private int currentNumberOfStrokes;
 	private InputStream inputStream;
 	private String host;
+	
+	private UsersService usersService;
+	
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
+	}
+	
+	public UsersService getUsersService() {
+		return usersService;
+	}
 	
 	public void setHost(String host) {
 		this.host = host;
@@ -207,7 +218,20 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		users.setAgeGroup(ageGroup);
 		users.setIpAddress(ci);
 		
-		users.toString();
+		logger.info(users.toString());
+
+		//Check if the user already exists!
+		Users user = usersService.getUserByEmail(userEmail);
+		
+		if(user == null) {
+			logger.info("User Not Found! So saving new user!");
+			Users newUser = usersService.saveNewUser(users);
+		} else {
+			logger.info("User already present : User Email : "+user.getEmail());
+		}
+		
+		List<Users> allUsers = usersService.getAllUsers();
+		logger.info("Size  : "+allUsers.size());
 		
 		return super.execute();
 	}
