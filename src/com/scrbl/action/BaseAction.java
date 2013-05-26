@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -41,7 +42,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
 import com.scrbl.logic.CosineSimilarity;
@@ -219,6 +219,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		users.setEmail(userEmail);
 		users.setAgeGroup(ageGroup);
 		users.setIpAddress(ci);
+		users.setCreatedAt(new Date());
+		users.setLastUpdatedAt(new Date());
 		
 		logger.info(users.toString());
 
@@ -383,6 +385,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 					Users user = usersService.getUserByEmail(email);
 					if (user != null) {
 						user.setTemplateData(templateDataString);
+						user.setLastUpdatedAt(new Date());
 						usersService.saveNewUser(user);
 						logger.info("TEMPLATE Data Saved for User : "+user.getFirstName() + " "+user.getLastName());
 					}
@@ -451,6 +454,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 					Users user = usersService.getUserByEmail(email);
 					if(user != null) {
 						user.setMatchData(matchDataString);
+						user.setLastUpdatedAt(new Date());
 						
 						int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
 						logger.info("Session Template's numberOfStrokes : "+numberOfStrokes);

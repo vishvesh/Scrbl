@@ -1,6 +1,7 @@
 package com.scrbl.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -70,6 +73,14 @@ public class Users implements Serializable {
     
     @Column(name = "ip_address")
     private String ipAddress;
+    
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    
+    @Column(name = "last_updated_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdatedAt;
     
     @Column(name = "latitude")
     private String latitude;
@@ -163,6 +174,22 @@ public class Users implements Serializable {
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
     }
+    
+    public Date getCreatedAt() {
+    	return createdAt;
+    }
+    
+    public void setCreatedAt(Date createdAt) {
+    	this.createdAt = createdAt;
+    }
+    
+    public Date getLastUpdatedAt() {
+        return lastUpdatedAt;
+    }
+
+    public void setLastUpdatedAt(Date lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
+    }
 
     public String getLatitude() {
         return latitude;
@@ -206,7 +233,7 @@ public class Users implements Serializable {
 				+ firstName + ", \nlastName = " + lastName + ", \ntemplateData = "
 				+ templateData + ", \nmatchData = " + matchData + ", \ncosineValue = "
 				+ cosValue + ", \nshapeValue = " + shpValue + ", \nageGroup = "
-				+ ageGroup + ", \nipAddress = " + ipAddress + ", \nlatitude = "
+				+ ageGroup + ", \nipAddress = " + ipAddress + ", \n lastUpdatedAt = " + lastUpdatedAt+", \nlatitude = "
 				+ latitude + ", \nlongitude = " + longitude + "\n****User Details****";
 	}
     
