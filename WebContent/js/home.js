@@ -287,20 +287,62 @@ function writeValues() {
   }); 
 }
 
+var image;
+
+function viewSavedImage() {
+	var context = document.getElementById('canvas').getContext('2d');
+	context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+	
+	if(!image) {
+		$.ajax({ 
+		  url: 'getImageUrl.html', 
+		  type: 'GET', 
+		  success: function(data) {
+			//console.log("IMAGE URL : "+data.imageUrl);
+			  if(typeof data.imageUrl == 'undefined') {
+
+				  context.strokeStyle = "navy";
+				  context.font = 'italic 24px san-serif';
+				  context.textBaseline = 'middle';
+				  context.strokeText('Nothing Found to View!', 10, 20);
+				  context.strokeText('To View, please ScribbleIn & Save!', 10, 60);
+			  } else {
+			
+			  image = new Image();
+				image.src = data.imageUrl;
+				image.onload = function() {
+					context.drawImage(image, 0, 0);
+				};
+			  }
+		  } 
+	  });
+	} else {
+		 context.drawImage(image, 0, 0);
+	 }
+}
+
 function save() {
 	console.log("pageX : " + JSON.stringify(pageX));
 	console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
 	console.log("PointArray : " + JSON.stringify(pointArray));
 	//console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
+    var canvas = document.getElementById('canvas');
+	
+	var base64ImageUrl = canvas.toDataURL('image/png');
+	console.log("Un-Replaced DATA URL : "+base64ImageUrl);
+	
+	//dataUrl = dataUrl.replace(/^data:image\/(png|jpeg);base64,/, "");
+	//console.log("Replaced DATA URL : "+dataUrl);
 	
 	alert("Done Scribbling?");
 	
   $.ajax({ 
 	  url: 'save.html', 
 	  type: 'POST', 
-	  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY),timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)}, 
-	  success: function(data){
+	  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY),timeArray: JSON.stringify(timeArray), 
+		  pointArray: JSON.stringify(pointArray), base64ImageUrl: base64ImageUrl}, 
+	  success: function(data) {
 		  //$('#ajaxResponse').html(data); 
 	  } 
   }); 
@@ -320,6 +362,7 @@ function match() {
 
 function clearScreen() {
 	var canvas = document.getElementById('canvas');
+
 	var context = canvas.getContext("2d");
 	context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 	//pageX.length = 0;

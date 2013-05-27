@@ -16,7 +16,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<!-- To be deleted -->
 	<!--<bean id="activeDatesService" class="com.scrbl.data.service.impl.ActiveDatesServiceImpl" parent="abstractService" />-->
-	
+
 	<bean id="usersService" class="com.scrbl.service.impl.UsersServiceImpl" parent="abstractService">
 		<!--<property name="userPasswordEncoder" ref="userPasswordEncoder" /> -->
 	</bean>

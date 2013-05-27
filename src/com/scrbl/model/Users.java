@@ -82,6 +82,9 @@ public class Users implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdatedAt;
     
+    @Column(name = "base64_image_url")
+    private String base64ImageUrl;
+    
     @Column(name = "latitude")
     private String latitude;
     
@@ -190,6 +193,14 @@ public class Users implements Serializable {
     public void setLastUpdatedAt(Date lastUpdatedAt) {
         this.lastUpdatedAt = lastUpdatedAt;
     }
+    
+    public void setBase64ImageUrl(String base64ImageUrl) {
+		this.base64ImageUrl = base64ImageUrl;
+	}
+    
+    public String getBase64ImageUrl() {
+		return base64ImageUrl;
+	}
 
     public String getLatitude() {
         return latitude;

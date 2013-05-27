@@ -23,6 +23,7 @@
 	<input type="button" value="Save" onclick="save()"/>
 	<input type="button" value="Match" onclick="match()"/>
 	<input type="button" value="Clear" onclick="clearScreen()"/>
+	<input type="button" value="View" onclick="viewSavedImage()"/>
 </div>
 </div>
 

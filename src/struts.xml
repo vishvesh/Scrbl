@@ -53,4 +53,14 @@
         </action>
         
     </package>
+    
+    <package name="json-package" namespace="/" extends="json-default">
+	
+        <action name="getImageUrl" class="com.scrbl.action.BaseAction" method="getBase64ImageUrlFromDB">
+             <result type="json">
+        		<param name="excludeNullProperties">true</param>
+        	</result>
+         </action>
+
+	</package>
 </struts>

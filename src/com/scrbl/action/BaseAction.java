@@ -41,6 +41,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
+import org.apache.struts2.json.annotations.JSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
@@ -89,75 +90,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private int currentNumberOfStrokes;
 	private InputStream inputStream;
 	private String host;
-	
+	private String base64ImageUrl;
 	private UsersService usersService;
+	private String imageUrl;
 	
-	public void setUsersService(UsersService usersService) {
-		this.usersService = usersService;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 	
-	public UsersService getUsersService() {
-		return usersService;
-	}
-	
-	public void setHost(String host) {
-		this.host = host;
-	}
-	
-	public String getHost() {
-		return host;
-	}
-
-	public void setInputStream(InputStream inputStream) {
-		this.inputStream = inputStream;
-	}
-	
-	public InputStream getInputStream() {
-		return inputStream;
-	}
-	
-	public int getCurrentNumberOfStrokes() {
-		return currentNumberOfStrokes;
-	}
-	
-	public void setVelocityVector(List<Double> velocityVector) {
-		this.velocityVector = velocityVector;
-	}
-	
-	public List<Double> getVelocityVector() {
-		return velocityVector;
-	}
-	
-	public void setUserFirstName(String userFirstName) {
-		this.userFirstName = userFirstName;
-	}
-	
-	public String getUserFirstName() {
-		return userFirstName;
-	}
-	
-	public void setUserLastName(String userLastName) {
-		this.userLastName = userLastName;
-	}
-	
-	public String getUserLastName() {
-		return userLastName;
-	}
-	
-	public void setAgeGroup(String ageGroup) {
-		this.ageGroup = ageGroup;
-	}
-	
-	public String getAgeGroup() {
-		return ageGroup;
-	}
-	
-	public String getUserEmail() {
-		return userEmail;
-	}
-	
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
 	@Override
@@ -264,6 +206,24 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public String startScribbling() {
 		logger.info("Forwarding User Start Scribbling!");
+		return SUCCESS;
+	}
+	
+	@JSON
+	public String getBase64ImageUrlFromDB() throws Exception {
+		try {
+			String email = (String) getValueBySessionAttribute("sessionUser");
+			if (email != null) {
+				//Check if the user already exists!
+				Users user = usersService.getUserByEmail(email);
+				if (user != null) {
+					imageUrl = user.getBase64ImageUrl();
+					logger.info("Image URL : "+imageUrl +" For User : "+user.getFirstName() + " "+user.getLastName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return SUCCESS;
 	}
 
@@ -386,6 +346,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 					if (user != null) {
 						user.setTemplateData(templateDataString);
 						user.setLastUpdatedAt(new Date());
+						user.setBase64ImageUrl(base64ImageUrl);
 						usersService.saveNewUser(user);
 						logger.info("TEMPLATE Data Saved for User : "+user.getFirstName() + " "+user.getLastName());
 					}
@@ -690,6 +651,82 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
         } catch (Exception sfe) {
             logger.info(sfe);
         }
+	}
+	
+	public void setBase64ImageUrl(String base64ImageUrl) {
+		this.base64ImageUrl = base64ImageUrl;
+	}
+	
+	public String getBase64ImageUrl() {
+		return base64ImageUrl;
+	}
+	
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
+	}
+	
+	public UsersService getUsersService() {
+		return usersService;
+	}
+	
+	public void setHost(String host) {
+		this.host = host;
+	}
+	
+	public String getHost() {
+		return host;
+	}
+
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
+	
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+	
+	public int getCurrentNumberOfStrokes() {
+		return currentNumberOfStrokes;
+	}
+	
+	public void setVelocityVector(List<Double> velocityVector) {
+		this.velocityVector = velocityVector;
+	}
+	
+	public List<Double> getVelocityVector() {
+		return velocityVector;
+	}
+	
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
+	}
+	
+	public String getUserFirstName() {
+		return userFirstName;
+	}
+	
+	public void setUserLastName(String userLastName) {
+		this.userLastName = userLastName;
+	}
+	
+	public String getUserLastName() {
+		return userLastName;
+	}
+	
+	public void setAgeGroup(String ageGroup) {
+		this.ageGroup = ageGroup;
+	}
+	
+	public String getAgeGroup() {
+		return ageGroup;
+	}
+	
+	public String getUserEmail() {
+		return userEmail;
+	}
+	
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 	public String getPageX() {
