@@ -370,7 +370,7 @@ function clearScreen() {
 	timeArray.length = 0;
 	pointArray.length = 0;
 	
-	$.ajax({ 
+	/*$.ajax({ 
 		  url: 'clean.html', 
 		  type: 'POST',
 		  //data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)},
@@ -378,6 +378,6 @@ function clearScreen() {
 			  //$('#ajaxResponse').html(data); 
 			  //alert("Template Saved!");
 		  } 
-	  });
+	  });*/
 	// context.clearRect(0, 0, canvas.width, canvas.height);
 }
