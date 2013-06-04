@@ -430,9 +430,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 							CosineSimilarity cosineSimilarity = new CosineSimilarity();
 							
 							cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
-							logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
 						}
-		
+						
+						logger.info("**********************************************************************************************************");
+						logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
 						//logger.info("Executing Logic to Match the Two Figures!!!!!");
 						Figure template = (Figure) getValueBySessionAttribute("figure");
 						//logger.info("GIFURE L "+getFigure());
@@ -445,6 +446,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 							matchedValue = "10000.00";
 						}
 						logger.info("Cosine Similarity Value : "+cosineSimilarityValue +" : MATCH VALUE : "+matchedValue);
+						logger.info("**********************************************************************************************************");
+						System.out.println();
 						
 						user.setCosValue(Double.toString(cosineSimilarityValue));
 						user.setShpValue(matchedValue);

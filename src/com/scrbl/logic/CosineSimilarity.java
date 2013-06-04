@@ -8,22 +8,46 @@ public class CosineSimilarity {
 	
 	Logger logger = Logger.getLogger(getClass());
 
-	public double calculateCosineSimilarity(List<Double> vecA, List<Double> vecB) {
-		double dotProduct = DotProduct(vecA, vecB);
-		double magnitudeOfA = Magnitude(vecA);
-		double magnitudeOfB = Magnitude(vecB);
+	public double calculateCosineSimilarity(List<Double> vectorA, List<Double> vectorB) {
+		System.out.println();
+		logger.info("**********************************************************************************************************");
+		logger.info("Before : vectorB.size() < vectorA.size() :  Template VECTOR's size : "+vectorA.size()+" : Current VECTOR's size : "+vectorB.size());
+		
+		if(vectorB.size() < vectorA.size()) {
+			int difference = vectorA.size() - vectorB.size();
+			logger.info("Current Vector's Size is LESS THAN Template Vector's Size");
+			logger.info("Difference in size of vectors : 'Template Vector Size -(MINUS)- Current Vector Size' : "+difference);
+			logger.info("Ignoring last : "+difference +" : elements from the Template Vector | Comparing only First : "+vectorB.size() +" : elements");
+			
+			vectorA = vectorA.subList(0, vectorB.size());
+			logger.info("Size of Template Vector after subList : Setting the size of Template Vector to Current Vector's Size : "+vectorA.size());
+
+			logger.info("After : vectorB.size() < vectorA.size() :  Template VECTOR's size : "+vectorA.size()+" : Current VECTOR's size : "+vectorB.size());
+			
+		} else {
+			logger.info("Current Vector's Size is GREATER THAN Template Vector's Size");
+			logger.info("So ignoring last : "+(vectorB.size() - vectorA.size())+" : elements from Current vector");
+		}
+		
+		logger.info("Calculating Cosine Similarity of Template Vector and Current Vector");
+		logger.info("**********************************************************************************************************");
+		System.out.println();
+		
+		double dotProduct = DotProduct(vectorA, vectorB);
+		double magnitudeOfA = Magnitude(vectorA);
+		double magnitudeOfB = Magnitude(vectorB);
 
 		return dotProduct / (magnitudeOfA * magnitudeOfB);
 	}
 
 	private double DotProduct(List<Double> vectorA, List<Double> vectorB) {
-		logger.info("Initial VECTOR's size : "+vectorA.size()+" : Current VECTOR's size : "+vectorB.size());
 		double dotProduct = 0;
-		for (int i = 0; i < vectorA.size() - 1; i++) {
-			if(vectorB.get(i) != null) {
-				//logger.info("LEMGTGH LESS STILL COMES IN WTF");
-				dotProduct += (vectorA.get(i) * vectorB.get(i));
+		try {
+			for(int i = 0; i < vectorA.size() - 1; i++) {
+			    dotProduct += (vectorA.get(i) * vectorB.get(i));
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return dotProduct;
 	}
