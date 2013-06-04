@@ -99,9 +99,9 @@ body {
 								
 				<div class="steps"><span class="step">Step 4.</span> Press Match.</div>			
 				
-				<div class="steps"><span class="step">Today's Prize</span> - The participant who is able to recreate his own 
+				<%-- <div class="steps"><span class="step">Today's Prize</span> - The participant who is able to recreate his own 
 									handwritten the phrase the best gets <span class="step">$50</span>.
-				</div>
+				</div> --%>
 			</div>
 			<div id="submit">
 				<input type="button" id="submitButton" value="Start Scribbling ->" onclick="proceedToScribling();" />
