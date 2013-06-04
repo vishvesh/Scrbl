@@ -424,6 +424,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 						if(currentNumberOfStrokes == numberOfStrokes) {
 							logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
 							
+							@SuppressWarnings("unchecked")
 							List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
 							logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
 							
