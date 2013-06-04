@@ -364,11 +364,14 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				point.toString();
 			}
 	
-		    sessionMap.put("figure", figure);
+			//TODO: Removed the sessionMap attribute.... Not needed anymore as setValueBySessionAttribute() takes care of everything!
+			//Maybe we can remove the "implements SessionAware" from the class declaration line!
+		    //sessionMap.put("figure", figure);
 		    
 		    setValueBySessionAttribute("figure", figure);
 		    setValueBySessionAttribute("velocityVector", velocityVector);
-		    logger.info("Session MAP Size : "+sessionMap.size() + " : Velocity Vector's Size : "+velocityVector.size());
+		    //logger.info("Session MAP Size : "+sessionMap.size() + " : Velocity Vector's Size : "+velocityVector.size());
+		    logger.info("Velocity Vector's Size : "+velocityVector.size());
 		    
 		    //writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
 		    
