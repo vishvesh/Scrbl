@@ -61,7 +61,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	 * Project : Scrbl
 	 */
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(getClass());
+	protected Logger logger = Logger.getLogger(getClass());
 	
 	private String name;
 	private String pageX;
@@ -80,7 +80,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private Stroke stroke;
 	private Figure template;
 	private String matchedValue;
+	
+	@SuppressWarnings("unused")
 	private Map<String, Object> sessionMap;
+	
 	protected HttpServletRequest request;
 	private String userFirstName;
 	private String userLastName;
@@ -93,6 +96,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private String base64ImageUrl;
 	private UsersService usersService;
 	private String imageUrl;
+	private double percentageThresholdFromConfig;
+	
+	public void setPercentageThresholdFromConfig(double percentageThresholdFromConfig) {
+		this.percentageThresholdFromConfig = percentageThresholdFromConfig;
+	}
+	
+	public double getPercentageThresholdFromConfig() {
+		return percentageThresholdFromConfig;
+	}
 	
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
@@ -429,11 +441,43 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 							
 							@SuppressWarnings("unchecked")
 							List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+							
+							System.out.println();
+							logger.info("**********************************************************************************************************");
 							logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
+							int difference = Math.abs(initialVelocityVector.size() - velocityVector.size());
+							logger.info("Difference between the two VECTORS = : "+difference);
 							
-							CosineSimilarity cosineSimilarity = new CosineSimilarity();
+							System.out.println();
+							double percentageThresholdValue = 0;
 							
-							cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
+							if(initialVelocityVector.size() >= velocityVector.size()) {
+								percentageThresholdValue = initialVelocityVector.size() * percentageThresholdFromConfig;
+								logger.info("Session Velocity Vector's Size : IS GREATER THAN OR EQUAL TO : Current Velocity Vector's Size");
+							} else {
+								percentageThresholdValue = velocityVector.size() * percentageThresholdFromConfig;
+								logger.info("Current Velocity Vector's Size : IS LESS THAN : Session Velocity Vector's Size");
+							}
+							
+							System.out.println();
+							logger.info("Percentage Threshold to be Multiplied : "+percentageThresholdFromConfig);
+							logger.info("Percentage Threshold Value After Calculation(Vector size * threshold) : "+percentageThresholdValue);
+							System.out.println();
+							logger.info("Difference between Vectors : "+difference + " : Percentage Threshold Value : "+percentageThresholdValue);
+							System.out.println();		
+							
+							if(difference <= percentageThresholdValue) {
+								logger.info("Difference b/w vectors : IS LESS THAN OR EQUAL TO : percentageThresholdValue : So Calculating Cosine Similarity!");
+								logger.info("**********************************************************************************************************");
+								System.out.println();
+								CosineSimilarity cosineSimilarity = new CosineSimilarity();
+								cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
+								
+							} else {
+								logger.info("Difference b/w vectors : IS GREATER THAN : percentageThresholdValue : So CANNOT Calculate Cosine Similarity!");
+								logger.info("**********************************************************************************************************");
+								System.out.println();
+							}
 						}
 						
 						logger.info("**********************************************************************************************************");
@@ -540,6 +584,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return SUCCESS;
 	}
 	
+	@SuppressWarnings("unused")
 	private void writeToExcel(String pageX, String pageY, String timeArray)
 	{
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");

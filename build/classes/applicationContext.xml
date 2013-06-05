@@ -13,6 +13,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	
 	<bean id="baseAction" scope="prototype" class="com.scrbl.action.BaseAction">
 		<property name="usersService" ref="usersService" />
+		<property name="percentageThresholdFromConfig" value="${cosineSimilarity.percentageThresholdFromConfig}" />
 	</bean>
 
 	<!-- <bean id="homePageAction" scope="prototype" class="org.lazypizza.web.actions.userCommunity.HomePageAction" parent="baseAction" >

@@ -44,7 +44,7 @@
             <result name="success">/actionView/success.jsp</result>
         </action>
 
-        <action name="match" class="com.scrbl.action.BaseAction" method="matchFigure">
+        <action name="match" class="baseAction" method="matchFigure">
             <result name="success">/actionView/success.jsp</result>
         </action>
         

@@ -2,11 +2,16 @@ package com.scrbl.logic;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import com.scrbl.action.BaseAction;
 
-public class CosineSimilarity {
+public class CosineSimilarity extends BaseAction {
 	
-	Logger logger = Logger.getLogger(getClass());
+	//Logger logger = Logger.getLogger(getClass());
+
+	/**
+	 * @author Vishvesh Deshmukh
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public double calculateCosineSimilarity(List<Double> vectorA, List<Double> vectorB) {
 		System.out.println();

@@ -2,13 +2,17 @@ package com.scrbl.logic;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
+import com.scrbl.action.BaseAction;
 import com.scrbl.model.Point;
 
-public class VelocityVector {
+public class VelocityVector extends BaseAction {
 	
-	Logger logger = Logger.getLogger(getClass());
+	//Logger logger = Logger.getLogger(getClass());
+
+	/**
+	 * @author Vishvesh Deshmukh
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public List<Double> calculateVelocityVector(List<Point> listOfPoints, String[] timeSplit, List<Double> velocityVector) {
 		for(int i = 0; i < listOfPoints.size() - 1; i++) {	
