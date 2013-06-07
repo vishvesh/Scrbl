@@ -45,7 +45,11 @@
         </action>
 
         <action name="match" class="baseAction" method="matchFigure">
-            <result name="success">/actionView/success.jsp</result>
+             <result name="success">/actionView/success.jsp</result>
+        </action>
+        
+        <action name="thankYou" class="baseAction">
+             <result name="success">/actionView/thankYou.jsp</result>
         </action>
         
          <action name="clean" class="com.scrbl.action.BaseAction" method="clean">

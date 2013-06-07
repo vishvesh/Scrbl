@@ -354,6 +354,7 @@ function match() {
 		  type: 'POST',
 		  data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)},
 		  success: function(data){
+			  window.location = "thankYou.html";
 			  //$('#ajaxResponse').html(data); 
 			  //alert("Template Saved!");
 		  } 
