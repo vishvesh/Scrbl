@@ -239,7 +239,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return SUCCESS;
 	}
 
-	private List<Point> compute() {
+	private List<Point> compute(boolean overrideValues) {
 		List<Point> listOfPoints = null;
 		try {
 			figure = new Figure();
@@ -287,7 +287,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			String[] splitString = pointArray.split("(,0,0)(,)?");
 			logger.info("splitString LENGTH : " +splitString.length);
 			
-			if(getValueBySessionAttribute("numberOfStrokes") == null)
+			//if(getValueBySessionAttribute("numberOfStrokes") == null)
+			if(overrideValues)
 				setValueBySessionAttribute("numberOfStrokes", splitString.length);
 			
 			currentNumberOfStrokes = splitString.length;
@@ -341,7 +342,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 
 		logger.info("Inside Save Figure() : Printing Template Data : --v");
 		
-		List<Point> templateData = compute();
+		List<Point> templateData = compute(true);
 		
 		if(templateData.size() > 0) {
 			//**Convert List to JSON....
@@ -415,7 +416,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	{
 		try {
 			//logger.info(figure.getLength());
-			List<Point> matchData = compute();
+			List<Point> matchData = compute(false);
 			
 			if(matchData.size() > 0) {
 				//**Convert List to JSON....
