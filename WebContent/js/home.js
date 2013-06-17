@@ -343,7 +343,9 @@ function save() {
 	
 	//dataUrl = dataUrl.replace(/^data:image\/(png|jpeg);base64,/, "");
 	//console.log("Replaced DATA URL : "+dataUrl);
-		
+	
+	alert("Done Scribbling? Now Scribble again & click Match!");
+	
   $.ajax({ 
 	  url: 'save.html', 
 	  type: 'POST', 
@@ -351,7 +353,6 @@ function save() {
 		  pointArray: JSON.stringify(pointArray), base64ImageUrl: base64ImageUrl}, 
 	  success: function(data) {
 		  //$('#ajaxResponse').html(data); 
-		  alert("Done Scribbling? Now Scribble again & click Match!");
 	  } 
   }); 
 }
