@@ -43,7 +43,7 @@
 	   	ci = null;
 	   
 	   document.getElementById('ci').value = ci;
-	   console.log("IP : "+ci);
+	   //console.log("IP : "+ci);
    });  
 
 	function checkVal(event) {

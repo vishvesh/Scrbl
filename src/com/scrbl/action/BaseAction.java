@@ -32,7 +32,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -40,6 +42,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.apache.struts2.json.annotations.JSON;
 
@@ -53,7 +56,7 @@ import com.scrbl.model.Point;
 import com.scrbl.model.Users;
 import com.scrbl.service.UsersService;
 
-public class BaseAction extends ActionSupport implements ServletRequestAware, SessionAware {
+public class BaseAction extends ActionSupport implements ServletRequestAware,ServletResponseAware, SessionAware {
 
 	/**
 	 * @author Vishvesh Deshmukh
@@ -85,6 +88,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private Map<String, Object> sessionMap;
 	
 	protected HttpServletRequest request;
+	protected HttpServletResponse response;
+	
 	private String userFirstName;
 	private String userLastName;
 	private String userEmail;
@@ -118,15 +123,15 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	public void setSession(Map<String, Object> sessionMap) {
 		this.sessionMap = sessionMap;
 	}
-	
-	@Override
-	public String execute() throws Exception {
-		return super.execute();
-	}
 
 	@Override
 	public void setServletRequest(HttpServletRequest arg0) {
-		request = arg0;
+		this.request = arg0;
+	}
+	
+	@Override
+	public void setServletResponse(HttpServletResponse servletResponse) {
+		this.response = servletResponse;
 	}
 	
 	protected Object getValueBySessionAttribute(String sessionAttribute) {
@@ -185,20 +190,53 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			logger.info("User Not Found! So saving new user!");
 			Users newUser = usersService.saveNewUser(users);
 			setValueBySessionAttribute("sessionUser", newUser.getEmail());
+			
+			setCookie(response, "userEmailFromCookie", newUser.getEmail());
 		} else {
 			logger.info("User already present : User Email : "+user.getEmail());
 			setValueBySessionAttribute("sessionUser", user.getEmail());
+			
+			setCookie(response, "userEmailFromCookie", user.getEmail());
 		}
 		
-		List<Users> allUsers = usersService.getAllUsers();
-		logger.info("Size  : "+allUsers.size());
+		
+		//List<Users> allUsers = usersService.getAllUsers();
+		//logger.info("Size  : "+allUsers.size());
 		
 		return super.execute();
 	}
+	
+	private String getUserFromCookieAndForwardToInstructions() throws Exception {
+		String email = getCookie(request, "userEmailFromCookie");
+		if(null != email) {
+			logger.info("UserEmail found in Cookie : "+email+" : Forwarding user to stepWiseInstructions!");
+			setValueBySessionAttribute("sessionUser", email);
+			return "forwardToInstructions";
+		} else {
+			return super.execute();
+		}
+	}
 
-	public String firstBlood()
+	@Override
+	public String execute() throws Exception {
+		//logger.info("Comes inside Execute method!");
+		return super.execute();
+		//return getUserFromCookieAndForwardToInstructions();
+	}
+	
+	public String firstBlood() throws Exception
 	{
-		name = "Welcome To Scrbl!";
+		//name = "Welcome To Scrbl!";
+		logger.info("Comes inside firstBlood() method!");
+		return getUserFromCookieAndForwardToInstructions();
+		
+		/*String email = getCookie(request, "userEmailFromCookie");
+		if(null != email) {
+			logger.info("UserEmail found in Cookie : "+email+" : Forwarding user to stepWiseInstructions!");
+			setValueBySessionAttribute("sessionUser", email);
+			return "forwardToInstructions";
+		}*/
+		
 		/*String name = System.getProperty("user.dir")+File.separator+BaseAction.class.getPackage().getName()+File.separator;
         logger.info("User dir name : "+name);
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -213,8 +251,55 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		}*/
 		//logger.info(getText("emailfile.nameOfFile"));
         
-		return SUCCESS;
+		//return SUCCESS;
 	}
+	
+	
+	/**
+	 * Setting the User's Email in the cookie
+	 * which lasts for 1 year.... So that he doesn't have
+	 * to fill in all his details once again!
+	 * @param response
+	 * @param name
+	 * @param value
+	 */
+	public static void setCookie(HttpServletResponse response, String name, String value) {
+	    try {
+	        Cookie div = new Cookie(name, value);
+	        div.setMaxAge(365 * 60 * 60 * 24); // Make the cookie last a year
+	        response.addCookie(div);
+	        System.out.println("Setting cookie with name : "+name+" : Value : User Email : "+value);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	/**
+	 * Returns the User's Email from the stored cookies so
+	 * that we take that as the input and check if the user exists, 
+	 * and then authenticate & forward the user to the appropriate page..
+	 * This way he doesn't have to re-enter all his details!
+	 * @param request
+	 * @param name
+	 * @return
+	 */
+	public static String getCookie(HttpServletRequest request, String name) {
+	    String value = null;
+	    try {
+	        for (Cookie c : request.getCookies()) {
+	            if (c.getName().equals(name)) {
+	                value = c.getValue();
+	            }
+	        }
+	    } catch (Exception e) {
+	        //Logger.getLogger(StrutsUtils.class.getName()).log(Level.INFO, "message", e);
+	    	e.printStackTrace();
+	    }
+	    return value;
+	}
+	
 	
 	public String startScribbling() {
 		logger.info("Forwarding User Start Scribbling!");
@@ -507,7 +592,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 									"So Calculating Cosine Similarity!");
 							logger.info("**********************************************************************************************************");
 							System.out.println();
+							
 							CosineSimilarity cosineSimilarity = new CosineSimilarity();
+							
 							cosineSimilarityValue = cosineSimilarity
 									.calculateCosineSimilarity(initialVelocityVector, velocityVector);
 
@@ -526,9 +613,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 						logger.info("MATCH VALUE Was not calculated.. Because matchedValue was 'NULL' OR Some Error Occurred!");
 					}
 					logger.info("Cosine Similarity of the two resulting Vectors is : "+ cosineSimilarityValue);
-					logger.info("**********************************************************************************************************");
+					
 					user.setCosValue(Double.toString(cosineSimilarityValue));
 					usersService.saveNewUser(user);
+					
+					logger.info("Data Saved for User : "+user.getFirstName() + " "+user.getLastName());
+					logger.info("**********************************************************************************************************");
 				}
 				
 			} catch (Exception e) {

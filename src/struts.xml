@@ -13,10 +13,12 @@
         
         <action name="baseAction" class="com.scrbl.action.BaseAction" method="firstBlood">
             <result name="success">/actionView/index.jsp</result>
+            <result name="forwardToInstructions">/actionView/stepWiseInstructions.jsp</result>
         </action>
         
-        <action name="submitPersonalInfo" class="com.scrbl.action.BaseAction">
+        <action name="submitPersonalInfo" class="com.scrbl.action.BaseAction" method="firstBlood">
             <result name="success">/actionView/submitPersonalInfo.jsp</result>
+            <result name="forwardToInstructions">/actionView/stepWiseInstructions.jsp</result>
         </action>
         
         <action name="viewInformedConsentPdf" class="com.scrbl.action.BaseAction" method="viewPdf">

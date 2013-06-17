@@ -58,26 +58,29 @@
 		 function validate() {
 		    var informedConsentCheckbox = document.getElementById('informedConsentCheckbox');
 			if (informedConsentCheckbox.checked == 1) {
-				console.log("Checked");
+				//console.log("Checked");
 				window.location.href = "submitPersonalInfo.html";
 			} else {
-				console.log("Unchecked");
+				//console.log("Unchecked");
 			} 
 		}
 	 
     $(document).ready(function() {
     	var host = location.host;
-   	 	console.log("Host : "+host);
+   	 	//console.log("Host : "+host);
    	 	
+   	 	/**
+   	 	* Not using the HTML5 Geolocation as of now.. will incorporate later on!
+   	 	*/
    	 	//Try the HTML5 geolocation to get user's location!
-   	 	if(navigator.geolocation) {
+   	 	/* if(navigator.geolocation) {
 	      // timeout at 60000 milliseconds (60 seconds)
 	      //var options = {timeout:60000}; //can add options as a parameter to getCurrentPosition()
 	      navigator.geolocation.getCurrentPosition(showLocation, errorHandler);
 	      
 	   } else {
 	      console.log("Sorry, browser does not support geolocation!");
-	   }
+	   } */
    	 
     	$('#pdf').on('click', function() {
   		  window.location.href = "viewInformedConsentPdf.html?host="+host+"";

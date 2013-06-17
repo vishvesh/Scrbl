@@ -321,22 +321,29 @@ function viewSavedImage() {
 	 }
 }
 
+function viewInstructions() {
+	window.location = "baseAction.html";
+}
+
 function save() {
-	console.log("pageX : " + JSON.stringify(pageX));
+	/*console.log("pageX : " + JSON.stringify(pageX));
 	console.log("pageY : " + JSON.stringify(pageY));
 	console.log("TimeArray : " + JSON.stringify(timeArray));
-	console.log("PointArray : " + JSON.stringify(pointArray));
+	console.log("PointArray : " + JSON.stringify(pointArray));*/
 	//console.log("X LENGTH : "+pageX.length + ": Y LENGTH : "+pageY.length + " TIME LENGTH : "+timeArray.length);
+	
+	if(pageX.length == 0 || pageY.length == 0 || timeArray.length == 0 || pointArray.length == 0) {
+		alert("Please Scribble before clicking Save!");
+		return false;
+	}
     var canvas = document.getElementById('canvas');
 	
 	var base64ImageUrl = canvas.toDataURL('image/png');
-	console.log("Un-Replaced DATA URL : "+base64ImageUrl);
+	//console.log("Un-Replaced DATA URL : "+base64ImageUrl);
 	
 	//dataUrl = dataUrl.replace(/^data:image\/(png|jpeg);base64,/, "");
 	//console.log("Replaced DATA URL : "+dataUrl);
-	
-	alert("Done Scribbling?");
-	
+		
   $.ajax({ 
 	  url: 'save.html', 
 	  type: 'POST', 
@@ -344,11 +351,16 @@ function save() {
 		  pointArray: JSON.stringify(pointArray), base64ImageUrl: base64ImageUrl}, 
 	  success: function(data) {
 		  //$('#ajaxResponse').html(data); 
+		  alert("Done Scribbling? Now Scribble again & click Match!");
 	  } 
   }); 
 }
 
 function match() {
+	if(timeArray.length == 0 || pointArray.length == 0) {
+		alert("Please Scribble before clicking Match!");
+		return false;
+	}
 	$.ajax({ 
 		  url: 'match.html', 
 		  type: 'POST',
