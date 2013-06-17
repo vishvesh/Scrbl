@@ -414,76 +414,31 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public String matchFigure()
 	{
+		double cosineSimilarityValue = 0.0;
+		Users user = null;
+		String email = null;
+		String matchedValue = null;
+		
 		try {
-			//logger.info(figure.getLength());
-			List<Point> matchData = compute(false);
+			email = (String) getValueBySessionAttribute("sessionUser");
 			
-			if(matchData.size() > 0) {
-				//**Convert List to JSON....
-				final ObjectMapper mapper = new ObjectMapper();
-				final String matchDataString = mapper.writeValueAsString(matchData);
-				logger.info("MATCH DATA : "+matchDataString);
-							
-				double cosineSimilarityValue = 0.0;
-				String email = (String) getValueBySessionAttribute("sessionUser");
-				if(email != null) {
-					//Check if the user already exists!
-					Users user = usersService.getUserByEmail(email);
-					if(user != null) {
-						user.setMatchData(matchDataString);
-						user.setLastUpdatedAt(new Date());
-						
-						int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
-						logger.info("Session Template's numberOfStrokes : "+numberOfStrokes);
-						logger.info("Current Figure's currentNumberOfStrokes : "+currentNumberOfStrokes);
-						
-						if(currentNumberOfStrokes == numberOfStrokes) {
-							logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
-							
-							@SuppressWarnings("unchecked")
-							List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
-							
-							System.out.println();
-							logger.info("**********************************************************************************************************");
-							logger.info("Session Velocity Vector's size : "+initialVelocityVector.size() +" : Current velocity vectors' size : "+velocityVector.size());
-							int difference = Math.abs(initialVelocityVector.size() - velocityVector.size());
-							logger.info("Difference between the two VECTORS = : "+difference);
-							
-							System.out.println();
-							double percentageThresholdValue = 0;
-							
-							if(initialVelocityVector.size() >= velocityVector.size()) {
-								percentageThresholdValue = initialVelocityVector.size() * percentageThresholdFromConfig;
-								logger.info("Session Velocity Vector's Size : IS GREATER THAN OR EQUAL TO : Current Velocity Vector's Size");
-							} else {
-								percentageThresholdValue = velocityVector.size() * percentageThresholdFromConfig;
-								logger.info("Current Velocity Vector's Size : IS LESS THAN : Session Velocity Vector's Size");
-							}
-							
-							System.out.println();
-							logger.info("Percentage Threshold to be Multiplied : "+percentageThresholdFromConfig);
-							logger.info("Percentage Threshold Value After Calculation(Vector size * threshold) : "+percentageThresholdValue);
-							System.out.println();
-							logger.info("Difference between Vectors : "+difference + " : Percentage Threshold Value : "+percentageThresholdValue);
-							System.out.println();		
-							
-							if(difference <= percentageThresholdValue) {
-								logger.info("Difference b/w vectors : IS LESS THAN OR EQUAL TO : percentageThresholdValue : So Calculating Cosine Similarity!");
-								logger.info("**********************************************************************************************************");
-								System.out.println();
-								CosineSimilarity cosineSimilarity = new CosineSimilarity();
-								cosineSimilarityValue = cosineSimilarity.calculateCosineSimilarity(initialVelocityVector, velocityVector);
-								
-							} else {
-								logger.info("Difference b/w vectors : IS GREATER THAN : percentageThresholdValue : So CANNOT Calculate Cosine Similarity!");
-								logger.info("**********************************************************************************************************");
-								System.out.println();
-							}
-						}
-						
-						logger.info("**********************************************************************************************************");
-						logger.info("Cosine Similarity of the two resulting Vectors is : "+cosineSimilarityValue);
-						//logger.info("Executing Logic to Match the Two Figures!!!!!");
+			if(email != null) {
+				//Check if the user already exists!
+				user = usersService.getUserByEmail(email);
+				
+				if(user != null) {
+					
+					user.setLastUpdatedAt(new Date());
+					
+					//Get the Match Data <-- List of Points to match against the saved Session Template!
+					List<Point> matchData = compute(false); //Not to override values, as we match two figures!
+					
+					if(matchData.size() > 0) {
+						//**Convert List to JSON....
+						final ObjectMapper mapper = new ObjectMapper();
+						final String matchDataString = mapper.writeValueAsString(matchData);
+						logger.info("MATCH DATA : "+matchDataString);
+						logger.info("Executing Logic to Match the Two Figures!!!!!");
 						Figure template = (Figure) getValueBySessionAttribute("figure");
 						//logger.info("GIFURE L "+getFigure());
 						if(!getFigure().equals(null) || getFigure() != null) {
@@ -494,14 +449,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 							logger.info("Comes in Else part.. Setting matched value to 10000.00.. Because the Template was NULL");
 							matchedValue = "10000.00";
 						}
-						logger.info("Cosine Similarity Value : "+cosineSimilarityValue +" : MATCH VALUE : "+matchedValue);
 						logger.info("**********************************************************************************************************");
 						System.out.println();
 						
-						user.setCosValue(Double.toString(cosineSimilarityValue));
 						user.setShpValue(matchedValue);
 						
-						usersService.saveNewUser(user);
 						logger.info("MATCH Data Saved for User : "+user.getFirstName() + " "+user.getLastName());
 					}
 				}				
@@ -511,10 +463,78 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		{
 			e.printStackTrace();
 		}
-		//matchedValue = (new Double(getTemplate().Match(getFigure()))).toString();
-		//logger.info("Matched VALUE : "+matchedValue);
-		//logger.info("template : "+template.getLength() + " : Figure : "+figure.getLength());
-		
+		finally {
+			try {
+				if(user != null) {
+					int numberOfStrokes = (Integer) getValueBySessionAttribute("numberOfStrokes");
+					
+					logger.info("Session Template's numberOfStrokes : "+ numberOfStrokes);
+					logger.info("Current Figure's currentNumberOfStrokes : "+ currentNumberOfStrokes);
+					
+					if (currentNumberOfStrokes == numberOfStrokes) {
+						logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
+
+						@SuppressWarnings("unchecked")
+						List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
+
+						System.out.println();
+						logger.info("**********************************************************************************************************");
+						logger.info("Session Velocity Vector's size : "+ initialVelocityVector.size()+ " : Current velocity vectors' size : "
+								+ velocityVector.size());
+						int difference = Math.abs(initialVelocityVector.size() - velocityVector.size());
+						logger.info("Difference between the two VECTORS = : "+difference);
+
+						System.out.println();
+						double percentageThresholdValue = 0;
+
+						if (initialVelocityVector.size() >= velocityVector.size()) {
+							percentageThresholdValue = initialVelocityVector.size() * percentageThresholdFromConfig;
+							logger.info("Session Velocity Vector's Size : IS GREATER THAN OR EQUAL TO : Current Velocity Vector's Size");
+						} else {
+							percentageThresholdValue = velocityVector.size() * percentageThresholdFromConfig;
+							logger.info("Current Velocity Vector's Size : IS LESS THAN : Session Velocity Vector's Size");
+						}
+
+						System.out.println();
+						logger.info("Percentage Threshold to be Multiplied : "+ percentageThresholdFromConfig);
+						logger.info("Percentage Threshold Value After Calculation(Vector size * threshold) : "+ percentageThresholdValue);
+						System.out.println();
+						logger.info("Difference between Vectors : "+ difference+ " : Percentage Threshold Value : "+ percentageThresholdValue);
+						System.out.println();
+
+						if (difference <= percentageThresholdValue) {
+							logger.info("Difference b/w vectors : IS LESS THAN OR EQUAL TO : percentageThresholdValue : " +
+									"So Calculating Cosine Similarity!");
+							logger.info("**********************************************************************************************************");
+							System.out.println();
+							CosineSimilarity cosineSimilarity = new CosineSimilarity();
+							cosineSimilarityValue = cosineSimilarity
+									.calculateCosineSimilarity(initialVelocityVector, velocityVector);
+
+						} else {
+							logger.info("Difference b/w vectors : IS GREATER THAN : percentageThresholdValue : " +
+									"So CANNOT Calculate Cosine Similarity!");
+							logger.info("**********************************************************************************************************");
+							System.out.println();
+						}
+					}
+					logger.info("**********************************************************************************************************");
+					
+					if(null != matchedValue) {
+						logger.info("MATCH VALUE CALCULATED SUCESSFULY : "+matchedValue);
+					} else {
+						logger.info("MATCH VALUE Was not calculated.. Because matchedValue was 'NULL' OR Some Error Occurred!");
+					}
+					logger.info("Cosine Similarity of the two resulting Vectors is : "+ cosineSimilarityValue);
+					logger.info("**********************************************************************************************************");
+					user.setCosValue(Double.toString(cosineSimilarityValue));
+					usersService.saveNewUser(user);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return SUCCESS;
 	}
 		
