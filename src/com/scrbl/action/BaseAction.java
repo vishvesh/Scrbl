@@ -288,11 +288,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 	public static String getCookie(HttpServletRequest request, String name) {
 	    String value = null;
 	    try {
-	        for (Cookie c : request.getCookies()) {
-	            if (c.getName().equals(name)) {
-	                value = c.getValue();
-	            }
-	        }
+	    	if(null != request.getCookies()) 
+	    	{
+		        for (Cookie c : request.getCookies()) {
+		            if (c.getName().equals(name)) {
+		                value = c.getValue();
+		            }
+		        }
+	    	} else {
+	    		System.out.println("Cookies not found!");
+	    	}
 	    } catch (Exception e) {
 	        //Logger.getLogger(StrutsUtils.class.getName()).log(Level.INFO, "message", e);
 	    	e.printStackTrace();
