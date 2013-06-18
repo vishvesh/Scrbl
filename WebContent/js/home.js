@@ -9,12 +9,10 @@ var pageX = [],
 	lastPoint, 
 	click,
 	lastClick;
-	ua = navigator.userAgent,
-	browser = {
-    iPad: /iPad/.test(ua),
-    iPhone: /iPhone/.test(ua),
-    Android4: /Android 4/.test(ua)
-};
+	
+	//console.log("Browser name: "+BrowserDetect.browser+" :  BrowserDetect.version : "+BrowserDetect.version+" : BrowserDetect.OS : "+BrowserDetect.OS);
+	
+	console.log(bd.b+" "+bd.v+" : "+bd.o);
 	
 /*var pointArray = {
 	points: []
