@@ -10,9 +10,8 @@ var pageX = [],
 	click,
 	lastClick;
 	
-	//console.log("Browser name: "+BrowserDetect.browser+" :  BrowserDetect.version : "+BrowserDetect.version+" : BrowserDetect.OS : "+BrowserDetect.OS);
-	
-	console.log(bd.b+" "+bd.v+" : "+bd.o);
+	var b = bd.b+" "+bd.v;
+	var o = bd.o;
 	
 /*var pointArray = {
 	points: []
@@ -348,7 +347,7 @@ function save() {
 	  url: 'save.html', 
 	  type: 'POST', 
 	  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY),timeArray: JSON.stringify(timeArray), 
-		  pointArray: JSON.stringify(pointArray), base64ImageUrl: base64ImageUrl}, 
+		  pointArray: JSON.stringify(pointArray), base64ImageUrl: base64ImageUrl, b: b, o: o}, 
 	  success: function(data) {
 		  //$('#ajaxResponse').html(data); 
 	  } 
@@ -363,7 +362,7 @@ function match() {
 	$.ajax({ 
 		  url: 'match.html', 
 		  type: 'POST',
-		  data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray)},
+		  data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray), b: b, o: o},
 		  success: function(data){
 			  window.location = "thankYou.html";
 			  //$('#ajaxResponse').html(data); 

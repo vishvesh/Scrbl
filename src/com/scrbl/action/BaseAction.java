@@ -101,7 +101,35 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 	private String base64ImageUrl;
 	private UsersService usersService;
 	private String imageUrl;
+	private String deviceName;
 	private double percentageThresholdFromConfig;
+	private String b;
+	private String o;
+	
+	public void setB(String b) {
+		this.b = b;
+	}
+	
+	public String getB() {
+		return b;
+	}
+	
+	public void setO(String o) {
+		this.o = o;
+	}
+	
+	public String getO() {
+		return o;
+	}
+	
+	
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
+	
+	public String getDeviceName() {
+		return deviceName;
+	}
 	
 	public void setPercentageThresholdFromConfig(double percentageThresholdFromConfig) {
 		this.percentageThresholdFromConfig = percentageThresholdFromConfig;
@@ -170,7 +198,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 	
 	public String saveUserDetails() throws Exception {
 		logger.info("Inside saveUserDetails() : User's First Name : "+userFirstName +" : User's Last Name : "+ userLastName +
-				" : \nUser's Email : "+userEmail + " : Age Group : "+ageGroup + " : Ip Address : "+ci);
+				" : \nUser's Email : "+userEmail + " : Age Group : "+ageGroup + " : Ip Address : "+ci+" : deviceName : "+deviceName);
 		
 		Users users = new Users();
 		users.setFirstName(userFirstName);
@@ -178,6 +206,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 		users.setEmail(userEmail);
 		users.setAgeGroup(ageGroup);
 		users.setIpAddress(ci);
+		users.setDeviceName(deviceName);
 		users.setCreatedAt(new Date());
 		users.setLastUpdatedAt(new Date());
 		
@@ -450,6 +479,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 						user.setTemplateData(templateDataString);
 						user.setLastUpdatedAt(new Date());
 						user.setBase64ImageUrl(base64ImageUrl);
+						user.setBrowserName(b);
+						user.setOperatingSystem(o);
 						usersService.saveNewUser(user);
 						logger.info("TEMPLATE Data Saved for User : "+user.getFirstName() + " "+user.getLastName());
 					}
@@ -620,6 +651,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 					logger.info("Cosine Similarity of the two resulting Vectors is : "+ cosineSimilarityValue);
 					
 					user.setCosValue(Double.toString(cosineSimilarityValue));
+					user.setBrowserName(b);
+					user.setOperatingSystem(o);
 					usersService.saveNewUser(user);
 					
 					logger.info("Data Saved for User : "+user.getFirstName() + " "+user.getLastName());

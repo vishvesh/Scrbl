@@ -85,6 +85,15 @@ public class Users implements Serializable {
     @Column(name = "base64_image_url")
     private String base64ImageUrl;
     
+    @Column(name = "deviceName")
+    private String deviceName;
+    
+    @Column(name = "browserName")
+    private String browserName;
+    
+    @Column(name = "operatingSystem")
+    private String operatingSystem;
+    
     @Column(name = "latitude")
     private String latitude;
     
@@ -200,6 +209,30 @@ public class Users implements Serializable {
     
     public String getBase64ImageUrl() {
 		return base64ImageUrl;
+	}
+    
+    public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
+    
+    public String getDeviceName() {
+		return deviceName;
+	}
+    
+    public void setBrowserName(String browserName) {
+		this.browserName = browserName;
+	}
+    
+    public String getBrowserName() {
+		return browserName;
+	}
+    
+    public void setOperatingSystem(String operatingSystem) {
+		this.operatingSystem = operatingSystem;
+	}
+    
+    public String getOperatingSystem() {
+		return operatingSystem;
 	}
 
     public String getLatitude() {

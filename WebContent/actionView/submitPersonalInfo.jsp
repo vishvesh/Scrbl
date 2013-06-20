@@ -93,6 +93,7 @@
 				<s:textfield label="First Name" type="text" name="userFirstName" id="userFirstName" required="true"/>
 				<s:textfield label="Last Name" type="text" name="userLastName" id="userLastName" required="true"/>
 				<s:textfield label="Enter Email" type="text" name="userEmail" id="userEmail" required="true"/>
+				<s:textfield label="Device Name" type="text" name="deviceName" id="deviceName" required="true"/>
 
 				<s:select label="Age Group"
 					id="ageGroup"
