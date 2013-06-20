@@ -348,7 +348,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 				//Check if the user already exists!
 				Users user = usersService.getUserByEmail(email);
 				if (user != null) {
-					imageUrl = user.getBase64ImageUrl();
+					imageUrl = user.getTemplateBase64ImageUrl();
 					logger.info("Image URL : "+imageUrl +" For User : "+user.getFirstName() + " "+user.getLastName());
 				}
 			}
@@ -478,7 +478,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 					if (user != null) {
 						user.setTemplateData(templateDataString);
 						user.setLastUpdatedAt(new Date());
-						user.setBase64ImageUrl(base64ImageUrl);
+						user.setTemplateBase64ImageUrl(base64ImageUrl);
 						user.setBrowserName(b);
 						user.setOperatingSystem(o);
 						usersService.saveNewUser(user);
@@ -559,6 +559,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 						final ObjectMapper mapper = new ObjectMapper();
 						final String matchDataString = mapper.writeValueAsString(matchData);
 						logger.info("MATCH DATA : "+matchDataString);
+						
+						user.setMatchData(matchDataString);
+						
 						logger.info("Executing Logic to Match the Two Figures!!!!!");
 						Figure template = (Figure) getValueBySessionAttribute("figure");
 						//logger.info("GIFURE L "+getFigure());
@@ -592,8 +595,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 					logger.info("Session Template's numberOfStrokes : "+ numberOfStrokes);
 					logger.info("Current Figure's currentNumberOfStrokes : "+ currentNumberOfStrokes);
 					
-					if (currentNumberOfStrokes == numberOfStrokes) {
-						logger.info("currentNumberOfStrokes == numberOfStrokes : So executing the CosineSimilarity Logic!");
+					if (currentNumberOfStrokes == numberOfStrokes 
+							|| currentNumberOfStrokes == numberOfStrokes + 2 
+								|| currentNumberOfStrokes == numberOfStrokes - 2
+									|| currentNumberOfStrokes == numberOfStrokes + 1
+										|| currentNumberOfStrokes == numberOfStrokes - 1) {
+						logger.info("currentNumberOfStrokes | numberOfStrokes : So executing the CosineSimilarity Logic!");
 
 						@SuppressWarnings("unchecked")
 						List<Double> initialVelocityVector = (List<Double>) getValueBySessionAttribute("velocityVector");
@@ -653,6 +660,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 					user.setCosValue(Double.toString(cosineSimilarityValue));
 					user.setBrowserName(b);
 					user.setOperatingSystem(o);
+					user.setMatchBase64ImageUrl(base64ImageUrl);
 					usersService.saveNewUser(user);
 					
 					logger.info("Data Saved for User : "+user.getFirstName() + " "+user.getLastName());

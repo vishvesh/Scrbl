@@ -82,8 +82,11 @@ public class Users implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdatedAt;
     
-    @Column(name = "base64_image_url")
-    private String base64ImageUrl;
+    @Column(name = "template_base64_image_url")
+    private String templateBase64ImageUrl;
+    
+    @Column(name = "match_base64_image_url")
+    private String matchBase64ImageUrl;
     
     @Column(name = "deviceName")
     private String deviceName;
@@ -203,12 +206,20 @@ public class Users implements Serializable {
         this.lastUpdatedAt = lastUpdatedAt;
     }
     
-    public void setBase64ImageUrl(String base64ImageUrl) {
-		this.base64ImageUrl = base64ImageUrl;
+    public void setTemplateBase64ImageUrl(String templateBase64ImageUrl) {
+		this.templateBase64ImageUrl = templateBase64ImageUrl;
 	}
     
-    public String getBase64ImageUrl() {
-		return base64ImageUrl;
+    public String getTemplateBase64ImageUrl() {
+		return templateBase64ImageUrl;
+	}
+    
+    public void setMatchBase64ImageUrl(String matchBase64ImageUrl) {
+		this.matchBase64ImageUrl = matchBase64ImageUrl;
+	}
+    
+    public String getMatchBase64ImageUrl() {
+		return matchBase64ImageUrl;
 	}
     
     public void setDeviceName(String deviceName) {

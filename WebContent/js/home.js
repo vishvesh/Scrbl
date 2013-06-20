@@ -322,6 +322,13 @@ function viewInstructions() {
 	window.location = "baseAction.html";
 }
 
+function getBase64ImageUrl() {
+	var canvas = document.getElementById('canvas');
+	var base64ImageUrl = canvas.toDataURL('image/png');
+	
+	return base64ImageUrl;
+}
+
 function save() {
 	/*console.log("pageX : " + JSON.stringify(pageX));
 	console.log("pageY : " + JSON.stringify(pageY));
@@ -333,9 +340,8 @@ function save() {
 		alert("Please Scribble before clicking Save!");
 		return false;
 	}
-    var canvas = document.getElementById('canvas');
 	
-	var base64ImageUrl = canvas.toDataURL('image/png');
+	var base64ImageUrl = getBase64ImageUrl();
 	//console.log("Un-Replaced DATA URL : "+base64ImageUrl);
 	
 	//dataUrl = dataUrl.replace(/^data:image\/(png|jpeg);base64,/, "");
@@ -349,6 +355,7 @@ function save() {
 	  data: {pageX: JSON.stringify(pageX), pageY: JSON.stringify(pageY),timeArray: JSON.stringify(timeArray), 
 		  pointArray: JSON.stringify(pointArray), base64ImageUrl: base64ImageUrl, b: b, o: o}, 
 	  success: function(data) {
+		  clearScreen();
 		  //$('#ajaxResponse').html(data); 
 	  } 
   }); 
@@ -359,10 +366,14 @@ function match() {
 		alert("Please Scribble before clicking Match!");
 		return false;
 	}
+	
+	var base64ImageUrl = getBase64ImageUrl();
+	
 	$.ajax({ 
 		  url: 'match.html', 
 		  type: 'POST',
-		  data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray), b: b, o: o},
+		  data: {timeArray: JSON.stringify(timeArray), pointArray: JSON.stringify(pointArray), 
+			  base64ImageUrl: base64ImageUrl, b: b, o: o},
 		  success: function(data){
 			  window.location = "thankYou.html";
 			  //$('#ajaxResponse').html(data); 
