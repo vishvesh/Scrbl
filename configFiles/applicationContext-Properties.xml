@@ -10,6 +10,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 			<list>
 				<value>classpath:propFiles/configs.properties</value>
 				<value>classpath:propFiles/database.properties</value>
+				<value>classpath:propFiles/hibernateCaching.properties</value>
 				<value>classpath:propFiles/connectionPooling.properties</value>
 			</list>
 		</property>

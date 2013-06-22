@@ -14,17 +14,26 @@
                 <value>com.scrbl.model.Users</value>
             </list>
         </property>
+        <property name="dataSource" ref="dataSource" />
 		<property name="hibernateProperties">
 			<value>
-				hibernate.connection.driver_class=${jdbc.driverClassName}
-				hibernate.connection.url=${jdbc.url}${jdbc.schema}
-				hibernate.connection.username=${jdbc.username}
-				hibernate.connection.password=${jdbc.password}
-				hibernate.dialect=${jdbc.hibernate.dialect}
+			    hibernate.dialect=${jdbc.hibernate.dialect}
 				hibernate.show_sql=${jdbc.hibernate.showSql}
 				hibernate.format_sql=${jdbc.hibernate.formatSql}
 				hibernate.use_sql_comments=${jdbc.hibernate.useSqlComments}
 				hibernate.auto_close_session=${jdbc.hibernate.autoCloseSession}
+				
+				hibernate.temp.use_jdbc_metadata_defaults=false
+				
+				hibernate.cache.region.factory_class=${jdbc.hibernate.cache.factory}
+				hibernate.cache.use_second_level_cache=${jdbc.hibernate.cache.level2.enabled}
+				hibernate.cache.use_query_cache=${jdbc.hibernate.cache.level2.query.enabled}
+				
+				<!-- hibernate.connection.driver_class=${jdbc.driverClassName}
+				hibernate.connection.url=${jdbc.url}${jdbc.schema}
+				hibernate.connection.username=${jdbc.username}
+				hibernate.connection.password=${jdbc.password}
+				
 				hibernate.c3p0.min_size=${jdbc.hibernate.max_size}
 				hibernate.c3p0.max_size=${jdbc.hibernate.min_size}
 				hibernate.c3p0.timeout=${jdbc.hibernate.timeout}
@@ -32,7 +41,7 @@
 				hibernate.connection.provider_class=${jdbc.hibernate.connection.provider_class}
 				hibernate.c3p0.idle_test_period=${jdbc.hibernate.idle_test_period}
 				hibernate.c3p0.acquire_increment=${jdbc.hibernate.acquire_increment}
-				hibernate.temp.use_jdbc_metadata_defaults=false
+				hibernate.temp.use_jdbc_metadata_defaults=false -->
 			</value>
 		</property>
 		
