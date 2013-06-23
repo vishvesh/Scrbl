@@ -9,6 +9,7 @@
 <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js" ></script>
 <script type = "text/javascript" src="http://l2.io/ip.js?var=c"></script> 
 <%-- <script src="js/home.js" ></script> --%>
+<script src="js/dmb.js" ></script>
 <link rel="stylesheet" type="text/css" href="css/home.css">
 <style type="text/css">
 #wrapper{
@@ -42,7 +43,12 @@
 	   else
 	   	ci = null;
 	   
+	   var b = bd.b+" "+bd.v;
+	   var o = bd.o;
+	   
 	   document.getElementById('ci').value = ci;
+	   document.getElementById('b').value = b;
+	   document.getElementById('o').value = o;
 	   //console.log("IP : "+ci);
    });  
 
@@ -104,6 +110,8 @@
 			        required="true" />
 			        
 			     <s:hidden id="ci" name="ci"></s:hidden>
+			     <s:hidden id="b" name="b"></s:hidden>
+			     <s:hidden id="o" name="o"></s:hidden>
 				
 				<s:submit type="button" id="submitButton" value="Next Step ->" onclick="checkVal(event);"/>
 				<div id="error"></div>

@@ -210,6 +210,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 		users.setCreatedAt(new Date());
 		users.setLastUpdatedAt(new Date());
 		
+		users.setBrowserName(b);
+		users.setOperatingSystem(o);
+		
 		logger.info(users.toString());
 
 		//Check if the user already exists!
