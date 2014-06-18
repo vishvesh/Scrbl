@@ -20,7 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author vishvesh
  */
 @Entity
-@Table(name = "users", catalog = "fragbait_scribblein", schema = "")
+@Table(name = "users", catalog = "ebdb", schema = "") //Used for Amazon AWS(Production) Deployment..
+//@Table(name = "users", catalog = "fragbait_scribblein", schema = "") //Used for Local(Development) Deployment..
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
