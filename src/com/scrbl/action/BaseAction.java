@@ -73,7 +73,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 	private String ci;
 	private File file;
 	private String nameOfFile = getText("email.nameOfFile");
-	private String informedConsentPdf = getText("informedConsentPdf");
+	//private String informedConsentPdf = getText("informedConsentPdf");
 	//private List<Object> pointArray;
 	private String pointArray;
 	//private List<Point> stroke;
@@ -183,8 +183,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 				logger.info("Is Development : Host : "+host);
 			else
 				logger.info("Is Production : Host : "+host);
+			
+			//logger.info("informedConsentPdf :: "+informedConsentPdf +" : nameOfFile :: "+nameOfFile);
 
-			URL url = getClass().getResource(informedConsentPdf);
+			URL url = getClass().getResource("INFORMED_CONSENT-1.pdf");
 			File file = new File(url.getPath());
 			logger.info("Informed Consent's abs file path : "+file.getAbsolutePath());
 			
@@ -677,72 +679,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 		return SUCCESS;
 	}
 		
-	
-	public String writeValues()
-	{
-		//for (Object element : pointArray) {
-		/*String[] points = pointArray.split(",");
-		for (String point : points) {
-			logger.info("Point is : "+point);
-		}*/
-		/*compute();
-	    
-	    setFigure(figure);
-	    sessionMap.put("figure", figure);
-	    
-	    logger.info("Session MAP Size : "+sessionMap.size());
-	    
-	    logger.info("GET FIGURES STROKES LENGTGH : "+getFigure().getLength() + " : Curves LENGTH : "+getFigure().getCurvesLength());*/
-	    
-	    /*for(int i = 0, j = i + 1; i < points.size() - 1; i+=2, j+=2)
-	    {
-	    	Point point = new Point(points.get(i), points.get(j));
-	    	//logger.info("X : "+point.getX() + " : Y : "+point.getY() );
-	    	stroke.add(point);
-	    }*/
-	    
-	    /*for (Point value : stroke) {
-			logger.info("STROKE : "+value);
-		}*/
-		
-		/*ObjectMapper mapper = new ObjectMapper();
-		try {
-			// read from file, convert it to user class
-			//User user = mapper.readValue(new File("c:\\user.json"), User.class);	 
-			// display to console
-			//logger.info(user);	 
-		} catch (Exception e) {	 
-			e.printStackTrace();
-		}*/
-	 
-		//}
-		//writeToExcel(pageX.replace("[", "").replace("]", ""), pageY.replace("[", "").replace("]", ""), timeArray.replace("[", "").replace("]", ""));
-		//logger.info("Page X : "+pageX.replace("[", "").replace("]", ""));
-		//logger.info("Page Y : "+pageY.replace("[", "").replace("]", ""));
-		
-		/*String replacedX = pageX.replaceAll(",", " ").replace("[", "").replace("]", "");
-		logger.info("Replaced PAGE X : "+replacedX);
-		String[] pagex = replacedX.split("\\s0");
-		for (String stringx : pagex) {
-			String x = stringx;
-			String[] splitStringX  = x.split(" ");
-			for (String string : splitStringX) {
-				System.out.print(" : splitString : "+string);
-			}
-			logger.info();
-			logger.info("PAGE X : "+stringx);
-		}
-		
-		String replacedY = pageY.replaceAll(",", " ").replace("[", "").replace("]", "");
-		logger.info("Replaced PAGE Y : "+replacedY);
-		String[] pagey = replacedY.split("\\s0");
-		for (String stringy : pagey) {
-			logger.info("PAGE Y : "+stringy);
-		}*/
-		//logger.info("Time Array : "+timeArray.replace("[", "").replace("]", ""));
-		//logger.info("Client IP Address : "+ci);
-		return SUCCESS;
-	}
 	
 	@SuppressWarnings("unused")
 	private void writeToExcel(String pageX, String pageY, String timeArray)
