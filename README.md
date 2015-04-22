@@ -1,6 +1,4 @@
 Scrbl
 =====
 
-Starting a new adventure :)
-
-Pushing after adding to redhat-scribbleapp!
+An attempt to replace username/password login with a canvas/scribble based approach! 
